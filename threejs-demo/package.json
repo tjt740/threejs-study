@@ -12,6 +12,7 @@
     "gsap": "^3.11.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.4.2",
     "react-scripts": "5.0.1",
     "three": "^0.145.0",
     "three-orbitcontrols": "^2.110.3",

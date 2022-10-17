@@ -19,13 +19,13 @@
         "typescript": "^4.8.4",
         "web-vitals": "^2.1.4"
     },
-     "homepage": ".",
+    "homepage": ".",
     "scripts": {
         "start": "react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
-         "gitee:ghpages": "gh-pages -d build"
+        "github:ghpages": "gh-pages -d build -r https://github.com/tjt740/threejs-study.git -b gh-pages"
     },
     "eslintConfig": {
         "extends": [

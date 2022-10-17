@@ -4,7 +4,8 @@ import ThreeComponent from './装箱demo';
 function App() {
     return (
         <>
-            <BrowserRouter>
+            <BrowserRouter basename={process.env.PUBLIC_URL}>
+                111
                 <Routes>
                     <Route path="/demo"  exact={false} element={<Demo1Component />} />
                     <Route path="/three"  exact={false} element={<ThreeComponent />} />

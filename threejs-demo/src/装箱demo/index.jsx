@@ -1,37 +1,33 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Button, Drawer, Tabs, Descriptions, Tree, Empty } from 'antd';
-// import './index.css';
+import { Button, Drawer, Tabs, Descriptions, Empty } from 'antd';
 import 'antd/dist/antd.css';
 import * as THREE from 'three';
 // 导入轨道控制器 只能通过这种方法
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 // mockData
+import * as dat from 'dat.gui';
 import { mockData } from './mockData';
 
-let cartonWidth,
-    cartonHeight,
-    cartonLength,
-    detailIndex = 0,
-    // angle = 0,
-    intersections,
-    intersected,
-    defaults = {
-        result: [],
-        detailList: [],
-        dataList: [],
-        detailNum: 0,
-        cartonNum: 0,
-        taskNum: 0,
-        cartonList: [],
-    },
-    HEIGHT,
-    WIDTH,
-    boxArr = [];
 
-const orientationEnum = {
-    FRONT_UP: 2,
-    FRONT_DOWN: 3,
+let cartonWidth;
+let cartonHeight;
+let cartonLength;
+let detailIndex = 0;
+// let angle = 0;
+let intersections;
+let intersected;
+const defaults = {
+    result: [],
+    detailList: [],
+    dataList: [],
+    detailNum: 0,
+    cartonNum: 0,
+    taskNum: 0,
+    cartonList: [],
 };
+let HEIGHT;
+let WIDTH;
+let boxArr = [];
 
 // 创建场景
 const scene = new THREE.Scene();
@@ -41,56 +37,65 @@ const camera = new THREE.PerspectiveCamera(
     45,
     window.innerWidth / window.innerHeight,
     1,
-    999999
+    99999
 );
-//初始化网格
-// const grid = new THREE.GridHelper(15000, 20, 0x333333, 0x333333);
+// 初始化网格
+const grid = new THREE.GridHelper(15000, 20, 0x333333, 0x333333);
 // 选中子级盒子
 const mouse = new THREE.Vector3();
 // 射线
 const raycaster = new THREE.Raycaster();
 // 初始化渲染器
 const renderer = new THREE.WebGLRenderer({
-    antialias: true, //开启锯齿
-    alpha: true, //透明度
+    antialias: true, // 开启锯齿
+    alpha: true, // 透明度
 });
 // 初始化轨道控制器
 const controls = new OrbitControls(camera, renderer.domElement);
-// const axesHelper = new THREE.AxesHelper(5000);
+// 三维坐标轴
+const axesHelper = new THREE.AxesHelper(40000);
 
-export default function ThreeComponent() {
+// gui控制器
+const gui = new dat.GUI();
+const cameraGui = gui.addFolder('调整相机视角');
+cameraGui.add(camera.position, 'x').min(1).max(20000).step(10);
+cameraGui.add(camera.position, 'y').min(1).max(10000).step(10);
+cameraGui.add(camera.position, 'z').min(1).max(10000).step(10);
+
+export default function PackagePreview3D() {
     const [selectIndex, setSelectIndex] = useState(0);
     const [boxContext, setBoxContext] = useState(null);
     const [containerContext, setContainerContext] = useState(null);
     // 容器
     const container = useRef(null);
 
-      // 获取详细数据
-      const getInfoDetail = () => {
-        // 获取详情
-        defaults['result'] = mockData;
-        defaults['detailList'] = [];
-        const dataList = mockData;
-        // 获取初始装货箱信息
-        const { container } = dataList;
-        const { width, height, length } = container.cube;
-        // 装货箱
-        initBox(width, height, length, container);
+    // 获取详细数据
+    const getInfoDetail = async () => {
+        const res = { status: 200, data: [], success: true };
+        res.data = mockData.singleContainerLoadingSolutions;
+        defaults.result = res;
+        defaults.detailList = [];
+
+        // 初始装货箱信息
+        const { width, length, height } = res.data[0].container.cube;
+        initBox(width, height, length, res.data[0].container);
+
         // 单个详情
-        detailIndex = defaults['detailNum'] = dataList.placedItems.length;
+        const placedItemsArr = res.data[0].placedItems;
+        detailIndex = defaults.detailNum = placedItemsArr.length;
+
         // 渲染单个子级盒子
         boxArr = [];
-        for (let i = 0; i < defaults['detailNum']; i++) {
-            const detail = dataList.placedItems[i];
-            defaults['detailList'].push(
+        for (let i = 0; i < defaults.detailNum; i++) {
+            const detail = placedItemsArr[i];
+            defaults.detailList.push(
                 initObject(
-                    detail.item.cube.width,
-                    detail.item.cube.height,
-                    detail.item.cube.length,
+                    detail.rotatedCube.width,
+                    detail.rotatedCube.height,
+                    detail.rotatedCube.length,
                     detail.position.x,
                     detail.position.y,
                     detail.position.z,
-                    detail.orientation,
                     i
                 )
             );
@@ -98,7 +103,7 @@ export default function ThreeComponent() {
     };
 
     // 初始化纸箱
-    const initBox = (xLen, yLen, zLen, context) => {   
+    const initBox = (xLen, yLen, zLen, context) => {
         setContainerContext(context);
         cartonWidth = xLen;
         cartonHeight = yLen;
@@ -108,44 +113,45 @@ export default function ThreeComponent() {
         // 声明材质;
         const edges = new THREE.EdgesGeometry(geometry);
         // 几何体+ 材质 = 物体
-        console.log(edges)
         const containerBox = new THREE.LineSegments(edges);
         containerBox.material.color = new THREE.Color(0x000000);
         containerBox.position.set(0, 0, 0);
         // 将物体添加到场景中
         scene.add(containerBox);
         // 添加网格
-        // grid.position.y = -(cartonHeight / 2) - cartonHeight / 8;
-        // scene.add(grid);
+        grid.position.y = -(cartonHeight / 2) - cartonHeight / 8;
+        scene.add(grid);
         return containerBox;
     };
 
     // 材质
     function getTextCanvas(width, height, length, i) {
-        let canvas = document.createElement('canvas');
-        let ctx = canvas.getContext('2d');
-        let ctx2 = canvas.getContext('2d');
-        let ctx3 = canvas.getContext('2d');
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        ctx.globalAlpha = 0.65;
         canvas.width = width;
         canvas.height = length;
+
         // 设置箱子面颜色
-        // ctx3.fillStyle = 'rgba(34,34,34, 0.35)';
-        ctx3.fillStyle = 'rgba(183,139,34,1)';
-        window.ctx3 = ctx3;
-        ctx3.fillRect(0, 0, width, length);
+        ctx.fillStyle = 'rgba(255,255,5,1)';
+        ctx.fillRect(0, 0, width, length);
+        ctx.save();
+
         // 制作胶带
-        ctx.fillStyle = 'rgba(152,107,9,0.8)';
+        ctx.fillStyle = 'rgba(183,139,34,1)';
         ctx.fillRect(
             0,
             length / 2 - length / 4 + length / 8,
             width,
             length / 4
         );
+        ctx.save();
         // 设置封条
-        ctx2.fillStyle = 'black';
+        ctx.fillStyle = 'black';
         ctx.fillRect(0, length / 2, width, 10);
-        ctx.fillStyle = 'white';
-        ctx.font = 'normal 240px "楷体"';
+        ctx.save();
+        ctx.fillStyle = 'black';
+        ctx.font = 'normal 180px "楷体"';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(`纸箱${i + 1}`, width / 2, length / 2);
@@ -153,25 +159,40 @@ export default function ThreeComponent() {
     }
 
     // 设置每个子级盒子
-    const initObject = (width, height, length, x, y, z, orientation, i) => {
+    const initObject = (width, height, length, x, y, z, index) => {
         const mesh = new THREE.Object3D();
         const geometry = new THREE.BoxGeometry(width, height, length);
         // 设置随机颜色
         const color = new THREE.Color(0xff794204);
         // 设置子级盒子材质
-        let material = [];
-        for (let i = 0; i < geometry.groups.length; i++) {
-            let mats = new THREE.MeshBasicMaterial({
+        const material = [];
+        for (let j = 0; j < geometry.groups.length; j++) {
+            const mats = new THREE.MeshBasicMaterial({
                 color,
                 transparent: true,
-                // opacity: 0.9,
+                opacity: 0.8,
             });
             material.push(mats);
         }
+
+        // console.log(
+        //   '宽:',
+        //   width,
+        //   '高:',
+        //   height,
+        //   '长:',
+        //   length,
+        //   '体积:',
+        //   width * height * length,
+        // );
+
         // 上下面
-        material[orientationEnum[orientation]].map = new THREE.CanvasTexture(
-            getTextCanvas(width, height, length, i)
+        // for (let j = 0; j < 6; j++) {
+        material[2].map = new THREE.CanvasTexture(
+            getTextCanvas(width, height, length, index)
         );
+        // }
+
         // 几何体 + 材质 = 物体
         const cube = new THREE.Mesh(geometry, material);
         // 3D模型添加 材质和几何体
@@ -183,13 +204,13 @@ export default function ThreeComponent() {
             materialBorder,
             new THREE.LineBasicMaterial({ color: 0xff131313 })
         );
-        // scene.add(axesHelper);
+        scene.add(axesHelper);
         mesh.add(lineFrame);
         // 装箱复位
         mesh.position.set(
-            y + width / 2 - cartonWidth / 2 + 5,
-            z + height / 2 - cartonHeight / 2 + 4,
-            x + length / 2 - cartonLength / 2 + 3,
+            y + width / 2 - cartonWidth / 2,
+            z + height / 2 - cartonHeight / 2,
+            x + length / 2 - cartonLength / 2,
             'XYZ'
         );
         scene.add(mesh);
@@ -201,26 +222,26 @@ export default function ThreeComponent() {
     const onMouseClick = (e) => {
         e.preventDefault();
         // 修改e精度
-        console.log( renderer.domElement.offsetLeft)
-        mouse.x = ((e.clientX - renderer.domElement.offsetLeft) / renderer.domElement.clientWidth) * 2 - 1;
-        mouse.y = -((e.clientY - renderer.domElement.offsetTop) / renderer.domElement.clientHeight) * 2 + 1;
+        mouse.x =
+            ((e.clientX - renderer.domElement.offsetLeft) /
+                renderer.domElement.clientWidth) *
+                2 -
+            1;
+
+        mouse.y =
+            -(
+                (e.clientY - renderer.domElement.offsetTop) /
+                renderer.domElement.clientHeight
+            ) *
+                2 +
+            1;
         raycaster.setFromCamera(mouse, camera);
         intersections = raycaster.intersectObjects(boxArr);
+
         if (intersections.length > 0) {
+            // 计算相交偏移量
             intersected = intersections[0].object;
-            if (!boxArr.findIndex((v) => v.uuid === intersected.uuid)) {
-                boxArr.forEach((v) => {
-                    v.material.forEach(
-                        (i) => (i.color = new THREE.Color(0xff794204))
-                    );
-                });
-                boxArr[selectIndex].material.forEach(
-                    (v) => (v.color = new THREE.Color(0xff5e3405))
-                );
-                setBoxContext(defaults['result'].placedItems[0]);
-                setSelectIndex(0);
-                return;
-            }
+            // useEffect 监听筛选出的id变化 确定点的那个盒子
             setSelectIndex(
                 boxArr.findIndex((v) => v.uuid === intersected.uuid)
             );
@@ -257,17 +278,14 @@ export default function ThreeComponent() {
                     )
                     .width.split('px')[0]
             );
-        HEIGHT =
-            window.innerHeight -
-            Number(
-                window
-                    .getComputedStyle(document.getElementById('operate'))
-                    .height.split('px')[0]
-            );
+
+        document.getElementById('canvas-frame').style.width = WIDTH + 'px';
+
+        HEIGHT = window.innerHeight;
         // 场景颜色
         scene.background = new THREE.Color(0x999999);
         // 调整相机位置
-        camera.position.set(13100, 2200, 2100);
+        camera.position.set(12000, 0, 0);
         camera.up.x = 0;
         camera.up.y = 1;
         camera.up.z = 0;
@@ -292,6 +310,8 @@ export default function ThreeComponent() {
         // 是否允许转动
         // controls.rotate = false;
         // controls.maxPolarAngle = Math.PI / 2;
+        // 禁用缩放
+        // controls.enableZoom = false;
 
         // 渲染
         render();
@@ -315,13 +335,10 @@ export default function ThreeComponent() {
                         )
                         .width.split('px')[0]
                 );
-            HEIGHT =
-                window.innerHeight -
-                Number(
-                    window
-                        .getComputedStyle(document.getElementById('operate'))
-                        .height.split('px')[0]
-                );
+
+            document.getElementById('canvas-frame').style.width = WIDTH + 'px';
+
+            HEIGHT = window.innerHeight;
             // 更新camera 宽高比;
             camera.aspect = WIDTH / HEIGHT;
             // 更新camera 投影矩阵
@@ -338,10 +355,11 @@ export default function ThreeComponent() {
         init();
         // 2. 获取详情
         getInfoDetail();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
-        if (!!defaults['result'].placedItems.length) {
+        if (defaults?.result?.data?.length) {
             if (intersected && intersections) {
                 boxArr.forEach((v) => {
                     v.material.forEach(
@@ -351,8 +369,7 @@ export default function ThreeComponent() {
                 boxArr[selectIndex].material.forEach(
                     (v) => (v.color = new THREE.Color(0xff5e3405))
                 );
-                setBoxContext(defaults['result'].placedItems[selectIndex]);
-                return;
+                setBoxContext(defaults.result.data[0].placedItems[selectIndex]);
             }
         }
     }, [selectIndex]);
@@ -360,55 +377,68 @@ export default function ThreeComponent() {
     // tab内容
     const TabContext = (props) => {
         const { active } = props;
-        // 集装箱信息
-        const containerContext = {
-            height: props?.containerContext?.cube.height,
-            width: props?.containerContext?.cube.width,
-            length: props?.containerContext?.cube.length,
-            price: props?.containerContext?.price,
-            weight: props?.containerContext?.weight,
+
+        // 集装箱信息枚举
+        const containerContextEnum = {
+            height: '包装箱高度',
+            width: '包装箱宽度',
+            length: '包装箱长度',
+            containerId: '包装箱id',
+            price: '价格',
+            volume: '体积',
+            weight: '重量',
         };
 
-        // 纸箱
-        const boxContext = {
-            height: props?.boxContext?.item?.cube.height,
-            width: props?.boxContext?.item?.cube.width,
-            length: props?.boxContext?.item?.cube.length,
+        // 纸箱信息枚举
+        const boxItemContextEnum = {
+            containerId: '包装箱id',
+            frontId: '物品前面对应的id',
+            itemId: '物品id',
+            itemName: '物品名',
+            upId: '物品上面对应的id',
+            height: '纸箱高度',
+            width: '纸箱宽度',
+            length: '纸箱长度',
+            volume: '体积',
+        };
+
+        // 打平JSON，找到对应的枚举★
+        const flatJSON = (propContext, contextEnum) => {
+            console.log(propContext,contextEnum)
+            return Object.entries(propContext).map((v, idx) => {
+                const [key, value] = v;
+                if (
+                    Object.prototype.toString.call(value) === '[object Object]'
+                ) {
+                    return flatJSON(value, contextEnum);
+                }
+                return contextEnum[key] ? (
+                    <Descriptions.Item label={contextEnum[key]} key={idx}>
+                        {value === 0 || value ? String(value) : '--'}
+                    </Descriptions.Item>
+                ) : null;
+            });
         };
 
         return (
             <>
                 {active === 0 ? (
                     <Descriptions column={1}>
-                        <Descriptions.Item label="重量 ">
-                            {containerContext.weight}
-                        </Descriptions.Item>
-                        <Descriptions.Item label="价格">
-                            {containerContext.price}
-                        </Descriptions.Item>
-                        <Descriptions.Item label="长度">
-                            {containerContext.length}
-                        </Descriptions.Item>
-                        <Descriptions.Item label="宽度">
-                            {containerContext.width}
-                        </Descriptions.Item>
-                        <Descriptions.Item label="高度">
-                            {containerContext.height}
-                        </Descriptions.Item>
+                        {props?.containerContext
+                            ? flatJSON(
+                                  props?.containerContext,
+                                  containerContextEnum
+                              )
+                            : null}
                     </Descriptions>
                 ) : (
                     <>
-                        {props.boxContext ? (
+                        {props.boxItemContext ? (
                             <Descriptions column={1}>
-                                <Descriptions.Item label="长度">
-                                    {boxContext.length}
-                                </Descriptions.Item>
-                                <Descriptions.Item label="宽度">
-                                    {boxContext.width}
-                                </Descriptions.Item>
-                                <Descriptions.Item label="高度">
-                                    {boxContext.height}
-                                </Descriptions.Item>
+                                {flatJSON(
+                                    props?.boxItemContext,
+                                    boxItemContextEnum
+                                )}
                             </Descriptions>
                         ) : (
                             <Empty
@@ -426,46 +456,46 @@ export default function ThreeComponent() {
         <div id="container">
             <div id="operate">
                 <Button
-                    id="first"
+                    style={{margin:'10px'}}
                     onClick={() => {
                         detailIndex = 0;
-                        for (let i = 0; i < defaults['detailNum']; i++) {
-                            scene.remove(defaults['detailList'][i]);
+                        for (let i = 0; i < defaults.detailNum; i++) {
+                            scene.remove(defaults.detailList[i]);
                         }
                     }}
                 >
                     清空
                 </Button>
                 <Button
-                    id="prev"
+                     style={{margin:'10px'}}
                     onClick={() => {
                         if (detailIndex <= 0) {
                             return;
                         }
                         detailIndex -= 1;
-                        scene.remove(defaults['detailList'][detailIndex]);
+                        scene.remove(defaults.detailList[detailIndex]);
                     }}
                 >
                     上一步
                 </Button>
                 <Button
-                    id="next"
+                     style={{margin:'10px'}}
                     onClick={() => {
-                        if (detailIndex >= defaults['detailNum']) {
+                        if (detailIndex >= defaults.detailNum) {
                             return;
                         }
-                        scene.add(defaults['detailList'][detailIndex]);
+                        scene.add(defaults.detailList[detailIndex]);
                         detailIndex += 1;
                     }}
                 >
                     下一步
                 </Button>
                 <Button
-                    id="last"
+                     style={{margin:'10px'}}
                     onClick={() => {
-                        detailIndex = defaults['detailNum'];
-                        for (var i = 0; i < defaults['detailNum']; i++) {
-                            scene.add(defaults['detailList'][i]);
+                        detailIndex = defaults.detailNum;
+                        for (let i = 0; i < defaults.detailNum; i++) {
+                            scene.add(defaults.detailList[i]);
                         }
                     }}
                 >
@@ -473,9 +503,16 @@ export default function ThreeComponent() {
                 </Button>
             </div>
 
+            {/* three 承载容器 */}
             <div id="canvas-frame" ref={container}></div>
 
-            <Drawer placement="right" open={true} closable={false} mask={false}>
+            <Drawer
+                // style={{ width: 0 }}
+                placement="right"
+                open
+                closable={false}
+                mask={false}
+            >
                 <Tabs
                     defaultActiveKey="1"
                     items={new Array(2).fill(null).map((_, i) => {
@@ -489,7 +526,7 @@ export default function ThreeComponent() {
                             children: (
                                 <TabContext
                                     active={i}
-                                    boxContext={boxContext}
+                                    boxItemContext={boxContext}
                                     containerContext={containerContext}
                                 />
                             ),

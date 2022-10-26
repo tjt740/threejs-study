@@ -1,5 +1,5 @@
 import PackagePreview3D from '../装箱demo';
-import Demo1Component from '../lessons/day1/index.tsx';
+import Demo1Component from '../lessons/day1';
 import { Route, Routes } from 'react-router-dom';
 export function RouterCom() {
     return (

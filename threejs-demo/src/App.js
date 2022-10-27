@@ -14,12 +14,30 @@ import './index.css';
 const { Header, Content, Footer, Sider } = Layout;
 
 function App() {
+    const [collapsed, setCollapsed] = useState(false);
     return (
-        <>
-            <BrowserRouter>
-                <RouterCom />
-            </BrowserRouter>
-        </>
+        <Layout>
+            <Sider
+                collapsible
+                collapsed={collapsed}
+                onCollapse={(value) => setCollapsed(value)}
+            >
+                <Menu
+                    theme="dark"
+                    mode="inline"
+                    defaultSelectedKeys={['1']}
+                    items={items}
+                />
+            </Sider>
+            <Layout className="site-layout">
+                <Content>
+                    11111
+                    <BrowserRouter>
+                        <RouterCom />
+                    </BrowserRouter>
+                </Content>
+            </Layout>
+        </Layout>
     );
 }
 

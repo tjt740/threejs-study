@@ -8,7 +8,6 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as dat from 'dat.gui';
 import { mockData } from './mockData';
 
-
 let cartonWidth;
 let cartonHeight;
 let cartonLength;
@@ -56,11 +55,11 @@ const controls = new OrbitControls(camera, renderer.domElement);
 const axesHelper = new THREE.AxesHelper(40000);
 
 // gui控制器
-const gui = new dat.GUI();
-const cameraGui = gui.addFolder('调整相机视角');
-cameraGui.add(camera.position, 'x').min(1).max(20000).step(10);
-cameraGui.add(camera.position, 'y').min(1).max(10000).step(10);
-cameraGui.add(camera.position, 'z').min(1).max(10000).step(10);
+// const gui = new dat.GUI();
+// const cameraGui = gui.addFolder('调整相机视角');
+// cameraGui.add(camera.position, 'x').min(1).max(20000).step(10);
+// cameraGui.add(camera.position, 'y').min(1).max(10000).step(10);
+// cameraGui.add(camera.position, 'z').min(1).max(10000).step(10);
 
 export default function PackagePreview3D() {
     const [selectIndex, setSelectIndex] = useState(0);
@@ -355,7 +354,7 @@ export default function PackagePreview3D() {
         init();
         // 2. 获取详情
         getInfoDetail();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -404,7 +403,7 @@ export default function PackagePreview3D() {
 
         // 打平JSON，找到对应的枚举★
         const flatJSON = (propContext, contextEnum) => {
-            console.log(propContext,contextEnum)
+            console.log(propContext, contextEnum);
             return Object.entries(propContext).map((v, idx) => {
                 const [key, value] = v;
                 if (
@@ -456,7 +455,7 @@ export default function PackagePreview3D() {
         <div id="container">
             <div id="operate">
                 <Button
-                    style={{margin:'10px'}}
+                    style={{ margin: '10px' }}
                     onClick={() => {
                         detailIndex = 0;
                         for (let i = 0; i < defaults.detailNum; i++) {
@@ -467,7 +466,7 @@ export default function PackagePreview3D() {
                     清空
                 </Button>
                 <Button
-                     style={{margin:'10px'}}
+                    style={{ margin: '10px' }}
                     onClick={() => {
                         if (detailIndex <= 0) {
                             return;
@@ -479,7 +478,7 @@ export default function PackagePreview3D() {
                     上一步
                 </Button>
                 <Button
-                     style={{margin:'10px'}}
+                    style={{ margin: '10px' }}
                     onClick={() => {
                         if (detailIndex >= defaults.detailNum) {
                             return;
@@ -491,7 +490,7 @@ export default function PackagePreview3D() {
                     下一步
                 </Button>
                 <Button
-                     style={{margin:'10px'}}
+                    style={{ margin: '10px' }}
                     onClick={() => {
                         detailIndex = defaults.detailNum;
                         for (let i = 0; i < defaults.detailNum; i++) {

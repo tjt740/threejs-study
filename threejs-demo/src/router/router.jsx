@@ -1,7 +1,6 @@
 import PackagePreview3D from '../pages/装箱demo';
 import Demo1Component from '../pages/lessons/day1';
-import { FolderOpenOutlined, FileOutlined } from '@ant-design/icons';
-import { Route, Routes, Switch } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import { createFromIconfontCN } from '@ant-design/icons';
 
 const MyIcon = createFromIconfontCN({
@@ -16,8 +15,8 @@ export const routePaths = [
             {
                 label: 'day-1',
                 key: Math.random(),
-                path: '/demo',
-                exact: false,
+                path: '/day1',
+                exact: 0,
                 element: <Demo1Component />,
             },
         ],
@@ -30,7 +29,7 @@ export const routePaths = [
                 label: '盒子装箱demo',
                 key: Math.random(),
                 path: '/package-preview',
-                exact: false,
+                exact: 0,
                 element: <PackagePreview3D />,
             },
         ],
@@ -38,15 +37,14 @@ export const routePaths = [
 ];
 export function RouterCom() {
     return (
-        // Routes 包裹路由匹配的对象
+        //  Routes 包裹路由匹配的对象
         <Routes>
             {/* <Route
                 path="/package-preview"
                 exact={false}  // exact:精准匹配，只有路径完全一致才能被匹配到。 如果Route 里不加 exact，那么凡是Link里面 to 的路径包含了/， 那么就会被匹配到，于是Switch就不继续匹配下去
-                element={<PackagePreview3D />
-                }
-            /> */}
-            {routePaths.map((v) => {
+                element={<PackagePreview3D />} /> */}
+
+            {routePaths.map((v) =>
                 v.children.map((item, index) => (
                     <Route
                         path={item.path}
@@ -54,8 +52,12 @@ export function RouterCom() {
                         element={item.element}
                         key={String(index + 1)}
                     />
-                ));
-            })}
+                ))
+            )}
+            {/* 重定向 */}
+            {/* <Navigate exact from="/" to="/day-1" /> */}
+            {/* 以上的路由没有一个匹配成功的，则用404页面 path属性不要写 */}
+            {/* <Route component={Notfound} /> */}
         </Routes>
     );
 }

@@ -44,7 +44,7 @@ export default function Demo1Component() {
 
         // Step9 设置渲染器大小
         renderer.setSize(window.innerWidth, window.innerHeight);
-        console.log(renderer);
+        // console.log(renderer);
 
         // Step10 渲染器渲染
         renderer.render(scene, camera);

@@ -8,9 +8,9 @@ import React from 'react';
 import './index.css';
 import { createFromIconfontCN } from '@ant-design/icons';
 const MyIcon = createFromIconfontCN({
-    scriptUrl: '//at.alicdn.com/t/c/font_2112553_dwu0qui8jl7.js', // 在 iconfont.cn 上生成
+    scriptUrl: '//at.alicdn.com/t/c/font_3387028_u7gtdny4m09.js', // 在 iconfont.cn 上生成
 });
-// 
+// 不推荐路由组件
 export function RouterCom1() {
     return (
         <Routes>
@@ -21,7 +21,7 @@ export function RouterCom1() {
             {/* http://localhost:3000/package-preview */}
             {/* 4️⃣二级/多级路由  5️⃣<Outlet/>二级路由显示父级路由123 */}
             <Route
-                path="/lesson"
+                path="/lessons"
                 element={
                     <div>
                         123 <Outlet />
@@ -29,14 +29,14 @@ export function RouterCom1() {
                 }
             >
                 <Route path="day-1" element={<Day1Com />} />
-                {/* http://localhost:3000/lesson/day-1 */}
+                {/* http://localhost:3000/lessons/day-1 */}
             </Route>
             {/* 6️⃣动态路由*/}
             <Route
-                path="/lesson/:context"
-                element={<> /lesson:context</>}
+                path="/lessons/:context"
+                element={<> /lessons:context</>}
             ></Route>
-            {/* http://localhost:3000/lesson/tjt?age=23 */}
+            {/* http://localhost:3000/lessons/tjt?age=23 */}
             {/* 7️⃣重定向 404 */}
             <Route path="/404" element={<NoFound />}></Route>
             <Route path="*" element={<Navigate to="/404" />} />
@@ -45,44 +45,65 @@ export function RouterCom1() {
 }
 
 // 懒加载
-const LazyLoad = (path) => { //传入在view 下的路径
-    const LazyCom = React.lazy(() => import(`../pages/${path}`))
+const LazyLoad = (path) => {
+    //传入在view 下的路径
+    const LazyCom = React.lazy(() => import(`../pages/${path}`));
     return (
         <React.Suspense fallback={<> 加载中...</>}>
             <LazyCom />
         </React.Suspense>
-    )
-}
+    );
+};
 
 export const routerPaths = [
     {
-
-        title: '学习内容',
-        icon: <MyIcon type="icon-hamigua" />,
-        pathName: 'lessons/day',
+        label: '学习内容',
+        icon: <MyIcon type="icon-kecheng" />,
+        key: Math.random(),
+        children: [
+            {
+                label: '学习-1',
+                icon: <MyIcon type="icon-danta" />,
+                key: 'lessons/day1',
+            },
+        ],
     },
     {
-        title: '案例/实操',
-        icon: <MyIcon type="icon-xigua" />,
-        pathName:'装箱demo'
-    }
+        label: '案例/实操',
+        icon: <MyIcon type="icon-anliku" />,
+        key: Math.random(),
+        children: [
+            {
+                label: '装箱demo',
+                icon: <MyIcon type="icon-zhixiang_niupizhixiang-15" />,
+                key: 'package-preview',
+            },
+        ],
+    },
 ];
 
 export function RouterCom2() {
-    return useRoutes([
+    // 固定路由配置
+    const FIXEDROUTE = [
         // 默认路由
         {
             path: '/',
-            element:LazyLoad('lessons/day1'),
+            element: LazyLoad('lessons/day1'),
         },
-        // 一级路由
         {
-            path: '/package-preview',
-            element: LazyLoad('装箱demo'),
+            path: '/404',
+            element: LazyLoad('no-found'),
         },
+        // 重定向 404
+        {
+            path: '*',
+            element: <Navigate to="/404" />,
+        },
+    ];
+    return useRoutes([
         // 多级路由
         {
-            path: '/lesson',
+            path: '/lessons',
             element: (
                 <>
                     <div className="father">父级</div>
@@ -91,44 +112,24 @@ export function RouterCom2() {
             ),
             children: [
                 {
-                    path: 'day-1', // http://localhost:3000/lesson/day-1
+                    path: 'day1',
                     element: <div className="son1">儿子1：day-1</div>,
                 },
-                // 孙子级路由
                 {
-                    path: 'day-2', // http://localhost:3000/lesson/day-1
+                    path: 'day2',
                     element: (
-
                         <>
                             <div className="son2">儿子2：day-2</div>
                             <Outlet />
                         </>
                     ),
-                    children: [
-                        {
-                            path: 'day-2-a',
-                            element: (
-                                <div className="grandson">孙子：day-2-a</div>
-                            ),
-                        },
-                    ],
                 },
             ],
         },
-        // 动态路由
-        { path: 'lesson/:context', element: <Day10Com /> },
+
         {
-            path: '/404',
-            element: LazyLoad('no-found')
+            path: '/package-preview',
+            element: LazyLoad('装箱demo'),
         },
-        // 重定向 404
-        {
-            path: '*',
-            element: <Navigate to="/404" />,
-        },
-        // {
-        //     path: '*',
-        //     element: <Redirect to="/404" />,
-        // },
     ]);
 }

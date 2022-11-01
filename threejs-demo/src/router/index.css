@@ -1,22 +1,31 @@
-.father{
+.father {
     width: 400px;
     height: 200px;
     background-color: cadetblue;
 }
-.son1{
+
+.son1 {
     width: 200px;
     height: 100px;
     background-color: tomato;
 }
 
-.son2{
+.son2 {
     width: 200px;
     height: 100px;
     background-color: slateblue;
 }
 
-.grandson{
+.grandson {
     width: 100px;
     height: 50px;
     background-color: yellowgreen;
+}
+
+.ant-menu-item-icon {
+    font-size: 24px !important;
+}
+
+.ant-menu-title-content {
+    margin-left: 5px !important;
 }

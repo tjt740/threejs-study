@@ -55,6 +55,8 @@ const LazyLoad = (path) => {
     );
 };
 
+// Tjt: 以后只需要维护这一个路由就可以了
+// Ps:  iconfont地址:  https://www.iconfont.cn/manage/index?spm=a313x.7781069.1998910419.db775f1f3&manage_type=myprojects&projectId=3387028&keyword=&project_type=&page=
 export const routerPaths = [
     {
         label: '学习内容',
@@ -64,18 +66,20 @@ export const routerPaths = [
             {
                 label: '学习-1',
                 icon: <MyIcon type="icon-danta" />,
+                elementPath: 'lessons/day1',
                 key: 'lessons/day1',
             },
         ],
     },
     {
-        label: '案例/实操',
+        label: '案例 / 实操',
         icon: <MyIcon type="icon-anliku" />,
         key: Math.random(),
         children: [
             {
                 label: '装箱demo',
                 icon: <MyIcon type="icon-zhixiang_niupizhixiang-15" />,
+                elementPath: '装箱demo',
                 key: 'package-preview',
             },
         ],
@@ -84,7 +88,7 @@ export const routerPaths = [
 
 export function RouterCom2() {
     // 固定路由配置
-    const FIXEDROUTE = [
+    const FIXED_ROUTE = [
         // 默认路由
         {
             path: '/',
@@ -100,36 +104,17 @@ export function RouterCom2() {
             element: <Navigate to="/404" />,
         },
     ];
-    return useRoutes([
-        // 多级路由
-        {
-            path: '/lessons',
-            element: (
-                <>
-                    <div className="father">父级</div>
-                    <Outlet />
-                </>
-            ),
-            children: [
-                {
-                    path: 'day1',
-                    element: <div className="son1">儿子1：day-1</div>,
-                },
-                {
-                    path: 'day2',
-                    element: (
-                        <>
-                            <div className="son2">儿子2：day-2</div>
-                            <Outlet />
-                        </>
-                    ),
-                },
-            ],
-        },
 
-        {
-            path: '/package-preview',
-            element: LazyLoad('装箱demo'),
-        },
-    ]);
+    // 路由枚举
+    const routerPathsEnum = routerPaths.reduce(
+        (prev, v) =>
+            prev.concat(
+                v.children.map((i) => {
+                    return { path: i.key, element: LazyLoad(i.elementPath) };
+                })
+            ),
+        []
+    );
+
+    return useRoutes([...routerPathsEnum, ...FIXED_ROUTE]);
 }

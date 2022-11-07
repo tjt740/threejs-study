@@ -82,7 +82,7 @@ export default function ThreeComponent() {
 
     return (
         <>
-            <h1> Three.js 组件 </h1>
+            
 
             <div id="container" ref={container}>
                 

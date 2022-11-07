@@ -4,8 +4,8 @@ import 'antd/dist/antd.css';
 import * as THREE from 'three';
 // 导入轨道控制器 只能通过这种方法
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+// import * as dat from 'dat.gui';
 // mockData
-import * as dat from 'dat.gui';
 import { mockData } from './mockData';
 
 let cartonWidth;
@@ -52,7 +52,7 @@ const renderer = new THREE.WebGLRenderer({
 // 初始化轨道控制器
 const controls = new OrbitControls(camera, renderer.domElement);
 // 三维坐标轴
-const axesHelper = new THREE.AxesHelper(40000);
+const axesHelper = new THREE.AxesHelper(5000);
 
 // gui控制器
 // const gui = new dat.GUI();
@@ -203,7 +203,6 @@ export default function PackagePreview3D() {
             materialBorder,
             new THREE.LineBasicMaterial({ color: 0xff131313 })
         );
-        scene.add(axesHelper);
         mesh.add(lineFrame);
         // 装箱复位
         mesh.position.set(
@@ -266,8 +265,14 @@ export default function PackagePreview3D() {
 
     const init = () => {
         // 实际canvas 宽高
-        WIDTH =
-            window.innerWidth -
+        WIDTH =  Number(
+                window
+                    .getComputedStyle(
+                        document.getElementById(
+                            'container'
+                        )
+                    )
+                .width.split('px')[0]) -
             Number(
                 window
                     .getComputedStyle(
@@ -277,6 +282,7 @@ export default function PackagePreview3D() {
                     )
                     .width.split('px')[0]
             );
+        
 
         document.getElementById('canvas-frame').style.width = WIDTH + 'px';
 
@@ -293,7 +299,7 @@ export default function PackagePreview3D() {
             y: 0,
             z: 200,
         });
-
+        scene.add(axesHelper);
         scene.add(camera);
         raycaster.intersectObjects(scene.children);
         renderer.outputEncoding = THREE.sRGBEncoding;
@@ -323,17 +329,24 @@ export default function PackagePreview3D() {
 
         // 根据页面大小变化，更新渲染
         window.addEventListener('resize', () => {
-            WIDTH =
-                window.innerWidth -
-                Number(
-                    window
-                        .getComputedStyle(
-                            document.getElementsByClassName(
-                                'ant-drawer-content-wrapper'
-                            )[0]
+            WIDTH =  Number(
+                window
+                    .getComputedStyle(
+                        document.getElementById(
+                            'container'
                         )
-                        .width.split('px')[0]
-                );
+                    )
+                .width.split('px')[0]) -
+            Number(
+                window
+                    .getComputedStyle(
+                        document.getElementsByClassName(
+                            'ant-drawer-content-wrapper'
+                        )[0]
+                    )
+                    .width.split('px')[0]
+            );
+        
 
             document.getElementById('canvas-frame').style.width = WIDTH + 'px';
 

@@ -1,49 +1,59 @@
 import PackagePreview3D from '../pages/装箱demo';
-import Day1Com from '../pages/lessons/day1';
-import Day10Com from '../pages/lessons/day10';
-import NoFound from '../pages/no-found';
-import { Redirect } from '../pages/redirect';
-import { Outlet, Route, Routes, useRoutes, Navigate } from 'react-router-dom';
+// import Day1Com from '../pages/lessons/day1';
+// import Day2Com from '../pages/lessons/day2';
+// import Day3Com from '../pages/lessons/day3';
+// import Day4Com from '../pages/lessons/day4';
+// import Day5Com from '../pages/lessons/day5';
+// import Day6Com from '../pages/lessons/day6';
+// import Day7Com from '../pages/lessons/day7';
+// import Day8Com from '../pages/lessons/day8';
+// import NoFound from '../pages/no-found';
+// import { Redirect } from '../pages/redirect';
+// import { Outlet, Route, Routes } from 'react-router-dom';
+
 import React from 'react';
+import { useRoutes, Navigate } from 'react-router-dom';
 import './index.css';
 import { createFromIconfontCN } from '@ant-design/icons';
 const MyIcon = createFromIconfontCN({
     scriptUrl: '//at.alicdn.com/t/c/font_3387028_u7gtdny4m09.js', // 在 iconfont.cn 上生成
 });
-// 不推荐路由组件
-export function RouterCom1() {
-    return (
-        <Routes>
-            {/* 2️⃣默认路由 */}
-            <Route path="/" element={<Day1Com />} />
-            {/* 3️⃣一级路由 */}
-            <Route path="/package-preview" element={<PackagePreview3D />} />
-            {/* http://localhost:3000/package-preview */}
-            {/* 4️⃣二级/多级路由  5️⃣<Outlet/>二级路由显示父级路由123 */}
-            <Route
-                path="/lessons"
-                element={
-                    <div>
-                        123 <Outlet />
-                    </div>
-                }
-            >
-                <Route path="day-1" element={<Day1Com />} />
-                {/* http://localhost:3000/lessons/day-1 */}
-            </Route>
-            {/* 6️⃣动态路由*/}
-            <Route
-                path="/lessons/:context"
-                element={<> /lessons:context</>}
-            ></Route>
-            {/* http://localhost:3000/lessons/tjt?age=23 */}
-            {/* 7️⃣重定向 404 */}
-            <Route path="/404" element={<NoFound />}></Route>
-            <Route path="*" element={<Navigate to="/404" />} />
-        </Routes>
-    );
-}
+// 不推荐路由组件 （一）
+// export function RouterCom1() {
+//     return (
+//         <Routes>
+//             {/* 2️⃣默认路由 */}
+//             <Route path="/" element={<Day1Com />} />
+//             {/* 3️⃣一级路由 */}
+//             <Route path="/package-preview" element={<PackagePreview3D />} />
+//             {/* http://localhost:3000/package-preview */}
+//             {/* 4️⃣二级/多级路由  5️⃣<Outlet/>二级路由显示父级路由123 */}
+//             <Route
+//                 path="/lessons"
+//                 element={
+//                     <div>
+//                         123 <Outlet />
+//                     </div>
+//                 }
+//             >
+//                 <Route path="day-1" element={<Day1Com />} />
+//                 {/* http://localhost:3000/lessons/day-1 */}
+//             </Route>
+//             {/* 6️⃣动态路由*/}
+//             <Route
+//                 path="/lessons/:context"
+//                 element={<> /lessons:context</>}
+//             ></Route>
+//             {/* http://localhost:3000/lessons/tjt?age=23 */}
+//             {/* 7️⃣重定向 404 */}
+//             <Route path="/404" element={<NoFound />}></Route>
+//             <Route path="*" element={<Navigate to="/404" />} />
+//         </Routes>
+//     );
+// }
 
+
+// （二）
 // 懒加载
 const LazyLoad = (path) => {
     //传入在view 下的路径
@@ -68,6 +78,48 @@ export const routerPaths = [
                 icon: <MyIcon type="icon-danta" />,
                 elementPath: 'lessons/day1',
                 key: 'lessons/day1',
+            },
+            {
+                label: '学习-2',
+                icon: <MyIcon type="icon-qingning" />,
+                elementPath: 'lessons/day2',
+                key: 'lessons/day2',
+            },
+            {
+                label: '学习-3',
+                icon: <MyIcon type="icon-lajiao" />,
+                elementPath: 'lessons/day3',
+                key: 'lessons/day3',
+            },
+            {
+                label: '学习-4',
+                icon: <MyIcon type="icon-shizi" />,
+                elementPath: 'lessons/day4',
+                key: 'lessons/day4',
+            },
+            {
+                label: '学习-5',
+                icon: <MyIcon type="icon-mojituo" />,
+                elementPath: 'lessons/day5',
+                key: 'lessons/day5',
+            },
+            {
+                label: '学习-6',
+                icon: <MyIcon type="icon-pijiu" />,
+                elementPath: 'lessons/day6',
+                key: 'lessons/day6',
+            },
+            {
+                label: '学习-7',
+                icon: <MyIcon type="icon-putaojiu" />,
+                elementPath: 'lessons/day7',
+                key: 'lessons/day7',
+            },
+            {
+                label: '学习-8',
+                icon: <MyIcon type="icon-kouxiangtang" />,
+                elementPath: 'lessons/day8',
+                key: 'lessons/day8',
             },
         ],
     },

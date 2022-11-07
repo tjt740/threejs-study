@@ -26,6 +26,10 @@ code {
   padding-left: 30px !important;
 }
 
+.ant-layout{
+  height: 100%;
+}
+
 .ant-layout.ant-layout-has-sider {
   flex-direction: row;
   height: 100%;
@@ -35,5 +39,10 @@ code {
   background: #fff;
   height: 100%;
   padding-top: 0;
-  padding: 20px;
+  
+}
+
+.container{
+  height: auto;
+  width: auto;
 }

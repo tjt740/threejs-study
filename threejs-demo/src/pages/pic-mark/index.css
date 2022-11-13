@@ -1,0 +1,44 @@
+
+
+.operation{
+    line-height: 50px;
+    /* background-color: #eeecec; */
+    /* box-shadow: 2px 0 6px rgb(0 21 41 / 35%); */
+    /* margin-bottom: 15px; */
+}
+
+.ant-btn{
+    margin-right: 5px;
+}
+
+
+.labelSelect{
+    padding: 10px 30px;
+    box-sizing: border-box;
+    margin-bottom: 15px;
+    line-height: 30px;
+    background-color: #ffffff;
+    box-shadow: 2px 0 6px rgb(0 21 41 / 35%);
+}
+
+.CateBox {
+    flex: 1;
+    color: green;
+    padding: 0px 0px 0px 30px;
+    background-color: #FDE6E0;
+}
+
+label {
+    display: inline-block;
+    width: 100px;
+    color: blue;
+}
+
+.Label {
+    padding: 0px 0px 20px 0px;
+}
+
+button {
+    padding: 5px;
+    width: 100px;
+}

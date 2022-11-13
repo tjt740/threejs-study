@@ -1,4 +1,5 @@
 import PackagePreview3D from '../pages/装箱demo';
+import PicMark from '../pages/pic-mark';
 // import Day1Com from '../pages/lessons/day1';
 // import Day2Com from '../pages/lessons/day2';
 // import Day3Com from '../pages/lessons/day3';
@@ -133,6 +134,19 @@ export const routerPaths = [
                 icon: <MyIcon type="icon-zhixiang_niupizhixiang-15" />,
                 elementPath: '装箱demo',
                 key: 'package-preview',
+            },
+        ],
+    },
+    {
+        label: '测试图片标注',
+        icon: <MyIcon type="icon-nailao" />,
+        key: Math.random(),
+        children: [
+            {
+                label: '图片标注',
+                icon: <MyIcon type="icon-feiyuguantou" />,
+                elementPath: 'pic-mark',
+                key: 'pic-mark',
             },
         ],
     },

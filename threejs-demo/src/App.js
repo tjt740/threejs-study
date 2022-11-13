@@ -13,13 +13,13 @@ const items = routerPaths.map((item, index) => ({
 }));
 
 function App() {
-    const [collapsed, setCollapsed] = useState(false);
+    const [collapsed, setCollapsed] = useState(true);
     const navigate = useNavigate();
     return (
         <>
             <Layout>
                 <Sider
-                    width={ 300}
+                    width={300}
                     collapsible
                     collapsed={collapsed}
                     onCollapse={(value) => setCollapsed(value)}

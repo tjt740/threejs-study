@@ -1,44 +1,41 @@
-
-
-.operation{
-    line-height: 50px;
-    /* background-color: #eeecec; */
-    /* box-shadow: 2px 0 6px rgb(0 21 41 / 35%); */
-    /* margin-bottom: 15px; */
-}
-
-.ant-btn{
-    margin-right: 5px;
-}
-
-
-.labelSelect{
-    padding: 10px 30px;
+.operation {
+    padding: 0px 30px;
     box-sizing: border-box;
-    margin-bottom: 15px;
-    line-height: 30px;
+    line-height: 50px;
     background-color: #ffffff;
     box-shadow: 2px 0 6px rgb(0 21 41 / 35%);
 }
 
-.CateBox {
-    flex: 1;
-    color: green;
-    padding: 0px 0px 0px 30px;
-    background-color: #FDE6E0;
+.ant-btn {
+    margin-right: 5px;
 }
 
-label {
-    display: inline-block;
-    width: 100px;
-    color: blue;
+
+.labelSelect {
+    margin-bottom: 10px;
+    line-height: 30px;
 }
 
-.Label {
-    padding: 0px 0px 20px 0px;
+.container {
+    width: 100%;
+    height: calc(100% - 90px);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
 }
 
-button {
-    padding: 5px;
-    width: 100px;
+#canvas {
+
+    width: auto;
+    height: auto;
+    box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%), 0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%);
+    overflow: auto;
+}
+
+.operation-area {
+    /* width: ; */
+    padding: 0 10px;
+    display: flex;
+    flex-direction: column;
 }

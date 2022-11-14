@@ -4,6 +4,7 @@ import { PlusOutlined, MinusOutlined } from '@ant-design/icons';
 import './FileSaver';
 import './index.css';
 import { colorChange } from './utils';
+import axios from 'axios';
 
 let canvas,
     obj = {},
@@ -77,24 +78,21 @@ export default function PicMark() {
     const [radioValue, setRadioValue] = useState(
         () => radioValueList[0]?.value
     );
+    // 初始化
     function init() {
         canvas = canvas.current;
-
-        console.log(canvas.width);
         canW = canvas.width;
         canH = canvas.height;
         ctx = canvas.getContext('2d');
         ctx.lineWidth = 3;
         flush_canvas();
-
         image.src = 'http://www.tietuku.cn/assets/img/error.svg';
         image.objects = [];
 
         // 加载图片
         image.onload = function () {
-            show_origin_img();
+            showOriginImg();
         };
-
         // 双击方法
         canvas.ondblclick = function (e) {
             enlargeIm(e, image);
@@ -104,7 +102,7 @@ export default function PicMark() {
         };
         canvas.onmouseup = function (e) {
             if (e.button === 2) {
-                show_origin_img();
+                showOriginImg();
             }
         };
         // 划线
@@ -144,12 +142,109 @@ export default function PicMark() {
                 obj.y = Math.min(p1.y, p2.y);
                 obj.w = Math.abs(p1.x - p2.x);
                 obj.h = Math.abs(p1.y - p2.y);
-                show_image(image);
+                showImage(image);
                 ctx.fillStyle = lineColorChange(obj.labelColor);
                 ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
                 ctx.save();
             }
         };
+    }
+    // 获取数据
+    function getData() {
+        axios
+            .get(
+                `https://search.heweather.com/find?location=杭州&key=bc08513d63c749aab3761f77d74fe820`
+            )
+            .then((res) => {
+                if (res.status === 200) {
+                    let data = {
+                        imgName: 'http://www.tietuku.cn/assets/img/error.svg',
+                        objValue: [
+                            {
+                                label: 'botany',
+                                labelColor: '#68228B',
+                                xMin: 100,
+                                xMax: 326,
+                                yMin: 44,
+                                yMax: 233,
+                                width: 226,
+                                height: 189,
+                            },
+                            {
+                                label: 'fruit',
+                                labelColor: '#FF82AB',
+                                xMin: 523,
+                                xMax: 752,
+                                yMin: 82,
+                                yMax: 303,
+                                width: 229,
+                                height: 221,
+                            },
+                            {
+                                label: 'botany',
+                                labelColor: '#68228B',
+                                xMin: 172,
+                                xMax: 371,
+                                yMin: 246,
+                                yMax: 496,
+                                width: 199,
+                                height: 250,
+                            },
+                            {
+                                label: 'coffee',
+                                labelColor: '#00CD00',
+                                xMin: 391,
+                                xMax: 520,
+                                yMin: 262,
+                                yMax: 425,
+                                width: 129,
+                                height: 163,
+                            },
+                            {
+                                label: 'carton',
+                                labelColor: '#00B2EE',
+                                xMin: 569,
+                                xMax: 750,
+                                yMin: 328,
+                                yMax: 482,
+                                width: 181,
+                                height: 154,
+                            },
+                            {
+                                label: 'tape',
+                                labelColor: '#DEB887',
+                                xMin: 949,
+                                xMax: 1152,
+                                yMin: 162,
+                                yMax: 355,
+                                width: 203,
+                                height: 193,
+                            },
+                        ],
+                    };
+
+                    console.log('data====>>>>>', data);
+
+                    const { imgName, objValue } = data;
+                    objValue.forEach((i) => {
+                        drawFill(
+                            imgName,
+                            i.xMin,
+                            i.yMin,
+                            i.xMax,
+                            i.yMax,
+                            i.labelColor
+                        );
+                        i.x = i.xMin;
+                    }
+                    );
+                    console.log(objValue);
+                    confirmBox(objValue);
+                    // showOriginImg();
+
+                    return;
+                }
+            });
     }
     //双击放大图片
     function enlargeIm(e, img) {
@@ -162,7 +257,7 @@ export default function PicMark() {
             img.focusY = imgXY[1];
             img.sizek *= 1.5;
             resetDataNewObj();
-            show_image(img);
+            showImage(img);
             return;
         }
     }
@@ -184,7 +279,7 @@ export default function PicMark() {
         return [imgX, imgY];
     }
     //在canvas上展示原图片
-    function show_origin_img() {
+    function showOriginImg() {
         flush_canvas();
         canvas = canvas.current || canvas;
         imW = canvas.width;
@@ -199,11 +294,10 @@ export default function PicMark() {
         image.focusX = imW / 2;
         image.focusY = imH / 2;
         resetDataNewObj();
-        show_image(image);
+        showImage(image);
     }
     //在canvas上展示图像对应的部分
-    function show_image(img) {
-        console.log(img.cutw);
+    function showImage(img) {
         flush_canvas();
         imgWK = img.width * img.sizek;
         imgHK = img.height * img.sizek;
@@ -261,9 +355,7 @@ export default function PicMark() {
             img.canw,
             img.canh
         );
-
-        console.log(img.canw, img.canh);
-        show_objects(img);
+        showObjects(img);
     }
     //图像上的点对应的canvas坐标
     function imageXYtoCanXY(img, x, y) {
@@ -272,7 +364,7 @@ export default function PicMark() {
         return [x, y];
     }
     //在canvas上显示已标注目标
-    function show_objects(img) {
+    function showObjects(img) {
         for (let i = 0; i < img.objects.length; i++) {
             target = img.objects[i];
             x = target.xMin;
@@ -286,11 +378,11 @@ export default function PicMark() {
             xm = p[0];
             ym = p[1];
             // 画填充
-            draw_fill(img, x, y, xm, ym, target.labelColor);
+            drawFill(img, x, y, xm, ym, target.labelColor);
         }
     }
     // 画填充
-    function draw_fill(img, x1, y1, x2, y2, color) {
+    function drawFill(img, x1, y1, x2, y2, color) {
         ctx.fillStyle = lineColorChange(color);
         ctx.beginPath();
         ctx.lineTo(x2, y1);
@@ -318,7 +410,7 @@ export default function PicMark() {
         setRadioValue(e.target.value);
     };
     // 确认框
-    function confirmBox() {
+    function confirmBox(resData) {
         if ('w' in obj && obj.w !== 0) {
             xMin = obj.x;
             yMin = obj.y;
@@ -331,9 +423,18 @@ export default function PicMark() {
             obj.xMax = pMax[0];
             obj.yMax = pMax[1];
             image.objects.push(obj);
-            show_origin_img();
+            showOriginImg();
+            console.log(`1`,image.objects)
             return true;
         }
+        if (resData?.length) { 
+            console.log(2, resData);
+            // flush_canvas();
+            resetDataNewObj();
+            // todo: 回填渲染
+            // showImage(image);
+        } 
+        console.log(3,resData)
         return false;
     }
     // 颜色转换
@@ -347,9 +448,10 @@ export default function PicMark() {
             const objValue = [];
             for (let i = 0; i < num; i++) {
                 target = image.objects[i];
-
+          
                 objValue.push({
                     label: target.label,
+                    labelColor: target.labelColor,
                     xMin: parseInt(target.xMin),
                     xMax: parseInt(target.xMax),
                     yMin: parseInt(target.yMin),
@@ -358,19 +460,16 @@ export default function PicMark() {
                     height: parseInt(target.h),
                 });
             }
-
+            // Tjt: key 数据
             const imRes = { imgName: image.src, objValue };
             const blob = new Blob([JSON.stringify(imRes)], { type: '' });
             const imgName = image.src.split('.')[0];
             const jsonFile = imgName + '.json';
             saveJson(jsonFile, blob);
-            // imgInd += 1
-            // openIndIm()
             return;
         }
         alert('未进行任何标注');
     };
-
     //保存json文件
     function saveJson(file, data) {
         //下载为json文件
@@ -388,13 +487,17 @@ export default function PicMark() {
 
     useEffect(() => {
         init();
+        // 获取已存的数据;
+        setTimeout(() => { 
+            getData();
+        },0)
     }, []);
 
     useEffect(() => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
         selectValue = radioValueList.filter((i) => i.value === radioValue);
         resetDataNewObj();
-        show_image(image);
+        showImage(image);
         ctx.fillStyle = lineColorChange(selectValue?.at(0)?.labelColor);
         ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
         ctx.save();
@@ -425,7 +528,7 @@ export default function PicMark() {
                         type="dashed"
                         onClick={() => {
                             image.objects = [];
-                            show_origin_img();
+                            showOriginImg();
                         }}
                     >
                         重新标注图片
@@ -454,21 +557,6 @@ export default function PicMark() {
                     <canvas width="1920" height="1080" ref={canvas}></canvas>
                 </div>
             </div>
-
-            {/* <label htmlFor="imgSelector" className="btn btn-success
-                    打开图片路径
-                </label>
-                <input
-                    type="file"
-                    id="imgSelector"
-                    name="imgFile"
-                    webkitdirectory="true"
-                    directory="true"
-                    multiple={ true}
-                />
-                <button id="gotoIm">
-                    转到图片...
-                </button>  */}
         </>
     );
 }

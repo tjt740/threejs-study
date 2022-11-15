@@ -53,8 +53,20 @@
 }
 
 .operation-area {
-    /* width: ; */
     padding: 0 10px;
+    width: 200px;
+    height: auto;
+    margin-left: 5px;
+    box-shadow: 2px 0 6px rgb(0 21 41 / 35%);
+}
+
+.card-title {
+    align-items: center;
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
+    font-size: 1.25rem;
+    font-weight: 500;
+    letter-spacing: .0125em;
+    line-height: 2rem;
+    word-break: break-all;
 }

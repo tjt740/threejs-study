@@ -43,6 +43,7 @@ let canvas,
     mouseX,
     mouseY,
     imgXY,
+    resValue = [],
     flag_drawBbox = false;
 
 export default function PicMark() {
@@ -143,7 +144,7 @@ export default function PicMark() {
                 obj.w = Math.abs(p1.x - p2.x);
                 obj.h = Math.abs(p1.y - p2.y);
                 showImage(image);
-                ctx.fillStyle = lineColorChange(obj.labelColor);
+                ctx.fillStyle = utilsColorChange(obj.labelColor);
                 ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
                 ctx.save();
             }
@@ -223,8 +224,6 @@ export default function PicMark() {
                         ],
                     };
 
-                    console.log('data====>>>>>', data);
-
                     const { imgName, objValue } = data;
                     objValue.forEach((i) => {
                         drawFill(
@@ -235,13 +234,14 @@ export default function PicMark() {
                             i.yMax,
                             i.labelColor
                         );
-                        i.x = i.xMin;
-                    }
-                    );
-                    console.log(objValue);
-                    confirmBox(objValue);
-                    // showOriginImg();
+                        i.x = i.xMin + 1;
+                        i.y = i.yMin + 1;
+                        i.w = i.xMax - i.xMin;
+                        i.h = i.yMax - i.yMin;
+                    });
 
+                    resValue = objValue;
+                    confirmBox(objValue);
                     return;
                 }
             });
@@ -252,6 +252,7 @@ export default function PicMark() {
         mouseY = e.offsetY;
 
         if (canXYonImage(mouseX, mouseY)) {
+            console.log(111);
             imgXY = canXYtoImageXY(img, mouseX, mouseY);
             img.focusX = imgXY[0];
             img.focusY = imgXY[1];
@@ -383,7 +384,7 @@ export default function PicMark() {
     }
     // 画填充
     function drawFill(img, x1, y1, x2, y2, color) {
-        ctx.fillStyle = lineColorChange(color);
+        ctx.fillStyle = utilsColorChange(color);
         ctx.beginPath();
         ctx.lineTo(x2, y1);
         ctx.lineTo(x2, y2);
@@ -424,21 +425,19 @@ export default function PicMark() {
             obj.yMax = pMax[1];
             image.objects.push(obj);
             showOriginImg();
-            console.log(`1`,image.objects)
             return true;
         }
-        if (resData?.length) { 
-            console.log(2, resData);
-            // flush_canvas();
+        if (resData?.length) {
+            image.objects = resData;
             resetDataNewObj();
-            // todo: 回填渲染
-            // showImage(image);
-        } 
-        console.log(3,resData)
+            showOriginImg();
+            return true;
+        }
+        // 没有划线路线
         return false;
     }
     // 颜色转换
-    const lineColorChange = (color) => {
+    const utilsColorChange = (color) => {
         return colorChange.hexToRgb(color || '#000000').rgba;
     };
     //保存标注结果
@@ -448,7 +447,7 @@ export default function PicMark() {
             const objValue = [];
             for (let i = 0; i < num; i++) {
                 target = image.objects[i];
-          
+
                 objValue.push({
                     label: target.label,
                     labelColor: target.labelColor,
@@ -488,9 +487,9 @@ export default function PicMark() {
     useEffect(() => {
         init();
         // 获取已存的数据;
-        setTimeout(() => { 
+        setTimeout(() => {
             getData();
-        },0)
+        }, 0);
     }, []);
 
     useEffect(() => {
@@ -498,7 +497,7 @@ export default function PicMark() {
         selectValue = radioValueList.filter((i) => i.value === radioValue);
         resetDataNewObj();
         showImage(image);
-        ctx.fillStyle = lineColorChange(selectValue?.at(0)?.labelColor);
+        ctx.fillStyle = utilsColorChange(selectValue?.at(0)?.labelColor);
         ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
         ctx.save();
     }, [radioValue]);
@@ -514,19 +513,21 @@ export default function PicMark() {
                     />
                     <Button
                         onClick={() => {
-                            if (!confirmBox()) {
-                                alert('未选择目标区域！');
+                            if (resValue.length) {
+                                !confirmBox(resValue) &&
+                                    alert('未选择目标区域！');
+                                return;
                             }
+                            !confirmBox() && alert('未选择目标区域！');
                         }}
                     >
                         确认
                     </Button>
-
                     <Button onClick={() => saveObj()}>完成图片标注</Button>
-
                     <Button
                         type="dashed"
                         onClick={() => {
+                            resValue = [];
                             image.objects = [];
                             showOriginImg();
                         }}
@@ -555,6 +556,10 @@ export default function PicMark() {
             <div className="container">
                 <div id="canvas">
                     <canvas width="1920" height="1080" ref={canvas}></canvas>
+                </div>
+
+                <div className="operation-area">
+                    <div className="card-title">操作</div>
                 </div>
             </div>
         </>

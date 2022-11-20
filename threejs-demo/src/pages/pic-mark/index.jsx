@@ -5,6 +5,7 @@ import './FileSaver';
 import './index.css';
 import { colorChange } from './utils';
 import axios from 'axios';
+import cnames from 'classnames';
 
 let canvas,
     obj = {},
@@ -26,7 +27,8 @@ let canvas,
     imW,
     imH,
     color,
-    lab,
+    label,
+    value,
     imgWK,
     imgHK,
     lenIm,
@@ -45,39 +47,39 @@ let canvas,
     imgXY,
     resValue = [],
     flag_drawBbox = false;
-
+const radioValueList = [
+    {
+        label: '植物',
+        value: 'botany',
+        labelColor: '#68228B',
+    },
+    {
+        label: '水果',
+        value: 'fruit',
+        labelColor: '#FF82AB',
+    },
+    {
+        label: '咖啡',
+        value: 'coffee',
+        labelColor: '#00CD00',
+    },
+    {
+        label: '纸箱',
+        value: 'carton',
+        labelColor: '#00B2EE',
+    },
+    {
+        label: '磁带',
+        value: 'tape',
+        labelColor: '#DEB887',
+    },
+];
 export default function PicMark() {
     canvas = useRef(null);
-    let selectValue;
-    const radioValueList = [
-        {
-            label: '植物',
-            value: 'botany',
-            labelColor: '#68228B',
-        },
-        {
-            label: '水果',
-            value: 'fruit',
-            labelColor: '#FF82AB',
-        },
-        {
-            label: '咖啡',
-            value: 'coffee',
-            labelColor: '#00CD00',
-        },
-        {
-            label: '纸箱',
-            value: 'carton',
-            labelColor: '#00B2EE',
-        },
-        {
-            label: '磁带',
-            value: 'tape',
-            labelColor: '#DEB887',
-        },
-    ];
+    let selectValue = radioValueList?.at(0);
+    const [objValueArr, setObjValueArr] = useState([]);
     const [radioValue, setRadioValue] = useState(
-        () => radioValueList[0]?.value
+        () => radioValueList?.at(0)?.value
     );
     // 初始化
     function init() {
@@ -96,7 +98,7 @@ export default function PicMark() {
         };
         // 双击方法
         canvas.ondblclick = function (e) {
-            enlargeIm(e, image);
+            enlargedPicture(e, image);
         };
         canvas.oncontextmenu = function (e) {
             e.preventDefault();
@@ -162,70 +164,165 @@ export default function PicMark() {
                         imgName: 'http://www.tietuku.cn/assets/img/error.svg',
                         objValue: [
                             {
-                                label: 'botany',
+                                label: '植物',
                                 labelColor: '#68228B',
-                                xMin: 100,
-                                xMax: 326,
-                                yMin: 44,
-                                yMax: 233,
-                                width: 226,
-                                height: 189,
+                                value: 'botany',
+                                keyId: '0.9097',
+                                xMin: 110,
+                                xMax: 236,
+                                yMin: 65,
+                                yMax: 208,
+                                width: 126,
+                                height: 143,
                             },
                             {
-                                label: 'fruit',
-                                labelColor: '#FF82AB',
-                                xMin: 523,
-                                xMax: 752,
-                                yMin: 82,
-                                yMax: 303,
-                                width: 229,
-                                height: 221,
-                            },
-                            {
-                                label: 'botany',
+                                label: '植物',
                                 labelColor: '#68228B',
-                                xMin: 172,
-                                xMax: 371,
-                                yMin: 246,
-                                yMax: 496,
-                                width: 199,
-                                height: 250,
+                                value: 'botany',
+                                keyId: '0.2382',
+                                xMin: 266,
+                                xMax: 366,
+                                yMin: 64,
+                                yMax: 208,
+                                width: 100,
+                                height: 144,
                             },
                             {
-                                label: 'coffee',
+                                label: '植物',
+                                labelColor: '#68228B',
+                                value: 'botany',
+                                keyId: '0.1336',
+                                xMin: 416,
+                                xMax: 516,
+                                yMin: 64,
+                                yMax: 206,
+                                width: 100,
+                                height: 142,
+                            },
+                            {
+                                label: '咖啡',
                                 labelColor: '#00CD00',
-                                xMin: 391,
-                                xMax: 520,
-                                yMin: 262,
-                                yMax: 425,
-                                width: 129,
-                                height: 163,
+                                value: 'coffee',
+                                keyId: '0.7728',
+                                xMin: 190,
+                                xMax: 280,
+                                yMin: 241,
+                                yMax: 371,
+                                width: 90,
+                                height: 130,
                             },
                             {
-                                label: 'carton',
+                                label: '咖啡',
+                                labelColor: '#00CD00',
+                                value: 'coffee',
+                                keyId: '0.7403',
+                                xMin: 352,
+                                xMax: 486,
+                                yMin: 241,
+                                yMax: 390,
+                                width: 134,
+                                height: 149,
+                            },
+                            {
+                                label: '水果',
+                                labelColor: '#FF82AB',
+                                value: 'fruit',
+                                keyId: '0.4778',
+                                xMin: 528,
+                                xMax: 696,
+                                yMin: 219,
+                                yMax: 324,
+                                width: 168,
+                                height: 105,
+                            },
+                            {
+                                label: '纸箱',
                                 labelColor: '#00B2EE',
-                                xMin: 569,
-                                xMax: 750,
-                                yMin: 328,
-                                yMax: 482,
-                                width: 181,
-                                height: 154,
+                                value: 'carton',
+                                keyId: '0.5362',
+                                xMin: 729,
+                                xMax: 953,
+                                yMin: 37,
+                                yMax: 261,
+                                width: 224,
+                                height: 224,
                             },
                             {
-                                label: 'tape',
-                                labelColor: '#DEB887',
-                                xMin: 949,
-                                xMax: 1152,
-                                yMin: 162,
-                                yMax: 355,
+                                label: '纸箱',
+                                labelColor: '#00B2EE',
+                                value: 'carton',
+                                keyId: '0.3866',
+                                xMin: 1038,
+                                xMax: 1248,
+                                yMin: 167,
+                                yMax: 420,
+                                width: 210,
+                                height: 253,
+                            },
+                            {
+                                label: '纸箱',
+                                labelColor: '#00B2EE',
+                                value: 'carton',
+                                keyId: '0.2151',
+                                xMin: 1220,
+                                xMax: 1423,
+                                yMin: 20,
+                                yMax: 229,
                                 width: 203,
-                                height: 193,
+                                height: 209,
+                            },
+                            {
+                                label: '磁带',
+                                labelColor: '#DEB887',
+                                value: 'tape',
+                                keyId: '0.2404',
+                                xMin: 616,
+                                xMax: 967,
+                                yMin: 537,
+                                yMax: 776,
+                                width: 351,
+                                height: 239,
+                            },
+                            {
+                                label: '磁带',
+                                labelColor: '#DEB887',
+                                value: 'tape',
+                                keyId: '0.9110',
+                                xMin: 173,
+                                xMax: 406,
+                                yMin: 554,
+                                yMax: 830,
+                                width: 233,
+                                height: 276,
+                            },
+                            {
+                                label: '磁带',
+                                labelColor: '#DEB887',
+                                value: 'tape',
+                                keyId: '0.1834',
+                                xMin: 1249,
+                                xMax: 1444,
+                                yMin: 492,
+                                yMax: 699,
+                                width: 195,
+                                height: 207,
+                            },
+                            {
+                                label: '咖啡',
+                                labelColor: '#00CD00',
+                                value: 'coffee',
+                                keyId: '0.9641',
+                                xMin: 877,
+                                xMax: 1077,
+                                yMin: 500,
+                                yMax: 703,
+                                width: 200,
+                                height: 203,
                             },
                         ],
                     };
-
                     const { imgName, objValue } = data;
-                    objValue.forEach((i) => {
+                    objValue?.forEach((i) => {
                         drawFill(
                             imgName,
                             i.xMin,
@@ -238,8 +335,12 @@ export default function PicMark() {
                         i.y = i.yMin + 1;
                         i.w = i.xMax - i.xMin;
                         i.h = i.yMax - i.yMin;
+                        // Tjt: 眼睛图标打开
+                        i.isShow = true;
+                        // Tjt: 是否选中
+                        i.isSelect = false;
                     });
-
+                    setObjValueArr(objValue);
                     resValue = objValue;
                     confirmBox(objValue);
                     return;
@@ -247,20 +348,35 @@ export default function PicMark() {
             });
     }
     //双击放大图片
-    function enlargeIm(e, img) {
-        mouseX = e.offsetX;
-        mouseY = e.offsetY;
-
+    function enlargedPicture(e, img) {
+        if (e) {
+            mouseX = e.offsetX;
+            mouseY = e.offsetY;
+        } else {
+            mouseX = 1;
+            mouseY = 1;
+        }
         if (canXYonImage(mouseX, mouseY)) {
-            console.log(111);
             imgXY = canXYtoImageXY(img, mouseX, mouseY);
             img.focusX = imgXY[0];
             img.focusY = imgXY[1];
-            img.sizek *= 1.5;
+            img.sizek *= 1.2;
             resetDataNewObj();
             showImage(img);
             return;
         }
+    }
+    // 缩小图片
+    function zoomOutPicture(img) {
+        mouseX = 1;
+        mouseY = 1;
+        imgXY = canXYtoImageXY(img, mouseX, mouseY);
+        imgXY = [1, 1];
+        img.focusX = imgXY[0];
+        img.focusY = imgXY[1];
+        img.sizek *= 0.9;
+        resetDataNewObj();
+        showImage(img);
     }
     //判断点是否在image上
     function canXYonImage(x, y) {
@@ -303,47 +419,47 @@ export default function PicMark() {
         imgWK = img.width * img.sizek;
         imgHK = img.height * img.sizek;
 
-        if (canW > imgWK) {
+        // if (canW > imgWK) {
+        //     img.cutx = 0;
+        //     img.canx = (canW - imgWK) / 2;
+        //     img.cutw = img.width;
+        //     img.canw = imgWK;
+        // } else {
+        img.canx = 0;
+        img.canw = canW;
+        lenIm = canW / img.sizek;
+        img.cutw = lenIm;
+        xl = img.focusX - lenIm / 2;
+        xr = img.focusX + lenIm / 2;
+        img.cutx = xl;
+        if (xl < 0) {
             img.cutx = 0;
-            img.canx = (canW - imgWK) / 2;
-            img.cutw = img.width;
-            img.canw = imgWK;
-        } else {
-            img.canx = 0;
-            img.canw = canW;
-            lenIm = canW / img.sizek;
-            img.cutw = lenIm;
-            xl = img.focusX - lenIm / 2;
-            xr = img.focusX + lenIm / 2;
-            img.cutx = xl;
-            if (xl < 0) {
-                img.cutx = 0;
-            }
-            if (xr >= img.width) {
-                img.cutx = xl - (xr - img.width + 1);
-            }
         }
+        if (xr >= img.width) {
+            img.cutx = xl - (xr - img.width + 1);
+        }
+        // }
 
-        if (canH > imgHK) {
+        // if (canH > imgHK) {
+        //     img.cuty = 0;
+        //     img.cany = (canH - imgHK) / 2;
+        //     img.cuth = img.height;
+        //     img.canh = imgHK;
+        // } else {
+        img.cany = 0;
+        img.canh = canH;
+        lenIm = canH / img.sizek;
+        img.cuth = lenIm;
+        yu = img.focusY - lenIm / 2;
+        yd = img.focusY + lenIm / 2;
+        img.cuty = yu;
+        if (yu < 0) {
             img.cuty = 0;
-            img.cany = (canH - imgHK) / 2;
-            img.cuth = img.height;
-            img.canh = imgHK;
-        } else {
-            img.cany = 0;
-            img.canh = canH;
-            lenIm = canH / img.sizek;
-            img.cuth = lenIm;
-            yu = img.focusY - lenIm / 2;
-            yd = img.focusY + lenIm / 2;
-            img.cuty = yu;
-            if (yu < 0) {
-                img.cuty = 0;
-            }
-            if (yd >= img.height) {
-                img.cuty = yu - (yd - img.height + 1);
-            }
         }
+        if (yd >= img.height) {
+            img.cuty = yu - (yd - img.height + 1);
+        }
+        // }
         // 先把图片缩放成画布比例的大小，否则直接设置图片宽高图片展示不完整
         ctx.drawImage(
             img,
@@ -396,12 +512,16 @@ export default function PicMark() {
     // 充值obj
     function resetDataNewObj() {
         obj = {};
-        color = selectValue?.at(0)?.labelColor;
-        lab = selectValue?.at(0)?.value;
+        color = selectValue?.[0]?.labelColor || selectValue?.labelColor;
+        value = selectValue?.[0]?.value || selectValue?.value;
+        label = selectValue?.[0]?.label || selectValue?.label;
+        // 塞入数据到obj
         obj.labelColor = color;
-        obj.label = lab;
+        obj.value = value;
+        obj.label = label;
+        obj.keyId = Math.random().toFixed(4);
     }
-    //背景画布
+    //  背景画布
     function flush_canvas() {
         ctx.fillStyle = 'rgb(255, 255, 255)';
         ctx.fillRect(0, 0, canW, canH);
@@ -442,15 +562,15 @@ export default function PicMark() {
     };
     //保存标注结果
     const saveObj = () => {
-        const num = image.objects.length;
-        if (num) {
-            const objValue = [];
-            for (let i = 0; i < num; i++) {
+        if (image?.objects?.length) {
+            const objArr = [];
+            for (let i = 0; i < image?.objects?.length; i++) {
                 target = image.objects[i];
-
-                objValue.push({
+                objArr.push({
                     label: target.label,
                     labelColor: target.labelColor,
+                    value: target.value,
+                    keyId: target.keyId,
                     xMin: parseInt(target.xMin),
                     xMax: parseInt(target.xMax),
                     yMin: parseInt(target.yMin),
@@ -459,8 +579,10 @@ export default function PicMark() {
                     height: parseInt(target.h),
                 });
             }
-            // Tjt: key 数据
-            const imRes = { imgName: image.src, objValue };
+            selectValue = objArr;
+            console.log('标注数组：', objArr);
+            // Tjt: 传给后端的数据
+            const imRes = { imgName: image.src, objArr };
             const blob = new Blob([JSON.stringify(imRes)], { type: '' });
             const imgName = image.src.split('.')[0];
             const jsonFile = imgName + '.json';
@@ -484,6 +606,9 @@ export default function PicMark() {
         document.body.removeChild(Link);
     }
 
+    // 显隐标注
+    
+
     useEffect(() => {
         init();
         // 获取已存的数据;
@@ -497,7 +622,7 @@ export default function PicMark() {
         selectValue = radioValueList.filter((i) => i.value === radioValue);
         resetDataNewObj();
         showImage(image);
-        ctx.fillStyle = utilsColorChange(selectValue?.at(0)?.labelColor);
+        ctx.fillStyle = utilsColorChange(selectValue?.labelColor);
         ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
         ctx.save();
     }, [radioValue]);
@@ -505,11 +630,15 @@ export default function PicMark() {
         <>
             <header>
                 <div className="operation">
-                    <Button type="primary" icon={<MinusOutlined />} />
+                    <Button
+                        type="primary"
+                        icon={<MinusOutlined />}
+                        onClick={() => zoomOutPicture(image)}
+                    />
                     <Button
                         type="primary"
                         icon={<PlusOutlined />}
-                        onClick={(e) => enlargeIm(e, image)}
+                        onClick={() => enlargedPicture(null, image)}
                     />
                     <Button
                         onClick={() => {
@@ -560,6 +689,56 @@ export default function PicMark() {
 
                 <div className="operation-area">
                     <div className="card-title">操作</div>
+                    <ul className="radio-label">
+                       
+                        {objValueArr?.map((v, i) => (
+                            <li
+                                className={cnames(
+                                    'li-radio-content',
+                                    v.isSelect && v.isShow
+                                        ? 'radio-select'
+                                        : null,
+                                    v.isShow ? null : 'opacity'
+                                )}
+                                key={v.keyId}
+                                onClick={() => {
+                                    [...objValueArr].forEach(
+                                        (item) => (item.isSelect = false)
+                                    );
+                                    objValueArr[i].isSelect = true;
+                                    setObjValueArr([...objValueArr]);
+                                }}
+                            >
+                                <div
+                                    className="li-radio"
+                                    style={{ background: v.labelColor }}
+                                >
+                                    {v.label}
+                                </div>
+                                <div className="li-operation">
+                                    <i
+                                        className={cnames(
+                                            'iconfont',
+                                            v.isShow ? 'tjtyanjing' : 'tjtbiyan'
+                                        )}
+                                        onClick={() => {
+                                            objValueArr[i].isShow =
+                                                !objValueArr[i].isShow;
+                                            setObjValueArr([...objValueArr]);
+                                            console.log([...objValueArr])
+                                            console.log('isShow===>', i);
+                                        }}
+                                    ></i>
+                                    <i
+                                        className="iconfont tjtlajitong1"
+                                        onClick={() => {
+                                            console.log(i);
+                                        }}
+                                    ></i>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
             </div>
         </>

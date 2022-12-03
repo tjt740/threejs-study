@@ -1,5 +1,6 @@
 import PackagePreview3D from '../pages/装箱demo';
 import PicMark from '../pages/pic-mark';
+import TextMark from '../pages/text-mark';
 // import Day1Com from '../pages/lessons/day1';
 // import Day2Com from '../pages/lessons/day2';
 // import Day3Com from '../pages/lessons/day3';
@@ -150,6 +151,21 @@ export const routerPaths = [
             },
         ],
     },
+    {
+        label: '测试文本标注',
+        icon: <MyIcon type="icon-doujiang" />,
+        key: Math.random(),
+        children: [
+            {
+                label: '文本标注',
+                icon: <MyIcon type="icon-dangaojuan" />,
+                elementPath: 'text-mark',
+                key: 'text-mark',
+            },
+        ],
+    },
+
+    
 ];
 
 export function RouterCom2() {

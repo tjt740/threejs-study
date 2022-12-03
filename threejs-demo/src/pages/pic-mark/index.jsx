@@ -607,7 +607,6 @@ export default function PicMark() {
     }
 
     // 显隐标注
-    
 
     useEffect(() => {
         init();
@@ -615,6 +614,8 @@ export default function PicMark() {
         setTimeout(() => {
             getData();
         }, 0);
+
+ 
     }, []);
 
     useEffect(() => {
@@ -690,7 +691,6 @@ export default function PicMark() {
                 <div className="operation-area">
                     <div className="card-title">操作</div>
                     <ul className="radio-label">
-                       
                         {objValueArr?.map((v, i) => (
                             <li
                                 className={cnames(
@@ -725,7 +725,7 @@ export default function PicMark() {
                                             objValueArr[i].isShow =
                                                 !objValueArr[i].isShow;
                                             setObjValueArr([...objValueArr]);
-                                            console.log([...objValueArr])
+                                            console.log([...objValueArr]);
                                             console.log('isShow===>', i);
                                         }}
                                     ></i>

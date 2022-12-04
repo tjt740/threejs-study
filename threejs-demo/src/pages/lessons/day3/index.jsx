@@ -1,9 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
-
 /*
-    *  XYZ 3维坐标 new THREE.AxesHelper(7); 7:XYZ长度
+ *  XYZ 3维坐标 new THREE.AxesHelper(7); 7:XYZ长度
  */
 
 export default function ThreeComponent() {
@@ -43,7 +42,6 @@ export default function ThreeComponent() {
         // Step2 坐标辅助线添加到场景中
         scene.add(axesHelper);
 
-     
         render();
 
         // DOM承载渲染器
@@ -57,11 +55,7 @@ export default function ThreeComponent() {
 
     return (
         <>
-            <h1> Three.js 组件 </h1>
-
-            <div id="container" ref={container}>
-                
-            </div>
+            <div id="container" ref={container}></div>
         </>
     );
 }

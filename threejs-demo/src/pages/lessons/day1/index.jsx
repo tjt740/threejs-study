@@ -10,48 +10,54 @@ export default function Demo1Component() {
     const init = () => {
         // Step1 创建场景
         const scene = new THREE.Scene();
+        // 场景颜色
+        scene.background = new THREE.Color(0x999999);
 
-        /* Step2 创建透视相机 (
-            视野角度,
-            宽高比 宽/高:,
-            近截面: 距离小于多少不渲染,
-            远截面: 距离远于多少不渲染, 
-            )
-        */
+        // Step2 创建 透视摄像机
         const camera = new THREE.PerspectiveCamera(
             90,
             window.innerWidth / window.innerHeight,
-            0.1,
+            1,
             1000
         );
-
         // Step3 设置相机位置
-        camera.position.set(0, 0, 10);
-
-        // Step4 场景中添加相机
+        camera.position.set(0, 0, 100);
+        // Step4 将camera 添加到scene
         scene.add(camera);
 
-        // Step5 创建几何体  http://localhost:8080/docs/index.html#api/zh/geometries/BoxGeometry
-        const geometry = new THREE.BoxGeometry(2, 3, 4);
-        const material = new THREE.MeshBasicMaterial({ color: 0xffe5cd61 });
-        // Step6 根据几何体和材质创建物体
+        // Step5 创建立方体几何体
+        const geometry = new THREE.BoxGeometry(30, 30, 30);
+        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
         const cube = new THREE.Mesh(geometry, material);
-        // Step7 场景添加 物体
+
+        // Step6 场景中添加物体
         scene.add(cube);
 
-        // Step8 初始化<渲染器>
+        // Step7 创建 渲染器
         const renderer = new THREE.WebGLRenderer();
+        const WIDTH = Number(
+            window
+                .getComputedStyle(
+                    document.getElementsByClassName('ant-layout-content')[0]
+                )
+                .width.split('px')[0]
+        );
 
-        // Step9 设置渲染器大小
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        console.log(renderer);
+        const HEIGHT = Number(
+            window
+                .getComputedStyle(
+                    document.getElementsByClassName('ant-layout-content')[0]
+                )
+                .height.split('px')[0]
+        );
 
-        // Step10 渲染器渲染
+        console.log(cube)
+        // Step8 修改渲染器大小
+        renderer.setSize(WIDTH, HEIGHT);
+
+        // Step9 渲染器渲染 场景+相机
         renderer.render(scene, camera);
-
-        // Step11 将WebGL 渲染的内容添加到dom上
-
-        // console.log(container);
+        console.log(container)
         // @ts-ignore
         container.current.appendChild(renderer.domElement);
     };
@@ -63,7 +69,6 @@ export default function Demo1Component() {
 
     return (
         <>
-            <h1> Three.js 组件 </h1>
             <div id="container" ref={container}></div>
         </>
     );

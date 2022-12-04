@@ -26,13 +26,25 @@ code {
   padding-left: 30px !important;
 }
 
+.ant-layout {
+  height: 100%;
+}
+
 .ant-layout.ant-layout-has-sider {
   flex-direction: row;
   height: 100%;
 }
 
 .ant-layout-content {
+  display: flex;
+  flex-direction: column;
   background: #fff;
   height: 100%;
-  padding: 20px;
+  padding-top: 0;
+
+}
+
+.container {
+  height: auto;
+  width: auto;
 }

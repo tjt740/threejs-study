@@ -1,74 +1,86 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
-
-
+// 导入轨道控制器 只能通过这种方法
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 /*
-    *  创建一个对象 （场景+相机+对象） ==> 渲染器渲染
-*/
+ *  创建一个对象 （场景+相机+对象） ==> 渲染器渲染
+ */
 export default function ThreeComponent() {
     const container = useRef(null);
 
     const init = () => {
-        // Step1 创建场景
         const scene = new THREE.Scene();
-
-        /* Step2 创建透视相机 (
-            视野角度,
-            宽高比 宽/高:,
-            近截面: 距离小于多少不渲染,
-            远截面: 距离远于多少不渲染, 
-            )
-        */
         const camera = new THREE.PerspectiveCamera(
             90,
             window.innerWidth / window.innerHeight,
-            0.1,
+            1,
             1000
         );
-
-        // Step3 设置相机位置
-        camera.position.set(0, 0, 10);
-
-        // Step4 场景中添加相机
+        camera.position.set(5, 0, 10);
         scene.add(camera);
-
-        // Step5 创建几何体  http://localhost:8080/docs/index.html#api/zh/geometries/BoxGeometry
-        const geometry = new THREE.BoxGeometry(2, 3, 4);
-        const material = new THREE.MeshBasicMaterial({ color: 0xffe5cd61 });
-        // Step6 根据几何体和材质创建物体
-        const cube = new THREE.Mesh(geometry, material);
-        // Step7 场景添加 物体
-        scene.add(cube);
-
-        // Step8 初始化<渲染器>
+        const coneGeometry = new THREE.ConeGeometry(5, 10, 3);
+        const material = new THREE.MeshBasicMaterial({ color: 0x784883 });
+        const cone = new THREE.Mesh(coneGeometry, material);
+        scene.add(cone);
         const renderer = new THREE.WebGLRenderer();
-
-        // Step9 设置渲染器大小
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        console.log(renderer);
-
-
-        // Step10 渲染器渲染
+        const WIDTH = Number(
+            window
+                .getComputedStyle(
+                    document.getElementsByClassName('ant-layout-content')[0]
+                )
+                .width.split('px')[0]
+        );
+        const HEIGHT = Number(
+            window
+                .getComputedStyle(
+                    document.getElementsByClassName('ant-layout-content')[0]
+                )
+                .height.split('px')[0]
+        );
+        renderer.setSize(WIDTH, HEIGHT);
         renderer.render(scene, camera);
 
-        // Step11 将WebGL 渲染的内容添加到dom上
-        container.current.appendChild(renderer.domElement);
-
+        const controls = new OrbitControls(camera, renderer.domElement);
+        // 轨道控制器是否自动围绕目标旋转。请注意，如果它被启用，你必须在你的动画循环里调用.update()。
+        controls.autoRotate = true;
+        // 轨道控制器旋转速度。默认2.0，相当于在60fps时每旋转一周需要30秒。请注意，如果.autoRotate被启用，你必须在你的动画循环里调用.update()。
+        controls.autoRotateSpeed = 3.0;
+        // 旋转速度
+        controls.rotateSpeed = 2;
+        // 轨道控制器阻尼。默认false，将给控制器带来重量感。请注意，如果该值被启用，你将必须在你的动画循环里调用.update()。
+        controls.enableDamping = true;
+        // 轨道控制器阻尼系数大小。 默认0.05
+        controls.dampingFactor = 0.1;
+        // 轨道控制器旋转中心点/焦点
+        controls.target.set(0, 0, 0);
+        // 是否允许控制，默认true
+        controls.enabled = true;
+        // 启用或禁用摄像机平移，默认为true。
+        controls.enablePan = true;
+        // 启用或禁用摄像机水平或垂直旋转。默认值为true。
+        controls.enableRotate = true;
+        //  启用或禁用摄像机的缩放。
+        controls.enableZoom = true;
        
+        // 动画帧
+        function animate(t) {
+            controls.update();
+            renderer.render(scene, camera);
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        container.current.appendChild(renderer.domElement);
     };
 
     useEffect(() => {
-        // 1. 初始化
         init();
     }, []);
 
     return (
         <>
-            
-
-            <div id="container" ref={container}>
-                
-            </div>
+            轨道控制器控制器 OrbitControls 使物体可以旋转
+            <div id="container" ref={container}></div>
         </>
     );
 }

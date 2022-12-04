@@ -15,22 +15,21 @@ const items = routerPaths.map((item, index) => ({
 }));
 
 function App() {
-    const [collapsed, setCollapsed] = useState(true);
+    // 是否收缩侧边栏
+    const [collapsed, setCollapsed] = useState(false);
     const navigate = useNavigate();
     return (
         <>
   
             <Layout>
                 <Sider
-                    width={300}
+
                     collapsible
                     collapsed={collapsed}
                     onCollapse={(value) => setCollapsed(value)}
                 >
                     <Menu
-                        theme="dark"
                         mode="inline"
-                        defaultSelectedKeys={['1']}
                         items={items}
                         onSelect={(item) => {
                             navigate(item['key']);

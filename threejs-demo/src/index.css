@@ -48,3 +48,9 @@ code {
   height: auto;
   width: auto;
 }
+.ant-menu-item{
+}
+.ant-menu-sub.ant-menu-inline > .ant-menu-item{
+  padding-left: 30px !important;
+
+}

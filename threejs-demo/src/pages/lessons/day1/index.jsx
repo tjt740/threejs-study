@@ -12,7 +12,6 @@ export default function Demo1Component() {
         const scene = new THREE.Scene();
         // 场景颜色
         scene.background = new THREE.Color(0x999999);
-
         // Step2 创建 透视摄像机
         const camera = new THREE.PerspectiveCamera(
             90,
@@ -69,6 +68,7 @@ export default function Demo1Component() {
 
     return (
         <>
+            创建一个对象 （场景+相机+对象） ==> 渲染器渲染
             <div id="container" ref={container}></div>
         </>
     );

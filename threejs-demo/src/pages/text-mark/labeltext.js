@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable no-loop-func */
 
-// todo:  切换颜色  
+// todo:  切换颜色
 export const LabelText = (function () {
     let _self;
     let _el;
@@ -13,7 +13,6 @@ export const LabelText = (function () {
         _el = opt.el;
         _self = this;
         this.config = Object.assign({}, this.default, opt);
-        this.color = 'tan';
         this.textStack = [];
         this.letters = []; // 存放被选中的文字内容
         selectText();
@@ -86,19 +85,6 @@ export const LabelText = (function () {
             }
         },
     };
-
-    // 改变颜色
-    function changeColor() {
-        const colors = document.getElementsByClassName('item-color');
-        const tc = document.getElementsByClassName('lt-tool-colors')[0];
-        for (let i = 0; i < colors.length; i++) {
-            colors[i].onclick = () => {
-                _self.color = this.dataset.color;
-                console.log(tc);
-                tc.style.backgroundColor = _self.color;
-            };
-        }
-    }
 
     function selectText() {
         const selObj = window.getSelection();
@@ -262,11 +248,11 @@ export const LabelText = (function () {
         const spanEle = document.createElement('span');
         spanEle.className = 'text-selected';
         spanEle.setAttribute('data-index', index);
-        spanEle.style.backgroundColor = _self.color;
+        spanEle.style.backgroundColor = 'rgba(24, 144, 255,0.5)';
         return spanEle;
     }
 
-    function selectLabel(v) {
+    function selectLabel(value) {
         const ts = document.getElementsByClassName('text-selected');
         // 修改路线
         if (mouseDataIndex) {
@@ -276,18 +262,20 @@ export const LabelText = (function () {
                 (item) =>
                     item.getAttribute('data-index') === String(mouseDataIndex)
             );
-            ts[changeIndex].setAttribute('data-attr', v);
+            ts[changeIndex].setAttribute('data-attr', value);
+            // 改变伪类颜色
+            ts[changeIndex].style.setProperty('--select-color', value);
             const lettersAndTextStacksIndex = _self.letters.findIndex(
                 (item) => item.dataIndex === mouseDataIndex
             );
-            _self.letters[lettersAndTextStacksIndex].tag = v;
+            _self.letters[lettersAndTextStacksIndex].tag = value;
             _self.textStack[lettersAndTextStacksIndex] = _el.innerHTML;
             _el.style.cssText = `pointer-events: inherit;`;
             mouseDataIndex = document.getElementById(
                 'select-modal'
             ).style.display = 'none';
             window.setModalSelectContent(null);
-              mouseDataIndex = 0;
+            mouseDataIndex = 0;
             window._self = _self;
             return;
         }
@@ -309,9 +297,11 @@ export const LabelText = (function () {
             (item) =>
                 item.getAttribute('data-index') === String(fixedTextStackLen)
         );
-
-        ts[addIndex].setAttribute('data-attr', v);
-        _self.letters[ts.length - 1 > 0 ? ts.length - 1 : 0].tag = v;
+        ts[addIndex].setAttribute('data-attr', value);
+        ts[addIndex].style.backgroundColor = 'transparent';
+        // 改变伪类颜色
+        ts[addIndex].style.setProperty('--select-color', value);
+        _self.letters[ts.length - 1 > 0 ? ts.length - 1 : 0].tag = value;
         _self.textStack[ts.length - 1 > 0 ? ts.length - 1 : 0] = _el.innerHTML;
         _el.style.cssText = `pointer-events: inherit;`;
         document.getElementById('select-modal').style.display = 'none';

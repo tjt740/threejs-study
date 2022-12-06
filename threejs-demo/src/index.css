@@ -1,56 +1,55 @@
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
-    'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
-    'Helvetica Neue', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+        'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
+        'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow: hidden;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+        monospace;
 }
 
 #root {
-  height: 100%;
+    height: 100%;
 }
 
 .site-layout {
-  padding: 16px;
-  box-sizing: border-box;
+    padding: 16px;
+    box-sizing: border-box;
 }
 
 .ant-menu-vertical .ant-menu-item {
-  margin-top: 0 !important;
-  padding-left: 30px !important;
+    margin-top: 0 !important;
+    padding-left: 30px !important;
 }
 
 .ant-layout {
-  height: 100%;
+    height: 100%;
 }
 
 .ant-layout.ant-layout-has-sider {
-  flex-direction: row;
-  height: 100%;
+    flex-direction: row;
+    height: 100%;
 }
 
 .ant-layout-content {
-  display: flex;
-  flex-direction: column;
-  background: #fff;
-  height: 100%;
-  padding-top: 0;
-
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    height: 100%;
+    padding-top: 0;
 }
 
 .container {
-  height: auto;
-  width: auto;
+    height: auto;
+    width: auto;
 }
-.ant-menu-item{
+.ant-menu-item {
 }
-.ant-menu-sub.ant-menu-inline > .ant-menu-item{
-  padding-left: 30px !important;
-
+.ant-menu-sub.ant-menu-inline > .ant-menu-item {
+    padding-left: 30px !important;
 }

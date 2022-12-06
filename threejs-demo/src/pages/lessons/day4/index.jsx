@@ -4,17 +4,12 @@ import * as THREE from 'three';
 // 导入轨道控制器 只能通过这种方法
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
-/*
- *  XYZ 3维坐标 new THREE.AxesHelper(7); 7:XYZ长度
- *  轨道控制器控制器 OrbitControls
- */
 
 export default function ThreeComponent() {
     const container = useRef(null);
 
     const init = () => {
         const scene = new THREE.Scene();
-
         const camera = new THREE.PerspectiveCamera(
             90,
             window.innerWidth / window.innerHeight,
@@ -34,13 +29,21 @@ export default function ThreeComponent() {
         renderer.setSize(window.innerWidth, window.innerHeight);
         console.log(renderer);
 
+
+        cube.position.set(1, 1, 1); // cube.position.set(x,y,z);
+        cube.position.y = 2;
+
         // 渲染函数
         function render(t) {
             controls.update()// 实现控制器阻尼感
-
             renderer.render(scene, camera);
             // 动画帧
             requestAnimationFrame(render);
+
+            cube.position.x += 0.01;
+            if (cube.position.x > 3) { 
+                cube.position.x = 0
+            }
         }
 
         // Step1 坐标  (红色代表 X 轴. 绿色代表 Y 轴. 蓝色代表 Z 轴.)
@@ -71,8 +74,7 @@ export default function ThreeComponent() {
 
     return (
         <>
-            
-
+            物体移动
             <div id="container" ref={container}>
                 
             </div>

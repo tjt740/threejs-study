@@ -12,7 +12,6 @@ export default function ThreeComponent() {
 
     const init = () => {
         const scene = new THREE.Scene();
-
         const camera = new THREE.PerspectiveCamera(
             90,
             window.innerWidth / window.innerHeight,
@@ -21,49 +20,60 @@ export default function ThreeComponent() {
         );
         camera.position.set(0, 0, 10);
         scene.add(camera);
-
         const geometry = new THREE.BoxGeometry(2, 3, 4);
         const material = new THREE.MeshBasicMaterial({ color: 0xffe5cd61 });
         const cube = new THREE.Mesh(geometry, material);
         scene.add(cube);
-
-        // 渲染器
         const renderer = new THREE.WebGLRenderer();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        console.log(renderer);
+        const WIDTH = Number(
+            window
+                .getComputedStyle(
+                    document.getElementsByClassName('ant-layout-content')[0]
+                )
+                .width.split('px')[0]
+        );
+        const HEIGHT = Number(
+            window
+                .getComputedStyle(
+                    document.getElementsByClassName('ant-layout-content')[0]
+                )
+                .height.split('px')[0]
+        );
+        renderer.setSize(WIDTH, HEIGHT);
 
-
-             
         // Step1 获取Clock 跟踪时间，解决 Date now() 不准的问题；
-        const clock = new THREE.Clock(); // 获取关于时钟的信息： <autoStart> <elapsedTime> <oldTime> <running> <startTime> 
+        const clock = new THREE.Clock(); // 获取关于时钟的信息： <autoStart> <elapsedTime> <oldTime> <running> <startTime>
+        console.log(clock);
 
+        clock.start();
+        setTimeout(() => {
+            clock.stop();
+            console.log(clock.getElapsedTime()); // 3s
+        }, 3000);
+        setTimeout(() => {
+            clock.start();
+            console.log(clock.getDelta());
+        }, 5000);
 
         // 渲染函数
         function render(t) {
-            // 利用默认形参 t 来精确每一次时间变化后
-            // cube 每次加0.01,超出复位
-            cube.position.x = ((t / 1000) * 1) % 5;
-            if (cube.position.x >= 5) {
-                cube.position.x = 1;
-            }
-            // cube 一直旋转
-            cube.rotation.z = (t / 100) * 1;
-
-
             // 获取始终运行的总时长
-            let time = clock.getElapsedTime(); // 1 2 3 4 5 ....
-            console.log(time);
+            const time = clock.getElapsedTime(); // 1 2 3 4 5 ....
+            cube.position.x = time  % 5;
+            // if (cube.position.x >= 5) {
+            //     cube.position.x = 1;
+            // }
+            // console.log(time);
             // 获取当前秒数到上一帧的秒数差
-            let deltaTime = clock.getDelta(); 
-            console.log(deltaTime);
+            // const deltaTime = clock.getDelta();
+            // console.log(deltaTime);
 
-
+            controls.update();
             renderer.render(scene, camera);
             // 动画帧
             requestAnimationFrame(render);
         }
 
-       
         const axesHelper = new THREE.AxesHelper(7);
         scene.add(axesHelper);
 
@@ -86,13 +96,8 @@ export default function ThreeComponent() {
 
     return (
         <>
-            
-
-            <div id="container" ref={container}>
-                
-            </div>
+            new THREE.Clock() 获取运行时时间信息
+            <div id="container" ref={container}></div>
         </>
     );
 }
-
-

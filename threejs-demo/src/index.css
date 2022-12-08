@@ -53,3 +53,8 @@ code {
 .ant-menu-sub.ant-menu-inline > .ant-menu-item {
     padding-left: 30px !important;
 }
+
+
+.ant-menu-light{
+    height: 100% !important;
+}

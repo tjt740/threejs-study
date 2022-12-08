@@ -222,6 +222,8 @@
 }
 
 .ant-menu-light {
+    max-height: inherit !important;
+    height: 100% !important;
     border: 1px solid #cfd2db !important;
     border-radius: 4px;
     overflow: hidden;

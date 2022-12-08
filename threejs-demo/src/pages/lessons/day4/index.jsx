@@ -4,7 +4,6 @@ import * as THREE from 'three';
 // 导入轨道控制器 只能通过这种方法
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
-
 export default function ThreeComponent() {
     const container = useRef(null);
 
@@ -29,20 +28,28 @@ export default function ThreeComponent() {
         renderer.setSize(window.innerWidth, window.innerHeight);
         console.log(renderer);
 
+        // cube.position.set(1, 1, 1); // cube.position.set(x,y,z);
+        // cube.position.y = 2;
 
-        cube.position.set(1, 1, 1); // cube.position.set(x,y,z);
-        cube.position.y = 2;
+        // 物体尺寸设置 (x,y,z)
+        // cube.scale.set(2, 0.5, 0.5);
+        // cube.scale.x = 4;
+
+        // 物体角度/方向设置  属性值：https://threejs.org/docs/index.html?q=ax#api/zh/math/Euler
+        // cube.rotation.set(45, 10, 45, 'XYZ');
 
         // 渲染函数
         function render(t) {
-            controls.update()// 实现控制器阻尼感
+            console.log('每一帧时间:', t);
+
+            controls.update(); // 实现控制器阻尼感
             renderer.render(scene, camera);
             // 动画帧
             requestAnimationFrame(render);
 
-            cube.position.x += 0.01;
-            if (cube.position.x > 3) { 
-                cube.position.x = 0
+            cube.rotation.z += 0.01;
+            if (cube.rotation.z >= 6) {
+                cube.rotation.z = 0;
             }
         }
 
@@ -60,7 +67,6 @@ export default function ThreeComponent() {
             请注意，如果该值被启用，你将必须在你的动画循环里调用.update()。
         */
         controls.enableDamping = true;
-        
         render();
 
         // DOM承载渲染器
@@ -75,9 +81,7 @@ export default function ThreeComponent() {
     return (
         <>
             物体移动
-            <div id="container" ref={container}>
-                
-            </div>
+            <div id="container" ref={container}></div>
         </>
     );
 }

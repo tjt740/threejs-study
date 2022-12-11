@@ -31,9 +31,21 @@ export default function ThreeComponent() {
 
         // 渲染器
         const renderer = new THREE.WebGLRenderer();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        console.log(renderer);
-
+        const WIDTH = Number(
+            window
+                .getComputedStyle(
+                    document.getElementsByClassName('ant-layout-content')[0]
+                )
+                .width.split('px')[0]
+        );
+        const HEIGHT = Number(
+            window
+                .getComputedStyle(
+                    document.getElementsByClassName('ant-layout-content')[0]
+                )
+                .height.split('px')[0]
+        );
+        renderer.setSize(WIDTH, HEIGHT);
         // 获取Clock 跟踪时间，解决 Date now() 不准的问题；
         const clock = new THREE.Clock(); // 获取关于时钟的信息： <autoStart> <elapsedTime> <oldTime> <running> <startTime>
 

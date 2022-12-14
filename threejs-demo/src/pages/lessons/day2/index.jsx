@@ -61,7 +61,7 @@ export default function ThreeComponent() {
         controls.enableRotate = true;
         //  启用或禁用摄像机的缩放。
         controls.enableZoom = true;
-       
+     
         // 动画帧
         function animate(t) {
             controls.update();

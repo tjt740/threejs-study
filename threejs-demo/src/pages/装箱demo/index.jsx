@@ -4,7 +4,7 @@ import 'antd/dist/antd.css';
 import * as THREE from 'three';
 // 导入轨道控制器 只能通过这种方法
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-// import * as dat from 'dat.gui';
+import * as dat from 'dat.gui';
 // mockData
 import { mockData } from './mockData';
 
@@ -12,7 +12,6 @@ let cartonWidth;
 let cartonHeight;
 let cartonLength;
 let detailIndex = 0;
-// let angle = 0;
 let intersections;
 let intersected;
 const defaults = {
@@ -55,11 +54,11 @@ const controls = new OrbitControls(camera, renderer.domElement);
 const axesHelper = new THREE.AxesHelper(5000);
 
 // gui控制器
-// const gui = new dat.GUI();
-// const cameraGui = gui.addFolder('调整相机视角');
-// cameraGui.add(camera.position, 'x').min(1).max(20000).step(10);
-// cameraGui.add(camera.position, 'y').min(1).max(10000).step(10);
-// cameraGui.add(camera.position, 'z').min(1).max(10000).step(10);
+const gui = new dat.GUI();
+const cameraGui = gui.addFolder('调整相机视角');
+cameraGui.add(camera.position, 'x').min(1).max(20000).step(10);
+cameraGui.add(camera.position, 'y').min(1).max(10000).step(10);
+cameraGui.add(camera.position, 'z').min(1).max(10000).step(10);
 
 export default function PackagePreview3D() {
     const [selectIndex, setSelectIndex] = useState(0);
@@ -265,14 +264,12 @@ export default function PackagePreview3D() {
 
     const init = () => {
         // 实际canvas 宽高
-        WIDTH =  Number(
+        WIDTH =
+            Number(
                 window
-                    .getComputedStyle(
-                        document.getElementById(
-                            'container'
-                        )
-                    )
-                .width.split('px')[0]) -
+                    .getComputedStyle(document.getElementById('container'))
+                    .width.split('px')[0]
+            ) -
             Number(
                 window
                     .getComputedStyle(
@@ -282,11 +279,24 @@ export default function PackagePreview3D() {
                     )
                     .width.split('px')[0]
             );
-        
 
+        HEIGHT =
+            Number(
+                window
+                    .getComputedStyle(
+                        document.getElementsByClassName('ant-layout')[0]
+                    )
+                    .height.split('px')[0]
+            ) -
+            Number(
+                window
+                    .getComputedStyle(document.getElementById('operate'))
+                    .height.split('px')[0]
+            ) -
+            16 * 2;
         document.getElementById('canvas-frame').style.width = WIDTH + 'px';
-
-        HEIGHT = window.innerHeight;
+        document.getElementById('canvas-frame').style.height = HEIGHT + 'px';
+        // HEIGHT = window.innerHeight;
         // 场景颜色
         scene.background = new THREE.Color(0x999999);
         // 调整相机位置
@@ -329,28 +339,39 @@ export default function PackagePreview3D() {
 
         // 根据页面大小变化，更新渲染
         window.addEventListener('resize', () => {
-            WIDTH =  Number(
-                window
-                    .getComputedStyle(
-                        document.getElementById(
-                            'container'
+            WIDTH =
+                Number(
+                    window
+                        .getComputedStyle(document.getElementById('container'))
+                        .width.split('px')[0]
+                ) -
+                Number(
+                    window
+                        .getComputedStyle(
+                            document.getElementsByClassName(
+                                'ant-drawer-content-wrapper'
+                            )[0]
                         )
-                    )
-                .width.split('px')[0]) -
-            Number(
-                window
-                    .getComputedStyle(
-                        document.getElementsByClassName(
-                            'ant-drawer-content-wrapper'
-                        )[0]
-                    )
-                    .width.split('px')[0]
-            );
-        
-
+                        .width.split('px')[0]
+                );
+            HEIGHT =
+                Number(
+                    window
+                        .getComputedStyle(
+                            document.getElementsByClassName('ant-layout')[0]
+                        )
+                        .height.split('px')[0]
+                ) -
+                Number(
+                    window
+                        .getComputedStyle(document.getElementById('operate'))
+                        .height.split('px')[0]
+                ) -
+                16 * 2;
             document.getElementById('canvas-frame').style.width = WIDTH + 'px';
-
-            HEIGHT = window.innerHeight;
+            document.getElementById('canvas-frame').style.height =
+                HEIGHT + 'px';
+            // HEIGHT = window.innerHeight;
             // 更新camera 宽高比;
             camera.aspect = WIDTH / HEIGHT;
             // 更新camera 投影矩阵
@@ -468,7 +489,7 @@ export default function PackagePreview3D() {
         <div id="container">
             <div id="operate">
                 <Button
-                    style={{ margin: '10px' }}
+                    style={{ margin: '5px' }}
                     onClick={() => {
                         detailIndex = 0;
                         for (let i = 0; i < defaults.detailNum; i++) {
@@ -479,7 +500,7 @@ export default function PackagePreview3D() {
                     清空
                 </Button>
                 <Button
-                    style={{ margin: '10px' }}
+                    style={{ margin: '5px' }}
                     onClick={() => {
                         if (detailIndex <= 0) {
                             return;
@@ -491,7 +512,7 @@ export default function PackagePreview3D() {
                     上一步
                 </Button>
                 <Button
-                    style={{ margin: '10px' }}
+                    style={{ margin: '5px' }}
                     onClick={() => {
                         if (detailIndex >= defaults.detailNum) {
                             return;
@@ -503,7 +524,7 @@ export default function PackagePreview3D() {
                     下一步
                 </Button>
                 <Button
-                    style={{ margin: '10px' }}
+                    style={{ margin: '5px' }}
                     onClick={() => {
                         detailIndex = defaults.detailNum;
                         for (let i = 0; i < defaults.detailNum; i++) {

@@ -16,7 +16,7 @@ const items = routerPaths.map((item, index) => ({
 
 function App() {
     // 是否收缩侧边栏
-    const [collapsed, setCollapsed] = useState(true);
+    const [collapsed, setCollapsed] = useState(false);
     const navigate = useNavigate();
     return (
         <>

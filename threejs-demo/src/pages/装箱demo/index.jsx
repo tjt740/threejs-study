@@ -56,9 +56,9 @@ const axesHelper = new THREE.AxesHelper(5000);
 // gui控制器
 const gui = new dat.GUI();
 const cameraGui = gui.addFolder('调整相机视角');
-cameraGui.add(camera.position, 'x').min(1).max(20000).step(10);
-cameraGui.add(camera.position, 'y').min(1).max(10000).step(10);
-cameraGui.add(camera.position, 'z').min(1).max(10000).step(10);
+// cameraGui.add(camera.position, 'x').min(1).max(20000).step(10);
+// cameraGui.add(camera.position, 'y').min(1).max(10000).step(10);
+// cameraGui.add(camera.position, 'z').min(1).max(10000).step(10);
 
 export default function PackagePreview3D() {
     const [selectIndex, setSelectIndex] = useState(0);
@@ -106,6 +106,210 @@ export default function PackagePreview3D() {
         cartonWidth = xLen;
         cartonHeight = yLen;
         cartonLength = zLen;
+        // start
+        const dir = new THREE.Vector3(0, 0, 0);
+        dir.normalize();
+        const origin = new THREE.Vector3(0, 0, 0);
+        const arrowHelper1 = new THREE.ArrowHelper(
+            dir,
+            origin,
+            6300,
+            0x00ff00,
+            200,
+            100
+        );
+
+        arrowHelper1.position.set(
+            -(cartonWidth / 2),
+            -(cartonHeight / 2),
+            -(cartonLength / 2)
+        );
+        scene.add(arrowHelper1);
+
+        const arrowHelper2 = new THREE.ArrowHelper(
+            dir,
+            origin,
+            13000,
+            0x0000ff,
+            200,
+            100
+        );
+        arrowHelper2.position.set(
+            -(cartonWidth / 2),
+            -(cartonHeight / 2),
+            -(cartonLength / 2)
+        );
+        arrowHelper2.rotation.x = Math.PI / 2;
+        scene.add(arrowHelper2);
+
+        const arrowHelper3 = new THREE.ArrowHelper(
+            dir,
+            origin,
+            5300,
+            0xff0000,
+            200,
+            100
+        );
+        arrowHelper3.position.set(
+            -(cartonWidth / 2),
+            -(cartonHeight / 2),
+            -(cartonLength / 2)
+        );
+        arrowHelper3.rotation.z = -Math.PI / 2;
+        scene.add(arrowHelper3);
+
+        const size = 6000,
+            divisions = 6;
+
+        const step = size / divisions;
+
+        const verticesX = [],
+            verticesY = [],
+            verticesZ = [],
+            colors = [];
+        const fontSize = 200;
+        // 刻度尺
+        const createTextTexture = (obj) => {
+            let canvas = document.createElement('canvas');
+            canvas.width = obj.width;
+            canvas.height = obj.height;
+            let ctx = canvas.getContext('2d');
+            ctx.font = obj.font || `Bold ${fontSize}px Arial`;
+            ctx.fillStyle = obj.color || '#090909';
+            ctx.fillText(obj.text, 0, obj.height / 2);
+            let texture = new THREE.Texture(canvas);
+            texture.needsUpdate = true;
+            texture.wrapS = THREE.RepeatWrapping;
+            texture.wrapT = THREE.RepeatWrapping;
+            return texture;
+        };
+
+        for (let i = 0, j = 0, k = 0; i <= divisions; i++, k += step) {
+            // 200 : 线长
+            verticesX.push(200, 0, k, 0, 0, k);
+            verticesY.push(-200, 0, k, 0, 0, k);
+            verticesZ.push(-200, 0, k, 0, 0, k);
+
+            const material = new THREE.SpriteMaterial({
+                map: createTextTexture({
+                    text: ` ${i ? i * 100 : ''}`,
+                    width: 500,
+                    height: 500,
+                }),
+                opacity: 1,
+                transparent: true,
+            });
+
+            const materialY = new THREE.SpriteMaterial({
+                map: createTextTexture({
+                    text: ` ${i * 100}`,
+                    width: 500,
+                    height: 500,
+                }),
+                opacity: 1,
+                transparent: true,
+            });
+            const particleX = new THREE.Sprite(material);
+            particleX.position.set(
+                `${i * step - step - fontSize}`,
+                -(cartonHeight / 2 + fontSize / 3),
+                -(cartonLength / 2) - 400
+            );
+            particleX.scale.set(500, 500, 500);
+            scene.add(particleX);
+
+            const particleY = new THREE.Sprite(materialY);
+            //  100： 字体大小
+            particleY.position.set(
+                -(cartonWidth / 2) - 400,
+                `${i * step - (step + step / 2) + fontSize / 2}`,
+                -(cartonLength / 2)
+            );
+            particleY.scale.set(500, 500, 500);
+            scene.add(particleY);
+
+            const particleZ = new THREE.Sprite(material);
+            particleZ.position.set(
+                -(cartonWidth / 2) - 400,
+                -(cartonHeight / 2 + fontSize / 3),
+                `${i * step + fontSize / 4 - cartonLength / 2}  `
+            );
+            particleZ.scale.set(500, 500, 500);
+            scene.add(particleZ);
+
+            const color = new THREE.Color(0x090909);
+            color.toArray(colors, j);
+            j += 3;
+            color.toArray(colors, j);
+            j += 3;
+            color.toArray(colors, j);
+            j += 3;
+            color.toArray(colors, j);
+            j += 3;
+        }
+        const materialLine = new THREE.LineBasicMaterial({
+            vertexColors: true,
+            toneMapped: false,
+        });
+
+        // x线刻度尺
+        const geometryX = new THREE.BufferGeometry();
+        geometryX.setAttribute(
+            'position',
+            new THREE.Float32BufferAttribute(verticesX, 3)
+        );
+        geometryX.setAttribute(
+            'color',
+            new THREE.Float32BufferAttribute(colors, 3)
+        );
+        const lineX = new THREE.LineSegments(geometryX, materialLine);
+        lineX.position.set(
+            -(cartonWidth / 2),
+            -(cartonHeight / 2),
+            -(cartonLength / 2)
+        );
+        lineX.rotation.y = Math.PI / 2;
+        scene.add(lineX);
+
+        // Y线刻度尺
+        const geometryY = new THREE.BufferGeometry();
+        geometryY.setAttribute(
+            'position',
+            new THREE.Float32BufferAttribute(verticesY, 3)
+        );
+        geometryY.setAttribute(
+            'color',
+            new THREE.Float32BufferAttribute(colors, 3)
+        );
+        const lineY = new THREE.LineSegments(geometryY, materialLine);
+        lineY.position.set(
+            -(cartonWidth / 2),
+            -(cartonHeight / 2),
+            -(cartonLength / 2)
+        );
+        lineY.rotation.x = -Math.PI / 2;
+        scene.add(lineY);
+
+        // Z线刻度尺
+        const geometryZ = new THREE.BufferGeometry();
+        geometryZ.setAttribute(
+            'position',
+            new THREE.Float32BufferAttribute(verticesY, 3)
+        );
+        geometryZ.setAttribute(
+            'color',
+            new THREE.Float32BufferAttribute(colors, 3)
+        );
+        const lineZ = new THREE.LineSegments(geometryZ, materialLine);
+        lineZ.position.set(
+            -(cartonWidth / 2),
+            -(cartonHeight / 2),
+            -(cartonLength / 2)
+        );
+        scene.add(lineZ);
+
+        // end
+
         // 声明几何体
         const geometry = new THREE.BoxGeometry(xLen, yLen, zLen);
         // 声明材质;
@@ -388,7 +592,6 @@ export default function PackagePreview3D() {
         init();
         // 2. 获取详情
         getInfoDetail();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {

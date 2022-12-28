@@ -54,7 +54,6 @@ const MyIcon = createFromIconfontCN({
 //     );
 // }
 
-
 // （二）
 // 懒加载
 const LazyLoad = (path) => {
@@ -147,25 +146,13 @@ export const routerPaths = [
                 elementPath: 'lessons/day12',
                 key: 'lessons/day12',
             },
+
             {
-                label: '创建空心长方体',
-                icon: <MyIcon type="icon-hongshu" />,
-                elementPath: 'lessons/day12',
-                key: 'lessons/day12',
+                label: '基础材质',
+                icon: <MyIcon type="icon-paobing" />,
+                elementPath: 'lessons/day13',
+                key: 'lessons/day13',
             },
-            {
-                label: '创建空心长方体',
-                icon: <MyIcon type="icon-bingkuai" />,
-                elementPath: 'lessons/day12',
-                key: 'lessons/day12',
-            },
-            {
-                label: '创建空心长方体',
-                icon: <MyIcon type="icon-mianhuatang" />,
-                elementPath: 'lessons/day12',
-                key: 'lessons/day12',
-            },
-            
         ],
     },
     {
@@ -207,8 +194,6 @@ export const routerPaths = [
             },
         ],
     },
-
-    
 ];
 
 export function RouterCom2() {

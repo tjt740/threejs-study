@@ -148,10 +148,17 @@ export const routerPaths = [
             },
 
             {
-                label: '基础材质',
+                label: '基础网格材质',
                 icon: <MyIcon type="icon-paobing" />,
                 elementPath: 'lessons/day13',
                 key: 'lessons/day13',
+            },
+
+            {
+                label: '标准网格材质',
+                icon: <MyIcon type="icon-mantou" />,
+                elementPath: 'lessons/day14',
+                key: 'lessons/day14',
             },
         ],
     },

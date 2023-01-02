@@ -2,15 +2,14 @@ import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 // 导入轨道控制器 只能通过这种方法
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import * as dat from 'dat.gui';
-// const gui = new dat.GUI();
+
 export default function ThreeComponent() {
     const container = useRef(null);
 
     const init = () => {
         const scene = new THREE.Scene();
         // 场景颜色
-        scene.background = new THREE.Color(0x000000);
+        scene.background = new THREE.Color(0x444444);
         const camera = new THREE.PerspectiveCamera(
             90,
             window.innerWidth / window.innerHeight,
@@ -20,9 +19,10 @@ export default function ThreeComponent() {
         camera.position.set(0, 0, 50);
         scene.add(camera);
 
+        /*
+         * ------------ start ----------
+         */
 
-
-        //------------ start ----------
         // 导入纹理
         const textureLoader = new THREE.TextureLoader();
         const doorTexture = textureLoader.load(require('./texture/door.jpg'));
@@ -33,54 +33,57 @@ export default function ThreeComponent() {
             require('./texture/ambientOcclusion.jpg')
         );
 
-        // // 添加几何体
-        // const boxGeometry = new THREE.BoxGeometry(30, 30, 30);
-        // // 添加材质
-        // const material = new THREE.MeshBasicMaterial({
-        //     map: doorTexture,
-        //     alphaMap: alphaTexture,
-        //     transparent: true,
-        // });
-        // // material.side = THREE.FrontSide   // 正面 (默认)
-        // material.side = THREE.BackSide; // 背面
-        // // material.side = THREE.DoubleSide  // 双面都渲染
+        // 环境光
+        const light = new THREE.AmbientLight({
+            color: 0xffffff,
+            intensity: 0.5,
+        });
+        // scene.add(light);
+        // 平行光
+        const directionalLight = new THREE.DirectionalLight({  color: 0xffffff,
+            intensity: 1});
+        directionalLight.position.set(0, 0, 20); // 平行光位置（类似太阳所在位置）
+        directionalLight.position.set(20, 20, 20); // 平行光位置（类似太阳所在位置）
+        scene.add(directionalLight);
 
-        // // 渲染立方体
-        // const cube = new THREE.Mesh(boxGeometry, material);
-        // // 添加进场景
-        // scene.add(cube);
-
-        // 添加平面
-        const planeGeometry = new THREE.PlaneGeometry(50, 50);
-        const planeMaterial = new THREE.MeshBasicMaterial({
+        // 创建平面
+        const boxGeometry = new THREE.BoxGeometry(25, 25,25);
+        // 创建标准网格材质 🌟 必须要有灯光！
+        const material = new THREE.MeshStandardMaterial({
             // 纹理图片
             map: doorTexture,
-            // 纹理透明
+            // alpha 滤镜纹理   (需要配合transparent:true)
             alphaMap: alphaTexture,
             transparent: true,
-            // 纹理图片双面显示
-            side: THREE.DoubleSide, // 双面渲染
-            // aoMap 在纹理较深的地方添加贴图
+            // aoMap 遮挡贴图纹理 (需要设置第二组uv)
             aoMap: aoMapTexture,
             // 设置aoMap 纹理遮挡效果透明度
-            aoMapIntensity: 0.5
+            aoMapIntensity: 0.5,
+            // 纹理图片双面显示
+            side: THREE.DoubleSide,
         });
 
         // 💡设置第二组uv,固定写法. 2:(x,y)两个点.
-        planeGeometry.setAttribute(
+        boxGeometry.setAttribute(
             'uv2',
-            new THREE.BufferAttribute(planeGeometry.attributes.uv.array, 2)
+            new THREE.BufferAttribute(boxGeometry.attributes.uv.array, 2)
         );
 
-        const planeCube = new THREE.Mesh(planeGeometry, planeMaterial);
-        scene.add(planeCube);
+        const cube = new THREE.Mesh(boxGeometry, material);
+        scene.add(cube);
 
 
 
-        // --------end-------------
+        // 模拟平行光所在位置
+        const sunCube = new THREE.Mesh(new THREE.DodecahedronGeometry(1,5), new THREE.MeshBasicMaterial({ color: new THREE.Color('red') }))
+        sunCube.position.set(20, 20, 20);
+        scene.add(sunCube);
+        /*
+         * ------------ end ----------
+         */
 
         //  创建XYZ直角坐标系  (红色代表 X 轴. 绿色代表 Y 轴. 蓝色代表 Z 轴.)
-        const axesHelper = new THREE.AxesHelper(7);
+        const axesHelper = new THREE.AxesHelper(25);
         //  坐标辅助线添加到场景中
         scene.add(axesHelper);
 
@@ -144,7 +147,7 @@ export default function ThreeComponent() {
 
     return (
         <>
-            基础网格材质+纹理
+            标准网格材质
             <div id="container" ref={container}></div>
         </>
     );

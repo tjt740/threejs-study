@@ -39,7 +39,7 @@ export default function ThreeComponent() {
             intensity: 0.5,
         });
         // scene.add(light);
-        // 平行光
+        // 平行光(类似太阳位置光线)
         const directionalLight = new THREE.DirectionalLight({  color: 0xffffff,
             intensity: 1});
         directionalLight.position.set(0, 0, 20); // 平行光位置（类似太阳所在位置）
@@ -58,7 +58,7 @@ export default function ThreeComponent() {
             // aoMap 遮挡贴图纹理 (需要设置第二组uv)
             aoMap: aoMapTexture,
             // 设置aoMap 纹理遮挡效果透明度
-            aoMapIntensity: 0.5,
+            aoMapIntensity: 1,
             // 纹理图片双面显示
             side: THREE.DoubleSide,
         });

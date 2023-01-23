@@ -168,39 +168,27 @@ export const routerPaths = [
         key: Math.random(),
         children: [
             {
-                label: '装箱demo',
+                label: '3D装箱demo',
                 icon: <MyIcon type="icon-zhixiang_niupizhixiang-15" />,
                 elementPath: '装箱demo',
                 key: 'package-preview',
             },
-        ],
-    },
-    {
-        label: '测试图片标注',
-        icon: <MyIcon type="icon-nailao" />,
-        key: Math.random(),
-        children: [
             {
-                label: '图片标注',
+                label: '测试图片标注demo',
                 icon: <MyIcon type="icon-feiyuguantou" />,
                 elementPath: 'pic-mark',
                 key: 'pic-mark',
             },
-        ],
-    },
-    {
-        label: '测试文本标注',
-        icon: <MyIcon type="icon-doujiang" />,
-        key: Math.random(),
-        children: [
             {
-                label: '文本标注',
+                label: '测试文本标注demo',
                 icon: <MyIcon type="icon-dangaojuan" />,
                 elementPath: 'text-mark',
                 key: 'text-mark',
             },
         ],
     },
+ 
+  
 ];
 
 export function RouterCom2() {

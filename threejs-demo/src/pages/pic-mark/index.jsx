@@ -1,203 +1,185 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Radio, Button, message  } from 'antd';
+import { Radio, Button, message, Divider } from 'antd';
 import { PlusOutlined, MinusOutlined } from '@ant-design/icons';
+import axios from 'axios';
 import './FileSaver';
-import cnames from 'classnames';
+import cNames from 'classnames';
 import { colorChange } from './utils';
 import './index.css';
 
-let canvas;
-let borderCanvas;
-let obj = {};
 const p1 = {};
 const p2 = {};
 // 图片数据存储
 const image = new Image();
-let xMin;
-let yMin;
-let xMax;
-let yMax;
-let pMin;
-let pMax;
-let k;
-let imgX;
-let imgY;
-let canW;
-let canH;
-let ctx;
-let imW;
-let imH;
-let color;
-let label;
-let value;
-let imgWK;
-let imgHK;
-let lenIm;
-let xl;
-let xr;
-let yu;
-let yd;
-let target;
-let x;
-let y;
-let xm;
-let ym;
-let p;
-let mouseX;
-let mouseY;
-let imgXY;
-let flagDrawBbox = false;
-let isPointInPath = false;
-let selectValue;
-let data;
+let canvas,
+    borderCanvas,
+    leftTopCanvas,
+    leftBottomCanvas,
+    rightTopCanvas,
+    rightBottomCanvas,
+    obj = {},
+    xMin,
+    yMin,
+    xMax,
+    yMax,
+    pMin,
+    pMax,
+    k,
+    imgX,
+    imgY,
+    canW,
+    canH,
+    ctx,
+    imW,
+    imH,
+    color,
+    label,
+    value,
+    imgWK,
+    imgHK,
+    lenIm,
+    xl,
+    xr,
+    yu,
+    yd,
+    target,
+    x,
+    y,
+    xm,
+    ym,
+    p,
+    mouseX,
+    mouseY,
+    imgXY,
+    flagDrawBbox = false,
+    isPointInPath = false,
+    selectValue,
+    data,
+    // 是否删除
+    isDelete;
+
 export default function ObjectDetection() {
     canvas = useRef(null);
     borderCanvas = useRef(null);
+    leftTopCanvas = useRef(null);
+    leftBottomCanvas = useRef(null);
+    rightTopCanvas = useRef(null);
+    rightBottomCanvas = useRef(null);
+
     const [objValueArr, setObjValueArr] = useState([]);
+
     // label数组
-    const [radioValueList, setRadioValueList] = useState([
-        {
-            label: '植物',
-            value: 'botany',
-            labelColor: '#e80b0b',
-        },
-        {
-            label: '水果',
-            value: 'fruit',
-            labelColor: '#e80',
-        },
-        {
-            label: '咖啡',
-            value: 'coffee',
-            labelColor: '#00CD00',
-        },
-        {
-            label: '纸箱',
-            value: 'carton',
-            labelColor: '#00B2EE',
-        },
-        {
-            label: '磁带',
-            value: 'tape',
-            labelColor: '#DEB887',
-        },
-    ]);
+    const [radioValueList, setRadioValueList] = useState([]);
+
     // key 监听值变化 ★不存在无法更新页面
     const [pageKey, setPageKey] = useState(Math.random());
     // radio切换
-    const [radioValue, setRadioValue] = useState(() => radioValueList?.at(0));
+    const [radioValue, setRadioValue] = useState(null);
     // 初始化
     const init = () => {
-        canvas = canvas.current;
-        canW = canvas.width;
-        canH = canvas.height;
-        ctx = canvas.getContext('2d');
-        image.src =
-            'https://img.alicdn.com/imgextra/i4/O1CN011OxBf221KTni2eSSA_!!6000000006966-0-tps-8364-4320.jpg';
-        image.objects = [];
-
         // 加载图片
-        image.onload = function () {
-            showOriginImg();
-        };
-        // 在canvas页面 按下时
-        canvas.onmousedown = function (e) {
-            canvas = canvas.current || canvas;
-            for (let i = 0; i < image?.objects?.length || 0; i++) {
-                if (image?.objects?.length) {
-                    isPointInPath = isPointInRect(e, image.objects[i]);
-                    if (isPointInPath && e.button === 0) {
-                        console.log('选中');
-                        // borderCanvas.current.style.cssText = `top:${image.objects[i].yMin}px;left:${image.objects[i].xMin}px`;
-                        // borderCanvas.current.width = image?.objects[i]?.width;
-                        // borderCanvas.current.height = image?.objects[i]?.height;
-                        // const borderCtx = borderCanvas.current.getContext('2d');
-                        // borderCtx.strokeStyle = 'rgb(59, 160, 249)';
-                        // borderCtx.lineWidth = 3;
-                        // borderCtx.strokeRect(
-                        //   0,
-                        //   0,
-                        //   borderCanvas.current.width,
-                        //   borderCanvas.current.height,
-                        // ); // 绘制红色边框矩形
-                        // borderCtx.clearRect(
-                        //   0,
-                        //   0,
-                        //   borderCanvas.current.width,
-                        //   borderCanvas.current.height,
-                        // );
-                        canvas.onmousemove = (e) => {
-                            image.objects[i].xMin =
-                                e.offsetX - image.objects[i].width / 2;
-                            image.objects[i].yMin =
-                                e.offsetY - image.objects[i].height / 2;
-                            image.objects[i].xMax =
-                                image.objects[i].xMin + image.objects[i].width;
-                            image.objects[i].yMax =
-                                image.objects[i].yMin + image.objects[i].height;
-
-                            // borderCanvas.current.style.cssText = `top:${image.objects[i].yMin}px;left:${image.objects[i].xMin}px`;
+        image.onload = () => {
+            canvas = canvas.current;
+            canvas.width = image.width;
+            canvas.height = image.height;
+            canW = image.width;
+            canH = image.height;
+            ctx = canvas.getContext('2d');
+            image.objects = [];
+            // 在canvas页面 按下时
+            canvas.onmousedown = (e) => {
+                canvas = canvas.current || canvas;
+                for (let i = 0; i < image?.objects?.length || 0; i++) {
+                    if (image?.objects?.length) {
+                        isPointInPath = isPointInRect(e, image.objects[i]);
+                        if (isPointInPath && e.button === 0) {
+                            console.log('选中', image.objects[i]);
+                            for (
+                                let j = 0;
+                                j < image?.objects.length || 0;
+                                j++
+                            ) {
+                                image.objects[j].isClick = false;
+                            }
+                            image.objects[i].isClick = true;
                             backfillDraw(image.objects);
                             showOriginImg();
-                        };
+
+                            canvas.onmousemove = (e) => {
+                                image.objects[i].xMin =
+                                    e.offsetX - image.objects[i].width / 2;
+                                image.objects[i].yMin =
+                                    e.offsetY - image.objects[i].height / 2;
+                                image.objects[i].xMax =
+                                    image.objects[i].xMin +
+                                    image.objects[i].width;
+                                image.objects[i].yMax =
+                                    image.objects[i].yMin +
+                                    image.objects[i].height;
+                                backfillDraw(image.objects);
+                                showOriginImg();
+                            };
+                            canvas.onmouseup = () => {
+                                canvas.onmousemove = null;
+                                canvas.onmouseup = null;
+                            };
+                            break;
+                        }
+                    }
+                }
+                if (!isPointInPath && e.button === 0) {
+                    console.log('未选中');
+                    canvas.onmousemove = (e) => {
+                        if (!isPointInPath && flagDrawBbox) {
+                            p2.x =
+                                e.offsetX > image.canx ? e.offsetX : image.canx;
+                            p2.x =
+                                p2.x < image.canx + image.canw
+                                    ? p2.x
+                                    : image.canx + image.canw;
+                            p2.y =
+                                e.offsetY > image.cany ? e.offsetY : image.cany;
+                            p2.y =
+                                p2.y < image.cany + image.canh
+                                    ? p2.y
+                                    : image.cany + image.canw;
+                            obj.x = Math.min(p1.x, p2.x);
+                            obj.y = Math.min(p1.y, p2.y);
+                            obj.w = Math.abs(p1.x - p2.x);
+                            obj.h = Math.abs(p1.y - p2.y);
+                            obj.width = Math.abs(p1.x - p2.x);
+                            obj.height = Math.abs(p1.y - p2.y);
+                            obj.isShow = true;
+                            obj.isSelect = false;
+                            showImage(image);
+                            ctx.fillStyle = utilsColorChange(obj?.labelColor);
+                            ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
+                            ctx.save();
+                        }
                         canvas.onmouseup = () => {
+                            flagDrawBbox = false;
                             canvas.onmousemove = null;
                             canvas.onmouseup = null;
                         };
-                        break;
-                    }
-                }
-            }
-
-            if (!isPointInPath && e.button === 0) {
-                console.log('未选中');
-                canvas.onmousemove = (e) => {
-                    if (!isPointInPath && flagDrawBbox) {
-                        p2.x = e.offsetX > image.canx ? e.offsetX : image.canx;
-                        p2.x =
-                            p2.x < image.canx + image.canw
-                                ? p2.x
-                                : image.canx + image.canw;
-                        p2.y = e.offsetY > image.cany ? e.offsetY : image.cany;
-                        p2.y =
-                            p2.y < image.cany + image.canh
-                                ? p2.y
-                                : image.cany + image.canw;
-                        obj.x = Math.min(p1.x, p2.x);
-                        obj.y = Math.min(p1.y, p2.y);
-                        obj.w = Math.abs(p1.x - p2.x);
-                        obj.h = Math.abs(p1.y - p2.y);
-                        obj.width = Math.abs(p1.x - p2.x);
-                        obj.height = Math.abs(p1.y - p2.y);
-                        obj.isShow = true;
-                        obj.isSelect = false;
-                        showImage(image);
-                        ctx.fillStyle = utilsColorChange(obj?.labelColor);
-                        ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
-                        ctx.save();
-                    }
-                    canvas.onmouseup = function () {
-                        flagDrawBbox = false;
-                        canvas.onmousemove = null;
-                        canvas.onmouseup = null;
                     };
-                };
-                if (!flagDrawBbox && e.button === 0) {
-                    flagDrawBbox = true;
-                    p1.x = e.offsetX > image.canx ? e.offsetX : image.canx;
-                    p1.x =
-                        p1.x < image.canx + image.canw
-                            ? p1.x
-                            : image.canx + image.canw;
-                    p1.y = e.offsetY > image.cany ? e.offsetY : image.cany;
-                    p1.y =
-                        p1.y < image.cany + image.canh
-                            ? p1.y
-                            : image.cany + image.canw;
-                    return;
+                    if (!flagDrawBbox && e.button === 0) {
+                        flagDrawBbox = true;
+                        p1.x = e.offsetX > image.canx ? e.offsetX : image.canx;
+                        p1.x =
+                            p1.x < image.canx + image.canw
+                                ? p1.x
+                                : image.canx + image.canw;
+                        p1.y = e.offsetY > image.cany ? e.offsetY : image.cany;
+                        p1.y =
+                            p1.y < image.cany + image.canh
+                                ? p1.y
+                                : image.cany + image.canw;
+                        return;
+                    }
+                    flagDrawBbox = false;
                 }
-                flagDrawBbox = false;
-            }
+            };
+            showOriginImg();
         };
     };
     // 判断点是否在矩形内。
@@ -209,8 +191,7 @@ export default function ObjectDetection() {
             point.offsetY <= rect.y + rect.h
         );
     };
-    // 拖拽改变图片宽高大小
-    const changeWorH = () => {};
+
     // 获取数据
     const getData = () => {
         // 接口数据
@@ -279,16 +260,19 @@ export default function ObjectDetection() {
     const backfillDraw = (picData) => {
         // 鼠标移动每一帧都清楚画布内容，然后重新画圆
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        // todo: 需要做处理
         const objValue = picData?.objValue || picData || [];
         objValue?.forEach((i) => {
-            drawFill(i.xMin, i.yMin, i.xMax, i.yMax, i.labelColor);
             i.x = i.xMin + 1;
             i.y = i.yMin + 1;
             i.w = i.xMax - i.xMin;
             i.h = i.yMax - i.yMin;
-            i.isShow = true;
-            i.isSelect = false;
+            if (i.isShow === undefined) {
+                i.isShow = true;
+                return;
+            }
+            if (!i.isShow) {
+                i.isShow = false;
+            }
         });
     };
     // 双击放大图片
@@ -407,7 +391,16 @@ export default function ObjectDetection() {
             xm = p[0];
             ym = p[1];
             // 画填充
-            drawFill(x, y, xm, ym, target.labelColor);
+            drawFill(
+                x,
+                y,
+                xm,
+                ym,
+                target.labelColor,
+                img.objects[i]?.isShow,
+                img.objects[i]?.isClick,
+                img.objects[i]
+            );
         }
     };
     // 图像上的点对应的canvas坐标
@@ -416,17 +409,180 @@ export default function ObjectDetection() {
         y = (y - img.cutY) * img.sizeK + img.cany;
         return [x, y];
     };
+    // 拖拽更改image.objects
+    const dragChangeWidthAndHeight = (event, index) => {
+        image.objects[index].x = event.offsetX + 1;
+        image.objects[index].y = event.offsetY + 1;
+        image.objects[index].width =
+            image.objects[index].xMax - image.objects[index].xMin;
+        image.objects[index].height =
+            image.objects[index].yMax - image.objects[index].yMin;
+        image.objects[index].w =
+            image.objects[index].xMax - image.objects[index].xMin;
+        image.objects[index].h =
+            image.objects[index].yMax - image.objects[index].yMin;
+        setObjValueArr(image.objects);
+        showImage(image);
+    };
     // 画填充
-    const drawFill = (x1, y1, x2, y2, ReactColor) => {
-        ctx.beginPath();
-        ctx.lineTo(x2, y1);
-        ctx.lineTo(x2, y2);
-        ctx.lineTo(x1, y2);
-        ctx.lineTo(x1, y1);
-        ctx.fillStyle = utilsColorChange(ReactColor);
-        ctx.fill();
-        ctx.closePath();
-        ctx.save();
+    const drawFill = (x1, y1, x2, y2, ReactColor, isShow, isClick, item) => {
+        if (isShow) {
+            if (isClick) {
+                ctx.strokeStyle = 'rgb(59, 160, 249)';
+                ctx.lineWidth = 1;
+                ctx.strokeRect(x1, y1, x2 - x1, y2 - y1);
+                ctx.save();
+                // 拖拽改变图片宽高大小
+                // 坐上角
+                leftTopCanvas.current.width = 10;
+                leftTopCanvas.current.height = 10;
+                leftTopCanvas.current.style.cssText = `top:${y1 - 5}px;left:${
+                    x1 - 5
+                }px;cursor:se-resize`;
+                const leftTopCtx = leftTopCanvas.current.getContext('2d');
+                leftTopCtx.fillStyle = '#FFFFFF';
+                leftTopCtx.fillRect(0, 0, 10, 10);
+                leftTopCanvas.current.onmousedown = (e) => {
+                    document.onmousedown = () => {
+                        document.onmousemove = (e) => {
+                            if (e.offsetX > 10 || e.offsetY > 10) {
+                                if (image.objects?.length) {
+                                    const index = image.objects.findIndex(
+                                        (o) => o.keyId === item.keyId
+                                    );
+                                    image.objects[index].xMin = e.offsetX;
+                                    image.objects[index].yMin = e.offsetY;
+                                    dragChangeWidthAndHeight(e, index);
+                                }
+                            }
+                        };
+
+                        document.onmouseup = () => {
+                            document.onmousemove = null;
+                            document.onmousedown = null;
+                            document.onmouseup = null;
+                            flagDrawBbox = false;
+                            canvas.onmousemove = null;
+                            canvas.onmouseup = null;
+                        };
+                    };
+                };
+
+                // 左下角
+                leftBottomCanvas.current.width = 10;
+                leftBottomCanvas.current.height = 10;
+                leftBottomCanvas.current.style.cssText = `top:${
+                    y2 - 5
+                }px;left:${x1 - 5}px;cursor:ne-resize`;
+                const leftBottomCtx = leftBottomCanvas.current.getContext('2d');
+                leftBottomCtx.fillStyle = '#FFFFFF';
+                leftBottomCtx.fillRect(0, 0, 10, 10);
+                leftBottomCanvas.current.onmousedown = (e) => {
+                    document.onmousedown = () => {
+                        document.onmousemove = (e) => {
+                            if (e.offsetX > 10 || e.offsetY > 10) {
+                                if (image.objects?.length) {
+                                    const index = image.objects.findIndex(
+                                        (o) => o.keyId === item.keyId
+                                    );
+                                    image.objects[index].xMin = e.offsetX;
+                                    image.objects[index].yMax = e.offsetY;
+                                    dragChangeWidthAndHeight(e, index);
+                                }
+                            }
+                        };
+
+                        document.onmouseup = () => {
+                            document.onmousemove = null;
+                            document.onmousedown = null;
+                            document.onmouseup = null;
+                            flagDrawBbox = false;
+                            canvas.onmousemove = null;
+                            canvas.onmouseup = null;
+                        };
+                    };
+                };
+
+                // 右上角
+                rightTopCanvas.current.width = 10;
+                rightTopCanvas.current.height = 10;
+                rightTopCanvas.current.style.cssText = `top:${y1 - 5}px;left:${
+                    x2 - 5
+                }px;cursor:sw-resize`;
+                const rightTopCtx = rightTopCanvas.current.getContext('2d');
+                rightTopCtx.fillStyle = '#FFFFFF';
+                rightTopCtx.fillRect(0, 0, 10, 10);
+                rightTopCanvas.current.onmousedown = (e) => {
+                    document.onmousedown = () => {
+                        document.onmousemove = (e) => {
+                            if (e.offsetX > 10 || e.offsetY > 10) {
+                                if (image.objects?.length) {
+                                    const index = image.objects.findIndex(
+                                        (o) => o.keyId === item.keyId
+                                    );
+                                    image.objects[index].xMax = e.offsetX;
+                                    image.objects[index].yMin = e.offsetY;
+                                    dragChangeWidthAndHeight(e, index);
+                                }
+                            }
+                        };
+
+                        document.onmouseup = () => {
+                            document.onmousemove = null;
+                            document.onmousedown = null;
+                            document.onmouseup = null;
+                            flagDrawBbox = false;
+                            canvas.onmousemove = null;
+                            canvas.onmouseup = null;
+                        };
+                    };
+                };
+
+                // 右下角
+                rightBottomCanvas.current.width = 10;
+                rightBottomCanvas.current.height = 10;
+                rightBottomCanvas.current.style.cssText = `top:${
+                    y2 - 5
+                }px;left:${x2 - 5}px;cursor:nw-resize`;
+                const rightBottomCtx =
+                    rightBottomCanvas.current.getContext('2d');
+                rightBottomCtx.fillStyle = '#FFFFFF';
+                rightBottomCtx.fillRect(0, 0, 10, 10);
+                rightBottomCanvas.current.onmousedown = (e) => {
+                    document.onmousedown = () => {
+                        document.onmousemove = (e) => {
+                            if (e.offsetX > 10 || e.offsetY > 10) {
+                                if (image.objects?.length) {
+                                    const index = image.objects.findIndex(
+                                        (o) => o.keyId === item.keyId
+                                    );
+                                    image.objects[index].xMax = e.offsetX;
+                                    image.objects[index].yMax = e.offsetY;
+                                    dragChangeWidthAndHeight(e, index);
+                                }
+                            }
+                        };
+                        document.onmouseup = () => {
+                            document.onmousemove = null;
+                            document.onmousedown = null;
+                            document.onmouseup = null;
+                            flagDrawBbox = false;
+                            canvas.onmousemove = null;
+                            canvas.onmouseup = null;
+                        };
+                    };
+                };
+            }
+            ctx.beginPath();
+            ctx.lineTo(x2, y1);
+            ctx.lineTo(x2, y2);
+            ctx.lineTo(x1, y2);
+            ctx.lineTo(x1, y1);
+            ctx.fillStyle = utilsColorChange(ReactColor);
+            ctx.fill();
+            ctx.closePath();
+            ctx.save();
+        }
     };
     // 充值obj
     const resetDataNewObj = () => {
@@ -465,7 +621,6 @@ export default function ObjectDetection() {
             setPageKey(Math.random());
             setRadioValue(selectValue);
         }
-
         if ('w' in obj && obj.w !== 0) {
             xMin = obj.x;
             yMin = obj.y;
@@ -536,57 +691,159 @@ export default function ObjectDetection() {
         // 然后移除
         document.body.removeChild(link);
     };
+    // 获取详情
+    const getContentInfo = () => {
+        axios
+            .get(
+                'https://tianqiapi.com/api?version=v6&appid=12382165&appsecret=9QN9R6Ma&city=杭州'
+            )
+            .then((res) => {
+                res = {
+                    success: true,
+                    errorCode: null,
+                    errorMessage: null,
+                    data: {
+                        detailData: {
+                            id: 51042,
+                            gmtCreate: 1674487914000,
+                            gmtModified: 1674487914000,
+                            sceneId: null,
+                            taskId: null,
+                            taskRecordId: null,
+                            dialogId: null,
+                            title: null,
+                            sourceContent:
+                                'https://station-img.oss-cn-hangzhou.aliyuncs.com/bpm/20220530/0c8cc470521f4850964e90f307c76b41/Screenshot_20220527_102922_com.tencent.mm.jpg',
+                            robotRecognition: null,
+                            humanRecognition: null,
+                            nluResult: null,
+                            comment: null,
+                            nodeId: null,
+                            topicId: null,
+                            status: 300,
+                            operatorId: null,
+                            operatorName: null,
+                            dataSetId: 55,
+                        },
+                        tagList: [
+                            {
+                                id: 640,
+                                gmtCreate: 1674487965000,
+                                gmtModified: 1674487965000,
+                                labelKey: 'tag3',
+                                labelType: 'category',
+                                color: '#a4dd00',
+                                labelName: 'tag2',
+                                sourceContent:
+                                    'https://station-img.oss-cn-hangzhou.aliyuncs.com/bpm/20220530/0c8cc470521f4850964e90f307c76b41/Screenshot_20220527_102922_com.tencent.mm.jpg',
+                                comment: null,
+                                feature: null,
+                                operatorId: null,
+                                operatorName: null,
+                                taskDetailId: 51042,
+                                taskRecordId: null,
+                                taskId: null,
+                                dataSetId: 55,
+                                dataIndex: null,
+                            },
+                        ],
+                        nextDetailId: 51043,
+                    },
+                };
 
+                const { detailData } = res.data;
+                // 初始化
+                init();
+                image.src = detailData?.sourceContent || '';
+            });
+    };
+    // 获取标签列表
+    const getTagTableData = (id) => {
+        axios
+            .get(
+                'https://tianqiapi.com/api?version=v6&appid=12382165&appsecret=9QN9R6Ma&city=杭州'
+            )
+            .then((res) => {
+                res = {
+                    success: true,
+                    errorCode: null,
+                    errorMessage: null,
+                    data: {
+                        category: [
+                            {
+                                id: 111,
+                                gmtCreate: 1674487927000,
+                                gmtModified: 1674487927000,
+                                labelName: 'tag1',
+                                labelKey: 'tag2',
+                                labelType: 'category',
+                                color: '#fcdc00',
+                                dataSetId: 55,
+                            },
+                            {
+                                id: 112,
+                                gmtCreate: 1674487935000,
+                                gmtModified: 1674487935000,
+                                labelName: 'tag2',
+                                labelKey: 'tag3',
+                                labelType: 'category',
+                                color: '#a4dd00',
+                                dataSetId: 55,
+                            },
+                            {
+                                id: 113,
+                                gmtCreate: 1674487939000,
+                                gmtModified: 1674487939000,
+                                labelName: 'tag3',
+                                labelKey: 'tag4',
+                                labelType: 'category',
+                                color: '#fda1ff',
+                                dataSetId: 55,
+                            },
+                        ],
+                    },
+                };
+                if (res.data?.category?.length) {
+                    res.data.category.forEach((o) => {
+                        o.label = o.labelName;
+                        o.value = o.labelKey;
+                        o.labelColor = o.color;
+                    });
+                    selectValue = res.data?.category?.at(0);
+                    setRadioValue(res.data.category?.at(0));
+                    setRadioValueList(res.data.category);
+                    return;
+                }
+                setRadioValueList([]);
+            });
+    };
     // 显隐标注
     useEffect(() => {
-        setRadioValueList([
-            {
-                label: '植物',
-                value: 'botany',
-                labelColor: '#e80b0b',
-            },
-            {
-                label: '水果',
-                value: 'fruit',
-                labelColor: '#e80',
-            },
-            {
-                label: '咖啡',
-                value: 'coffee',
-                labelColor: '#00CD00',
-            },
-            {
-                label: '纸箱',
-                value: 'carton',
-                labelColor: '#00B2EE',
-            },
-            {
-                label: '磁带',
-                value: 'tape',
-                labelColor: '#DEB887',
-            },
-        ]);
-        init();
-        // 获取已存的数据;
-        getData();
-        selectValue = radioValueList?.at(0);
+        getContentInfo();
+        // 最后获取 标签
+        setTimeout(() => {
+            getTagTableData();
+        });
     }, []);
-
+    // radio切换
     useEffect(() => {
-        if (Object.prototype.toString.call(radioValue) !== '[object Object]') {
-            selectValue = radioValueList.filter(
-                (i) => i.value === radioValue
-            )[0];
-            resetDataNewObj();
-            console.log('触发radio变化', objValueArr, selectValue, radioValue);
+        if (
+            Object.prototype.toString.call(radioValue) === '[object Object]' ||
+            Object.prototype.toString.call(radioValue) === '[object String]'
+        ) {
+            if (radioValueList.length) {
+                selectValue = radioValueList.filter(
+                    (i) => i.value === (radioValue?.value || radioValue)
+                )[0];
+                resetDataNewObj();
+            }
         }
     }, [radioValue]);
-
+    // 刷新
     useEffect(() => {
-        // console.groupCollapsed(
-        //   `%页面已经发生变化(づ￣3￣)づ╭❤～`,
-        //   'color:#36ab60; font-size: 14px;'
-        // );
+        if (image?.objects?.at(-1)) {
+            console.log('===>触发确认<===');
+        }
     }, [pageKey]);
 
     return (
@@ -596,14 +853,14 @@ export default function ObjectDetection() {
                     <div className="save-operation">
                         <Button
                             type="primary"
-                            icon={<MinusOutlined />}
+                            icon={<PlusOutlined />}
                             onClick={() => {
                                 zoomOutPicture(image);
                             }}
                         ></Button>
                         <Button
                             type="primary"
-                            icon={<PlusOutlined />}
+                            icon={<MinusOutlined />}
                             onClick={() => {
                                 enlargedPicture(null, image);
                             }}
@@ -612,7 +869,7 @@ export default function ObjectDetection() {
                             type="primary"
                             onClick={() => {
                                 !confirmBox(image?.objects) &&
-                                message.error('未选择目标区域！');
+                                    message.error('未选择目标区域！');
                             }}
                         >
                             确认
@@ -627,18 +884,15 @@ export default function ObjectDetection() {
                         >
                             重新标注图片
                         </Button>
-                        <div className="labelSelect">
-                            <Radio.Group
-                                onChange={onChangeLineColor}
-                                value={
-                                    Object.prototype.toString.call(
-                                        radioValue
-                                    ) === '[object Object]'
-                                        ? radioValue.value
-                                        : radioValue
-                                }
-                            >
-                                {radioValueList.map((i) => (
+                        <div className="labelSelect"></div>
+                    </div>
+                    <div className="label-operation">
+                        <Radio.Group
+                            onChange={onChangeLineColor}
+                            value={radioValue?.value || radioValue}
+                        >
+                            {radioValueList?.map((i) => (
+                                <>
                                     <Radio
                                         key={i.value}
                                         value={i.value}
@@ -646,22 +900,40 @@ export default function ObjectDetection() {
                                     >
                                         {i.label}
                                     </Radio>
-                                ))}
-                            </Radio.Group>
-                        </div>
+                                </>
+                            ))}
+                        </Radio.Group>
+                        <Divider />
                     </div>
-                    <div className="label-operation"></div>
                 </div>
                 <div className="content-container">
                     <div id="canvas">
-                        <canvas
-                            width="1920"
-                            height="1080"
-                            ref={canvas}
-                        ></canvas>
+                        {/* 承载容器 */}
+                        <canvas id="drawer" ref={canvas}></canvas>
+                        {/* 红框容器 */}
                         <canvas
                             className="border-canvas"
                             ref={borderCanvas}
+                        ></canvas>
+                        {/* 左上角 */}
+                        <canvas
+                            className="border-canvas"
+                            ref={leftTopCanvas}
+                        ></canvas>
+                        {/* 左下角 */}
+                        <canvas
+                            className="border-canvas"
+                            ref={leftBottomCanvas}
+                        ></canvas>
+                        {/* 右上角 */}
+                        <canvas
+                            className="border-canvas"
+                            ref={rightTopCanvas}
+                        ></canvas>
+                        {/* 右上角 */}
+                        <canvas
+                            className="border-canvas"
+                            ref={rightBottomCanvas}
                         ></canvas>
                     </div>
                 </div>
@@ -684,7 +956,7 @@ export default function ObjectDetection() {
                 <ul className="radio-label">
                     {objValueArr?.map((v, i) => (
                         <li
-                            className={cnames(
+                            className={cNames(
                                 'li-radio-content',
                                 v?.isSelect && v?.isShow
                                     ? 'radio-select'
@@ -710,14 +982,18 @@ export default function ObjectDetection() {
                                 borderCanvas.current.height = 0;
                             }}
                             onClick={() => {
+                                if (isDelete) {
+                                    [...objValueArr].forEach((item) => {
+                                        item.isSelect = false;
+                                    });
+                                    isDelete = false;
+                                    return;
+                                }
                                 [...objValueArr].forEach((item) => {
                                     item.isSelect = false;
                                 });
-                                objValueArr[i].isSelect = true;
+                                objValueArr.at(i).isSelect = true;
                                 setObjValueArr([...objValueArr]);
-
-                                // console.log([...objValueArr]);
-                                // console.log('isShow===>', i);
                             }}
                         >
                             <div
@@ -728,22 +1004,48 @@ export default function ObjectDetection() {
                             </div>
                             <div className="li-operation">
                                 <i
-                                    className={cnames(
+                                    className={cNames(
                                         'iconfont',
                                         v.isShow ? 'tjtyanjing' : 'tjtbiyan'
                                     )}
                                     onClick={() => {
                                         objValueArr[i].isShow =
                                             !objValueArr[i].isShow;
+                                        image.objects[i].isShow =
+                                            objValueArr[i].isShow;
                                         setObjValueArr([...objValueArr]);
-                                        console.log([...objValueArr]);
-                                        console.log('isShow===>', i);
+                                        confirmBox(image.objects);
                                     }}
                                 ></i>
                                 <i
                                     className="iconfont tjtlajitong1"
                                     onClick={() => {
-                                        console.log(i);
+                                        if (
+                                            [...objValueArr].length === 1 &&
+                                            i === 0
+                                        ) {
+                                            setObjValueArr([]);
+                                            isDelete = true;
+                                            image.objects = [];
+                                            showOriginImg();
+                                            borderCanvas.current.style.cssText = `top:auto;left:auto`;
+                                            borderCanvas.current.width = 0;
+                                            borderCanvas.current.height = 0;
+                                            return;
+                                        }
+
+                                        [...objValueArr].splice(i, 1);
+                                        [...objValueArr].forEach((item) => {
+                                            item.isSelect = false;
+                                        });
+                                        isDelete = true;
+                                        setObjValueArr([...objValueArr]);
+                                        image.objects.splice(i, 1);
+                                        confirmBox(image.objects);
+
+                                        borderCanvas.current.style.cssText = `top:auto;left:auto`;
+                                        borderCanvas.current.width = 0;
+                                        borderCanvas.current.height = 0;
                                     }}
                                 ></i>
                             </div>

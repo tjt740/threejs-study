@@ -425,7 +425,7 @@ export default function ObjectDetection() {
         showImage(image);
     };
     // 画填充
-    const drawFill = (x1, y1, x2, y2, ReactColor, isShow, isClick, item) => {
+    const drawFill = (x1, y1, x2, y2, ReactColor, isShow, isClick = false, item) => {
         if (isShow) {
             if (isClick) {
                 ctx.strokeStyle = 'rgb(59, 160, 249)';
@@ -835,9 +835,11 @@ export default function ObjectDetection() {
                 selectValue = radioValueList.filter(
                     (i) => i.value === (radioValue?.value || radioValue)
                 )[0];
+
                 resetDataNewObj();
             }
         }
+      
     }, [radioValue]);
     // 刷新
     useEffect(() => {

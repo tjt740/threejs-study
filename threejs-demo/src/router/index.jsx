@@ -185,6 +185,15 @@ export const routerPaths = [
                 elementPath: 'text-mark',
                 key: 'text-mark',
             },
+
+            {
+                label: '测试纹理demo',
+                icon: <MyIcon type="icon-yuzijiang" />,
+                elementPath: 'texture-demo',
+                key: 'texture-demo',
+            },
+
+            
         ],
     },
  

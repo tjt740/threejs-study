@@ -54,8 +54,8 @@ const controls = new OrbitControls(camera, renderer.domElement);
 const axesHelper = new THREE.AxesHelper(5000);
 
 // gui控制器
-const gui = new dat.GUI();
-const cameraGui = gui.addFolder('调整相机视角');
+// const gui = new dat.GUI();
+// const cameraGui = gui.addFolder('调整相机视角');
 // cameraGui.add(camera.position, 'x').min(1).max(20000).step(10);
 // cameraGui.add(camera.position, 'y').min(1).max(10000).step(10);
 // cameraGui.add(camera.position, 'z').min(1).max(10000).step(10);

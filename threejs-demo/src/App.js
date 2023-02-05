@@ -23,7 +23,7 @@ function App() {
   
             <Layout>
                 <Sider
-
+                    width={400}
                     collapsible
                     collapsed={collapsed}
                     onCollapse={(value) => setCollapsed(value)}

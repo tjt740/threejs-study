@@ -58,7 +58,7 @@ export default function ThreeComponent() {
                 console.log('纹理图片加载中');
             }
             // onError
-            // Tjt: jiazai
+            // Tjt: 11
         );
     
 

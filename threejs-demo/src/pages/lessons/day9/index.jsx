@@ -36,7 +36,21 @@ export default function ThreeComponent() {
 
         // 渲染器
         const renderer = new THREE.WebGLRenderer();
-        renderer.setSize(window.innerWidth, window.innerHeight);
+        const WIDTH = Number(
+            window
+                .getComputedStyle(
+                    document.getElementsByClassName('ant-layout-content')[0]
+                )
+                .width.split('px')[0]
+        );
+        const HEIGHT = Number(
+            window
+                .getComputedStyle(
+                    document.getElementsByClassName('ant-layout-content')[0]
+                )
+                .height.split('px')[0]
+        );
+        renderer.setSize(WIDTH, HEIGHT);
         console.log(renderer);
 
         // 获取Clock 跟踪时间，解决 Date now() 不准的问题；
@@ -131,9 +145,8 @@ export default function ThreeComponent() {
         // 修改物体显影 setValue(设置属性)
         gui1.add(cube, 'visible').setValue(true).name('是否显示');
 
-
         // gsap + gui 配置 点击触发事件
-          const animationParams = {
+        const animationParams = {
             xFn: () => {
                 gsap.to(cube.position, {
                     x: 5,
@@ -146,8 +159,8 @@ export default function ThreeComponent() {
             },
         };
         gui2.add(animationParams, 'xFn').name('点击触发gsap动画 --- xFn');
-     
-        // options({key1:value1,key2:value2})配置 
+
+        // options({key1:value1,key2:value2})配置
         gui2.add(cube.position, 'y')
             .options({ Y1: 'yFn1', Y2: 'yFn2' })
             .name('物体在Y轴移动变化方式')
@@ -161,7 +174,7 @@ export default function ThreeComponent() {
                         delay: 0,
                         ease: 'ease',
                     });
-                } else { 
+                } else {
                     gsap.to(cube.position, {
                         y: -5,
                         duration: 8,
@@ -172,12 +185,13 @@ export default function ThreeComponent() {
                     });
                 }
             });
-        
+
         // 类似radio
         gui2.add(cube.material, 'wireframe').name('是否网格化物体');
 
         // 改变gui控制台宽度
         gui.width = 400;
+    
         // 默认收起gui控制展示
         gui.close();
 
@@ -188,13 +202,12 @@ export default function ThreeComponent() {
     };
 
     useEffect(() => {
-
         gsap.to('h1', {
             rotation: 360,
             duration: 5,
             repeat: true,
-            ease:'none'
-        })
+            ease: 'none',
+        });
 
         // 1. 初始化
         init();
@@ -202,8 +215,7 @@ export default function ThreeComponent() {
 
     return (
         <>
-            <h1 style={{width: '200px'}}> Three.js 组件 </h1>
-
+            dat.gui 配置
             <div id="container" ref={container}></div>
         </>
     );

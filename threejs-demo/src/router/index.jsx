@@ -54,7 +54,6 @@ const MyIcon = createFromIconfontCN({
 //     );
 // }
 
-
 // （二）
 // 懒加载
 const LazyLoad = (path) => {
@@ -76,52 +75,90 @@ export const routerPaths = [
         key: Math.random(),
         children: [
             {
-                label: '学习-1',
+                label: '创建一个对象 （场景+相机+对象） ==> 渲染器渲染',
                 icon: <MyIcon type="icon-danta" />,
                 elementPath: 'lessons/day1',
                 key: 'lessons/day1',
             },
             {
-                label: '学习-2',
+                label: '轨道控制器控制器 OrbitControls 使物体可以旋转',
                 icon: <MyIcon type="icon-qingning" />,
                 elementPath: 'lessons/day2',
                 key: 'lessons/day2',
             },
             {
-                label: '学习-3',
+                label: '3D辅助线',
                 icon: <MyIcon type="icon-lajiao" />,
                 elementPath: 'lessons/day3',
                 key: 'lessons/day3',
             },
             {
-                label: '学习-4',
+                label: '物体移动',
                 icon: <MyIcon type="icon-shizi" />,
                 elementPath: 'lessons/day4',
                 key: 'lessons/day4',
             },
             {
-                label: '学习-5',
+                label: '物体位置 + 缩放 + 角度',
                 icon: <MyIcon type="icon-mojituo" />,
                 elementPath: 'lessons/day5',
                 key: 'lessons/day5',
             },
             {
-                label: '学习-6',
+                label: 'new THREE.Clock() 获取运行时时间信息',
                 icon: <MyIcon type="icon-pijiu" />,
                 elementPath: 'lessons/day6',
                 key: 'lessons/day6',
             },
             {
-                label: '学习-7',
+                label: 'gsap 设置动画效果 动画框架 npm i gsap',
                 icon: <MyIcon type="icon-putaojiu" />,
                 elementPath: 'lessons/day7',
                 key: 'lessons/day7',
             },
             {
-                label: '学习-8',
+                label: '随页面尺寸变化而自适应渲染大小',
                 icon: <MyIcon type="icon-kouxiangtang" />,
                 elementPath: 'lessons/day8',
-                key: 'lessons/day8',
+                key: 'lessons吧/day8',
+            },
+            {
+                label: 'dat.gui使用',
+                icon: <MyIcon type="icon-xiangcaobingqilin" />,
+                elementPath: 'lessons/day9',
+                key: 'lessons/day9',
+            },
+            {
+                label: '认识几何体',
+                icon: <MyIcon type="icon-jiaozi" />,
+                elementPath: 'lessons/day10',
+                key: 'lessons/day10',
+            },
+            {
+                label: '创建酷炫三角形',
+                icon: <MyIcon type="icon-tilamisu" />,
+                elementPath: 'lessons/day11',
+                key: 'lessons/day11',
+            },
+            {
+                label: '创建空心长方体',
+                icon: <MyIcon type="icon-huoguo" />,
+                elementPath: 'lessons/day12',
+                key: 'lessons/day12',
+            },
+
+            {
+                label: '基础网格材质',
+                icon: <MyIcon type="icon-paobing" />,
+                elementPath: 'lessons/day13',
+                key: 'lessons/day13',
+            },
+
+            {
+                label: '标准网格材质',
+                icon: <MyIcon type="icon-mantou" />,
+                elementPath: 'lessons/day14',
+                key: 'lessons/day14',
             },
         ],
     },
@@ -131,41 +168,36 @@ export const routerPaths = [
         key: Math.random(),
         children: [
             {
-                label: '装箱demo',
+                label: '3D装箱demo',
                 icon: <MyIcon type="icon-zhixiang_niupizhixiang-15" />,
                 elementPath: '装箱demo',
                 key: 'package-preview',
             },
-        ],
-    },
-    {
-        label: '测试图片标注',
-        icon: <MyIcon type="icon-nailao" />,
-        key: Math.random(),
-        children: [
             {
-                label: '图片标注',
+                label: '测试图片标注demo',
                 icon: <MyIcon type="icon-feiyuguantou" />,
                 elementPath: 'pic-mark',
                 key: 'pic-mark',
             },
-        ],
-    },
-    {
-        label: '测试文本标注',
-        icon: <MyIcon type="icon-doujiang" />,
-        key: Math.random(),
-        children: [
             {
-                label: '文本标注',
+                label: '测试文本标注demo',
                 icon: <MyIcon type="icon-dangaojuan" />,
                 elementPath: 'text-mark',
                 key: 'text-mark',
             },
+
+            {
+                label: '测试纹理demo',
+                icon: <MyIcon type="icon-yuzijiang" />,
+                elementPath: 'texture-demo',
+                key: 'texture-demo',
+            },
+
+            
         ],
     },
-
-    
+ 
+  
 ];
 
 export function RouterCom2() {

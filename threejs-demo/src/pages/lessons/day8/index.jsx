@@ -10,9 +10,38 @@ import gsap from 'gsap';
  *  随页面尺寸变化而变化渲染分辨率
  */
 
+// 打开浏览器全屏
+
+const toFullScreen = () => {
+    let element = document.body;
+    if (element.requestFullscreen) {
+        element.requestFullscreen();
+    } else if (element.mozRequestFullScreen) {
+        element.mozRequestFullScreen();
+    } else if (element.msRequestFullscreen) {
+        element.msRequestFullscreen();
+    } else if (element.webkitRequestFullscreen) {
+        element.webkitRequestFullScreen();
+    }
+};
+
+// 退出浏览器全屏
+
+const exitFullscreen = () => {
+    if (document.exitFullscreen) {
+        document.exitFullscreen();
+    } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+        document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+    }
+};
+
 export default function ThreeComponent() {
     const container = useRef(null);
-
+    let fullScreenFlag = false;
     const init = () => {
         const scene = new THREE.Scene();
 
@@ -25,22 +54,34 @@ export default function ThreeComponent() {
         camera.position.set(0, 0, 10);
         scene.add(camera);
 
-        const geometry = new THREE.BoxGeometry(2, 3, 4);
+        const geometry = new THREE.BoxGeometry(4, 4, 2);
         const material = new THREE.MeshBasicMaterial({ color: 0xffe5cd61 });
         const cube = new THREE.Mesh(geometry, material);
         scene.add(cube);
 
         // 渲染器
         const renderer = new THREE.WebGLRenderer();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        console.log(renderer);
-
+        const WIDTH = Number(
+            window
+                .getComputedStyle(
+                    document.getElementsByClassName('ant-layout-content')[0]
+                )
+                .width.split('px')[0]
+        );
+        const HEIGHT = Number(
+            window
+                .getComputedStyle(
+                    document.getElementsByClassName('ant-layout-content')[0]
+                )
+                .height.split('px')[0]
+        );
+        renderer.setSize(WIDTH, HEIGHT);
         // 获取Clock 跟踪时间，解决 Date now() 不准的问题；
         const clock = new THREE.Clock(); // 获取关于时钟的信息： <autoStart> <elapsedTime> <oldTime> <running> <startTime>
 
         // 利用gsap移动物体， x: 方向距离，duration:秒数 , repeat:重复 , delay: 延迟时间 ease: 速度, yoyo: 来回移动
         const animation1 = gsap.to(cube.position, {
-            x: 5,
+            z: 5,
             duration: 4,
             repeat: true,
             yoyo: true,
@@ -51,6 +92,7 @@ export default function ThreeComponent() {
         gsap.to(cube.rotation, {
             z: Math.PI * 3,
             duration: 5,
+            repeat: true,
             onComplete: () => {
                 console.log('动画完成');
             },
@@ -59,21 +101,41 @@ export default function ThreeComponent() {
             },
         });
         // 双击暂停
-        window.addEventListener('click', () => {
-            console.log('gsap x:', animation1);
-            window.animation1 = animation1;
-            if (animation1.isActive()) {
-                // 动画暂停
-                animation1.pause();
-                return;
+        // window.addEventListener('click', () => {
+        //     console.log('gsap x:', animation1);
+        //     window.animation1 = animation1;
+        //     if (animation1.isActive()) {
+        //         // 动画暂停
+        //         animation1.pause();
+        //         return;
+        //     }
+        //     // 动画恢复
+        //     animation1.resume();
+        // });
+
+        // 双击打开全屏 / 退出全屏
+        window.addEventListener('dblclick', () => {
+            if (!document.fullscreen) {
+                toFullScreen();
+            } else {
+                exitFullscreen();
             }
-            // 动画恢复
-            animation1.resume();
+            // 更新camera 宽高比;
+            camera.aspect = window.innerWidth / window.innerHeight;
+            /* 
+                  更新camera 投影矩阵
+                  .updateProjectionMatrix () : undefined
+                  更新摄像机投影矩阵。在任何参数被改变以后必须被调用。
+                  */
+            camera.updateProjectionMatrix();
+            // 更新渲染器
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            // 设置渲染器像素比:
+            renderer.setPixelRatio(window.devicePixelRatio);
         });
 
-
         // 更具页面大小变化，更新渲染
-        window.addEventListener('resize', () => { 
+        window.addEventListener('resize', () => {
             // 更新camera 宽高比;
             camera.aspect = window.innerWidth / window.innerHeight;
             /* 
@@ -82,18 +144,16 @@ export default function ThreeComponent() {
             更新摄像机投影矩阵。在任何参数被改变以后必须被调用。
             */
             camera.updateProjectionMatrix();
-
             // 更新渲染器
             renderer.setSize(window.innerWidth, window.innerHeight);
-            // 设置渲染器像素比: 
+            // 设置渲染器像素比:
             renderer.setPixelRatio(window.devicePixelRatio);
-        })
+        });
 
         // 渲染函数
         function render(t) {
-
             controls.update();
-            
+
             renderer.render(scene, camera);
             // 动画帧
             requestAnimationFrame(render);
@@ -111,10 +171,10 @@ export default function ThreeComponent() {
             请注意，如果该值被启用，你将必须在你的动画循环里调用.update()。
         */
         controls.enableDamping = true;
-  
-        cube.position.set(2, 2, 1);
-        cube.rotation.set(Math.PI / 4, 0, 0, 'XYZ'); // Math.PI = 180° , 'XYZ'、'YZX'、'ZXY' 都可以，但必须大写
-        cube.scale.set(0.5, 0.7, 0.5); // XYZ 轴缩放尺寸
+
+        // cube.position.set(2, 2, 1);
+        // cube.rotation.set(Math.PI / 4, 0, 0, 'XYZ'); // Math.PI = 180° , 'XYZ'、'YZX'、'ZXY' 都可以，但必须大写
+        // cube.scale.set(0.5, 0.7, 0.5); // XYZ 轴缩放尺寸
 
         render();
 
@@ -129,11 +189,8 @@ export default function ThreeComponent() {
 
     return (
         <>
-            
-
-            <div id="container" ref={container}>
-                
-            </div>
+            随页面尺寸变化而自适应渲染大小
+            <div id="container" ref={container}></div>
         </>
     );
 }

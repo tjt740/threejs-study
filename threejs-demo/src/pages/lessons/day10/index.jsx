@@ -5,7 +5,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 // 导入动画库
 import gsap from 'gsap';
-
+ 
 // 导入gui
 // import * as dat from 'dat.gui';
 /*
@@ -36,9 +36,7 @@ export default function ThreeComponent() {
         const vertexPosition = new Float32Array([
             1.0, 1.0, 0, // 顶点1,XYZ坐标
             1.0, 5.0, 0, // 顶点2,XYZ坐标
-            5.0, 5.0, 0, // 顶点3,XYZ坐标
-
-           
+            5.0, 5.0, 0, // 顶点3,XYZ坐标           
             5.0, 5.0, 0,
             5.0, 1.0, 0, // 顶点4,XYZ坐标
             1.0, 1.0, 0,
@@ -62,11 +60,11 @@ export default function ThreeComponent() {
         scene.add(cube);
         
         // 创建空心长方体 
-        const cuboid = new THREE.BoxGeometry(3, 2, 1);
-        const cuboidMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-        const cuboidCube = new THREE.Mesh(cuboid, cuboidMaterial);
-        const box = new THREE.BoxHelper(cuboidCube)
-        scene.add( box );
+        // const cuboid = new THREE.BoxGeometry(3, 2, 1);
+        // const cuboidMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        // const cuboidCube = new THREE.Mesh(cuboid, cuboidMaterial);
+        // const box = new THREE.BoxHelper(cuboidCube)
+        // scene.add( box );
        
 
         //  创建XYZ直角坐标系  (红色代表 X 轴. 绿色代表 Y 轴. 蓝色代表 Z 轴.)
@@ -112,7 +110,7 @@ export default function ThreeComponent() {
 
     return (
         <>
-            <h1 style={{ width: '200px' }}> Three.js 组件 </h1>
+            认识几何体
 
             <div id="container" ref={container}></div>
         </>

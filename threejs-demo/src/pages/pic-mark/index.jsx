@@ -1,17 +1,23 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Radio, Button } from 'antd';
+import { Radio, Button, message, Divider } from 'antd';
 import { PlusOutlined, MinusOutlined } from '@ant-design/icons';
-import './FileSaver';
-import './index.css';
-import { colorChange } from './utils';
 import axios from 'axios';
-import cnames from 'classnames';
+import './FileSaver';
+import cNames from 'classnames';
+import { colorChange } from './utils';
+import './index.css';
 
+const p1 = {};
+const p2 = {};
+// 图片数据存储
+const image = new Image();
 let canvas,
+    borderCanvas,
+    leftTopCanvas,
+    leftBottomCanvas,
+    rightTopCanvas,
+    rightBottomCanvas,
     obj = {},
-    p1 = {},
-    p2 = {},
-    image = new Image(),
     xMin,
     yMin,
     xMax,
@@ -45,310 +51,232 @@ let canvas,
     mouseX,
     mouseY,
     imgXY,
-    resValue = [],
-    flag_drawBbox = false;
-const radioValueList = [
-    {
-        label: '植物',
-        value: 'botany',
-        labelColor: '#68228B',
-    },
-    {
-        label: '水果',
-        value: 'fruit',
-        labelColor: '#FF82AB',
-    },
-    {
-        label: '咖啡',
-        value: 'coffee',
-        labelColor: '#00CD00',
-    },
-    {
-        label: '纸箱',
-        value: 'carton',
-        labelColor: '#00B2EE',
-    },
-    {
-        label: '磁带',
-        value: 'tape',
-        labelColor: '#DEB887',
-    },
-];
-export default function PicMark() {
-    canvas = useRef(null);
-    let selectValue = radioValueList?.at(0);
-    const [objValueArr, setObjValueArr] = useState([]);
-    const [radioValue, setRadioValue] = useState(
-        () => radioValueList?.at(0)?.value
-    );
-    // 初始化
-    function init() {
-        canvas = canvas.current;
-        canW = canvas.width;
-        canH = canvas.height;
-        ctx = canvas.getContext('2d');
-        ctx.lineWidth = 3;
-        flush_canvas();
-        image.src = 'http://www.tietuku.cn/assets/img/error.svg';
-        image.objects = [];
+    flagDrawBbox = false,
+    isPointInPath = false,
+    selectValue,
+    data,
+    // 是否删除
+    isDelete;
 
+export default function ObjectDetection() {
+    canvas = useRef(null);
+    borderCanvas = useRef(null);
+    leftTopCanvas = useRef(null);
+    leftBottomCanvas = useRef(null);
+    rightTopCanvas = useRef(null);
+    rightBottomCanvas = useRef(null);
+
+    const [objValueArr, setObjValueArr] = useState([]);
+
+    // label数组
+    const [radioValueList, setRadioValueList] = useState([]);
+
+    // key 监听值变化 ★不存在无法更新页面
+    const [pageKey, setPageKey] = useState(Math.random());
+    // radio切换
+    const [radioValue, setRadioValue] = useState(null);
+    // 初始化
+    const init = () => {
         // 加载图片
-        image.onload = function () {
+        image.onload = () => {
+            canvas = canvas.current;
+            canvas.width = image.width;
+            canvas.height = image.height;
+            canW = image.width;
+            canH = image.height;
+            ctx = canvas.getContext('2d');
+            image.objects = [];
+            // 在canvas页面 按下时
+            canvas.onmousedown = (e) => {
+                canvas = canvas.current || canvas;
+                for (let i = 0; i < image?.objects?.length || 0; i++) {
+                    if (image?.objects?.length) {
+                        isPointInPath = isPointInRect(e, image.objects[i]);
+                        if (isPointInPath && e.button === 0) {
+                            console.log('选中', image.objects[i]);
+                            for (
+                                let j = 0;
+                                j < image?.objects.length || 0;
+                                j++
+                            ) {
+                                image.objects[j].isClick = false;
+                            }
+                            image.objects[i].isClick = true;
+                            backfillDraw(image.objects);
+                            showOriginImg();
+
+                            canvas.onmousemove = (e) => {
+                                image.objects[i].xMin =
+                                    e.offsetX - image.objects[i].width / 2;
+                                image.objects[i].yMin =
+                                    e.offsetY - image.objects[i].height / 2;
+                                image.objects[i].xMax =
+                                    image.objects[i].xMin +
+                                    image.objects[i].width;
+                                image.objects[i].yMax =
+                                    image.objects[i].yMin +
+                                    image.objects[i].height;
+                                backfillDraw(image.objects);
+                                showOriginImg();
+                            };
+                            canvas.onmouseup = () => {
+                                canvas.onmousemove = null;
+                                canvas.onmouseup = null;
+                            };
+                            break;
+                        }
+                    }
+                }
+                if (!isPointInPath && e.button === 0) {
+                    console.log('未选中');
+                    canvas.onmousemove = (e) => {
+                        if (!isPointInPath && flagDrawBbox) {
+                            p2.x =
+                                e.offsetX > image.canx ? e.offsetX : image.canx;
+                            p2.x =
+                                p2.x < image.canx + image.canw
+                                    ? p2.x
+                                    : image.canx + image.canw;
+                            p2.y =
+                                e.offsetY > image.cany ? e.offsetY : image.cany;
+                            p2.y =
+                                p2.y < image.cany + image.canh
+                                    ? p2.y
+                                    : image.cany + image.canw;
+                            obj.x = Math.min(p1.x, p2.x);
+                            obj.y = Math.min(p1.y, p2.y);
+                            obj.w = Math.abs(p1.x - p2.x);
+                            obj.h = Math.abs(p1.y - p2.y);
+                            obj.width = Math.abs(p1.x - p2.x);
+                            obj.height = Math.abs(p1.y - p2.y);
+                            obj.isShow = true;
+                            obj.isSelect = false;
+                            showImage(image);
+                            ctx.fillStyle = utilsColorChange(obj?.labelColor);
+                            ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
+                            ctx.save();
+                        }
+                        canvas.onmouseup = () => {
+                            flagDrawBbox = false;
+                            canvas.onmousemove = null;
+                            canvas.onmouseup = null;
+                        };
+                    };
+                    if (!flagDrawBbox && e.button === 0) {
+                        flagDrawBbox = true;
+                        p1.x = e.offsetX > image.canx ? e.offsetX : image.canx;
+                        p1.x =
+                            p1.x < image.canx + image.canw
+                                ? p1.x
+                                : image.canx + image.canw;
+                        p1.y = e.offsetY > image.cany ? e.offsetY : image.cany;
+                        p1.y =
+                            p1.y < image.cany + image.canh
+                                ? p1.y
+                                : image.cany + image.canw;
+                        return;
+                    }
+                    flagDrawBbox = false;
+                }
+            };
             showOriginImg();
         };
-        // 双击方法
-        canvas.ondblclick = function (e) {
-            enlargedPicture(e, image);
-        };
-        canvas.oncontextmenu = function (e) {
-            e.preventDefault();
-        };
-        canvas.onmouseup = function (e) {
-            if (e.button === 2) {
-                showOriginImg();
-            }
-        };
-        // 划线
-        canvas.onmousedown = function (e) {
-            // 0 : 鼠标左键
-            if (e.button === 0) {
-                if (!flag_drawBbox) {
-                    flag_drawBbox = true;
-                    p1.x = e.offsetX > image.canx ? e.offsetX : image.canx;
-                    p1.x =
-                        p1.x < image.canx + image.canw
-                            ? p1.x
-                            : image.canx + image.canw;
-                    p1.y = e.offsetY > image.cany ? e.offsetY : image.cany;
-                    p1.y =
-                        p1.y < image.cany + image.canh
-                            ? p1.y
-                            : image.cany + image.canw;
-                    return;
-                }
-                flag_drawBbox = false;
-            }
-        };
-        canvas.onmousemove = function (e) {
-            if (flag_drawBbox) {
-                p2.x = e.offsetX > image.canx ? e.offsetX : image.canx;
-                p2.x =
-                    p2.x < image.canx + image.canw
-                        ? p2.x
-                        : image.canx + image.canw;
-                p2.y = e.offsetY > image.cany ? e.offsetY : image.cany;
-                p2.y =
-                    p2.y < image.cany + image.canh
-                        ? p2.y
-                        : image.cany + image.canw;
-                obj.x = Math.min(p1.x, p2.x);
-                obj.y = Math.min(p1.y, p2.y);
-                obj.w = Math.abs(p1.x - p2.x);
-                obj.h = Math.abs(p1.y - p2.y);
-                showImage(image);
-                ctx.fillStyle = utilsColorChange(obj.labelColor);
-                ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
-                ctx.save();
-            }
-        };
-    }
+    };
+    // 判断点是否在矩形内。
+    const isPointInRect = (point, rect) => {
+        return (
+            point.offsetX >= rect.x &&
+            point.offsetY >= rect.y &&
+            point.offsetX <= rect.x + rect.w &&
+            point.offsetY <= rect.y + rect.h
+        );
+    };
+
     // 获取数据
-    function getData() {
-        axios
-            .get(
-                `https://search.heweather.com/find?location=杭州&key=bc08513d63c749aab3761f77d74fe820`
-            )
-            .then((res) => {
-                if (res.status === 200) {
-                    let data = {
-                        imgName: 'http://www.tietuku.cn/assets/img/error.svg',
-                        objValue: [
-                            {
-                                label: '植物',
-                                labelColor: '#68228B',
-                                value: 'botany',
-                                keyId: '0.9097',
-                                xMin: 110,
-                                xMax: 236,
-                                yMin: 65,
-                                yMax: 208,
-                                width: 126,
-                                height: 143,
-                            },
-                            {
-                                label: '植物',
-                                labelColor: '#68228B',
-                                value: 'botany',
-                                keyId: '0.2382',
-                                xMin: 266,
-                                xMax: 366,
-                                yMin: 64,
-                                yMax: 208,
-                                width: 100,
-                                height: 144,
-                            },
-                            {
-                                label: '植物',
-                                labelColor: '#68228B',
-                                value: 'botany',
-                                keyId: '0.1336',
-                                xMin: 416,
-                                xMax: 516,
-                                yMin: 64,
-                                yMax: 206,
-                                width: 100,
-                                height: 142,
-                            },
-                            {
-                                label: '咖啡',
-                                labelColor: '#00CD00',
-                                value: 'coffee',
-                                keyId: '0.7728',
-                                xMin: 190,
-                                xMax: 280,
-                                yMin: 241,
-                                yMax: 371,
-                                width: 90,
-                                height: 130,
-                            },
-                            {
-                                label: '咖啡',
-                                labelColor: '#00CD00',
-                                value: 'coffee',
-                                keyId: '0.7403',
-                                xMin: 352,
-                                xMax: 486,
-                                yMin: 241,
-                                yMax: 390,
-                                width: 134,
-                                height: 149,
-                            },
-                            {
-                                label: '水果',
-                                labelColor: '#FF82AB',
-                                value: 'fruit',
-                                keyId: '0.4778',
-                                xMin: 528,
-                                xMax: 696,
-                                yMin: 219,
-                                yMax: 324,
-                                width: 168,
-                                height: 105,
-                            },
-                            {
-                                label: '纸箱',
-                                labelColor: '#00B2EE',
-                                value: 'carton',
-                                keyId: '0.5362',
-                                xMin: 729,
-                                xMax: 953,
-                                yMin: 37,
-                                yMax: 261,
-                                width: 224,
-                                height: 224,
-                            },
-                            {
-                                label: '纸箱',
-                                labelColor: '#00B2EE',
-                                value: 'carton',
-                                keyId: '0.3866',
-                                xMin: 1038,
-                                xMax: 1248,
-                                yMin: 167,
-                                yMax: 420,
-                                width: 210,
-                                height: 253,
-                            },
-                            {
-                                label: '纸箱',
-                                labelColor: '#00B2EE',
-                                value: 'carton',
-                                keyId: '0.2151',
-                                xMin: 1220,
-                                xMax: 1423,
-                                yMin: 20,
-                                yMax: 229,
-                                width: 203,
-                                height: 209,
-                            },
-                            {
-                                label: '磁带',
-                                labelColor: '#DEB887',
-                                value: 'tape',
-                                keyId: '0.2404',
-                                xMin: 616,
-                                xMax: 967,
-                                yMin: 537,
-                                yMax: 776,
-                                width: 351,
-                                height: 239,
-                            },
-                            {
-                                label: '磁带',
-                                labelColor: '#DEB887',
-                                value: 'tape',
-                                keyId: '0.9110',
-                                xMin: 173,
-                                xMax: 406,
-                                yMin: 554,
-                                yMax: 830,
-                                width: 233,
-                                height: 276,
-                            },
-                            {
-                                label: '磁带',
-                                labelColor: '#DEB887',
-                                value: 'tape',
-                                keyId: '0.1834',
-                                xMin: 1249,
-                                xMax: 1444,
-                                yMin: 492,
-                                yMax: 699,
-                                width: 195,
-                                height: 207,
-                            },
-                            {
-                                label: '咖啡',
-                                labelColor: '#00CD00',
-                                value: 'coffee',
-                                keyId: '0.9641',
-                                xMin: 877,
-                                xMax: 1077,
-                                yMin: 500,
-                                yMax: 703,
-                                width: 200,
-                                height: 203,
-                            },
-                        ],
-                    };
-                    const { imgName, objValue } = data;
-                    objValue?.forEach((i) => {
-                        drawFill(
-                            imgName,
-                            i.xMin,
-                            i.yMin,
-                            i.xMax,
-                            i.yMax,
-                            i.labelColor
-                        );
-                        i.x = i.xMin + 1;
-                        i.y = i.yMin + 1;
-                        i.w = i.xMax - i.xMin;
-                        i.h = i.yMax - i.yMin;
-                        // Tjt: 眼睛图标打开
-                        i.isShow = true;
-                        // Tjt: 是否选中
-                        i.isSelect = false;
-                    });
-                    setObjValueArr(objValue);
-                    resValue = objValue;
-                    confirmBox(objValue);
-                    return;
-                }
-            });
-    }
-    //双击放大图片
-    function enlargedPicture(e, img) {
+    const getData = () => {
+        // 接口数据
+        data = [];
+        setTimeout(() => {
+            data = {
+                imgName: 'http://www.tietuku.cn/assets/img/error.svg',
+                objValue: [
+                    {
+                        label: '植物',
+                        labelColor: '#68228B',
+                        value: 'botany',
+                        keyId: '0.9097',
+                        xMin: 110,
+                        xMax: 236,
+                        yMin: 65,
+                        yMax: 208,
+                        width: 126,
+                        height: 143,
+                    },
+                    {
+                        label: '咖啡',
+                        labelColor: '#00CD00',
+                        value: 'coffee',
+                        keyId: '0.7403',
+                        xMin: 284,
+                        xMax: 418,
+                        yMin: 67,
+                        yMax: 216,
+                        width: 134,
+                        height: 149,
+                    },
+                    {
+                        label: '纸箱',
+                        labelColor: '#00B2EE',
+                        value: 'carton',
+                        keyId: '0.2151',
+                        xMin: 697,
+                        xMax: 900,
+                        yMin: 77,
+                        yMax: 286,
+                        width: 203,
+                        height: 209,
+                    },
+                    {
+                        label: '咖啡',
+                        labelColor: '#00CD00',
+                        value: 'coffee',
+                        keyId: '0.9641',
+                        xMin: 465,
+                        xMax: 665,
+                        yMin: 70,
+                        yMax: 273,
+                        width: 200,
+                        height: 203,
+                    },
+                ],
+            };
+            const { objValue } = data;
+            backfillDraw(data);
+            image.objects = objValue;
+            confirmBox(image.objects);
+        }, 500);
+    };
+    // 回填渲染
+    const backfillDraw = (picData) => {
+        // 鼠标移动每一帧都清楚画布内容，然后重新画圆
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const objValue = picData?.objValue || picData || [];
+        objValue?.forEach((i) => {
+            i.x = i.xMin + 1;
+            i.y = i.yMin + 1;
+            i.w = i.xMax - i.xMin;
+            i.h = i.yMax - i.yMin;
+            if (i.isShow === undefined) {
+                i.isShow = true;
+                return;
+            }
+            if (!i.isShow) {
+                i.isShow = false;
+            }
+        });
+    };
+    // 双击放大图片
+    const enlargedPicture = (e, img) => {
         if (e) {
             mouseX = e.offsetX;
             mouseY = e.offsetY;
@@ -356,30 +284,29 @@ export default function PicMark() {
             mouseX = 1;
             mouseY = 1;
         }
-        if (canXYonImage(mouseX, mouseY)) {
+        if (canXYOnImage(mouseX, mouseY)) {
             imgXY = canXYtoImageXY(img, mouseX, mouseY);
             img.focusX = imgXY[0];
             img.focusY = imgXY[1];
-            img.sizek *= 1.2;
+            img.sizeK *= 1.2;
             resetDataNewObj();
             showImage(img);
-            return;
         }
-    }
+    };
     // 缩小图片
-    function zoomOutPicture(img) {
+    const zoomOutPicture = (img) => {
         mouseX = 1;
         mouseY = 1;
         imgXY = canXYtoImageXY(img, mouseX, mouseY);
         imgXY = [1, 1];
         img.focusX = imgXY[0];
         img.focusY = imgXY[1];
-        img.sizek *= 0.9;
+        img.sizeK *= 0.9;
         resetDataNewObj();
         showImage(img);
-    }
-    //判断点是否在image上
-    function canXYonImage(x, y) {
+    };
+    // 判断点是否在image上
+    const canXYOnImage = (x, y) => {
         if (x > image.canx && x < image.canx + image.canw) {
             if (y > image.cany && y < image.cany + image.canh) {
                 return true;
@@ -387,101 +314,70 @@ export default function PicMark() {
         } else {
             return false;
         }
-    }
-    //获取canvas上一个点对应原图像的点
-    function canXYtoImageXY(img, canx, cany) {
-        k = 1 / img.sizek;
-        imgX = (canx - img.canx) * k + img.cutx;
-        imgY = (cany - img.cany) * k + img.cuty;
+    };
+    // 获取canvas上一个点对应原图像的点
+    const canXYtoImageXY = (img, canx, cany) => {
+        k = 1 / img.sizeK;
+        imgX = (canx - img.canx) * k + img.cutX;
+        imgY = (cany - img.cany) * k + img.cutY;
         return [imgX, imgY];
-    }
-    //在canvas上展示原图片
+    };
+    // 在canvas上展示原图片
     function showOriginImg() {
-        flush_canvas();
-        canvas = canvas.current || canvas;
-        imW = canvas.width;
-        imH = canvas.height;
-        image.width = canW;
-        image.height = canH;
+        canvas = canvas?.current || canvas;
+        imW = canvas?.width;
+        imH = canvas?.height;
         k = canW / imW;
         if (imH * k > canH) {
             k = canH / imH;
         }
-        image.sizek = k;
+        image.width = canW;
+        image.height = canH;
+        image.sizeK = k;
         image.focusX = imW / 2;
         image.focusY = imH / 2;
         resetDataNewObj();
         showImage(image);
     }
-    //在canvas上展示图像对应的部分
-    function showImage(img) {
-        flush_canvas();
-        imgWK = img.width * img.sizek;
-        imgHK = img.height * img.sizek;
-
-        // if (canW > imgWK) {
-        //     img.cutx = 0;
-        //     img.canx = (canW - imgWK) / 2;
-        //     img.cutw = img.width;
-        //     img.canw = imgWK;
-        // } else {
+    // 在canvas上展示图像对应的部分
+    // *此处img === image
+    const showImage = (img) => {
+        flushCanvas();
+        imgWK = img.width * img.sizeK;
+        imgHK = img.height * img.sizeK;
         img.canx = 0;
         img.canw = canW;
-        lenIm = canW / img.sizek;
-        img.cutw = lenIm;
+        lenIm = canW / img.sizeK;
+        img.cutW = lenIm;
         xl = img.focusX - lenIm / 2;
         xr = img.focusX + lenIm / 2;
-        img.cutx = xl;
+        img.cutX = xl;
         if (xl < 0) {
-            img.cutx = 0;
+            img.cutX = 0;
         }
         if (xr >= img.width) {
-            img.cutx = xl - (xr - img.width + 1);
+            img.cutX = xl - (xr - img.width + 1);
         }
-        // }
-
-        // if (canH > imgHK) {
-        //     img.cuty = 0;
-        //     img.cany = (canH - imgHK) / 2;
-        //     img.cuth = img.height;
-        //     img.canh = imgHK;
-        // } else {
         img.cany = 0;
         img.canh = canH;
-        lenIm = canH / img.sizek;
-        img.cuth = lenIm;
+        lenIm = canH / img.sizeK;
+        img.cutH = lenIm;
         yu = img.focusY - lenIm / 2;
         yd = img.focusY + lenIm / 2;
-        img.cuty = yu;
+        img.cutY = yu;
         if (yu < 0) {
-            img.cuty = 0;
+            img.cutY = 0;
         }
         if (yd >= img.height) {
-            img.cuty = yu - (yd - img.height + 1);
+            img.cutY = yu - (yd - img.height + 1);
         }
-        // }
-        // 先把图片缩放成画布比例的大小，否则直接设置图片宽高图片展示不完整
-        ctx.drawImage(
-            img,
-            0,
-            0,
-            img.cutw,
-            img.cuth,
-            img.canx,
-            img.cany,
-            img.canw,
-            img.canh
-        );
+        // 绘制图片并进行自适应
+        ctx.drawImage(img, 0, 0, img.cutW, img.cutH);
         showObjects(img);
-    }
-    //图像上的点对应的canvas坐标
-    function imageXYtoCanXY(img, x, y) {
-        x = (x - img.cutx) * img.sizek + img.canx;
-        y = (y - img.cuty) * img.sizek + img.cany;
-        return [x, y];
-    }
-    //在canvas上显示已标注目标
-    function showObjects(img) {
+    };
+    // 在canvas上显示已标注目标
+    // *此处img === image
+    const showObjects = (img) => {
         for (let i = 0; i < img.objects.length; i++) {
             target = img.objects[i];
             x = target.xMin;
@@ -495,22 +391,201 @@ export default function PicMark() {
             xm = p[0];
             ym = p[1];
             // 画填充
-            drawFill(img, x, y, xm, ym, target.labelColor);
+            drawFill(
+                x,
+                y,
+                xm,
+                ym,
+                target.labelColor,
+                img.objects[i]?.isShow,
+                img.objects[i]?.isClick,
+                img.objects[i]
+            );
         }
-    }
+    };
+    // 图像上的点对应的canvas坐标
+    const imageXYtoCanXY = (img, x, y) => {
+        x = (x - img.cutX) * img.sizeK + img.canx;
+        y = (y - img.cutY) * img.sizeK + img.cany;
+        return [x, y];
+    };
+    // 拖拽更改image.objects
+    const dragChangeWidthAndHeight = (event, index) => {
+        image.objects[index].x = event.offsetX + 1;
+        image.objects[index].y = event.offsetY + 1;
+        image.objects[index].width =
+            image.objects[index].xMax - image.objects[index].xMin;
+        image.objects[index].height =
+            image.objects[index].yMax - image.objects[index].yMin;
+        image.objects[index].w =
+            image.objects[index].xMax - image.objects[index].xMin;
+        image.objects[index].h =
+            image.objects[index].yMax - image.objects[index].yMin;
+        setObjValueArr(image.objects);
+        showImage(image);
+    };
     // 画填充
-    function drawFill(img, x1, y1, x2, y2, color) {
-        ctx.fillStyle = utilsColorChange(color);
-        ctx.beginPath();
-        ctx.lineTo(x2, y1);
-        ctx.lineTo(x2, y2);
-        ctx.lineTo(x1, y2);
-        ctx.lineTo(x1, y1);
-        ctx.fill();
-        ctx.closePath();
-    }
+    const drawFill = (x1, y1, x2, y2, ReactColor, isShow, isClick = false, item) => {
+        if (isShow) {
+            if (isClick) {
+                ctx.strokeStyle = 'rgb(59, 160, 249)';
+                ctx.lineWidth = 1;
+                ctx.strokeRect(x1, y1, x2 - x1, y2 - y1);
+                ctx.save();
+                // 拖拽改变图片宽高大小
+                // 坐上角
+                leftTopCanvas.current.width = 10;
+                leftTopCanvas.current.height = 10;
+                leftTopCanvas.current.style.cssText = `top:${y1 - 5}px;left:${
+                    x1 - 5
+                }px;cursor:se-resize`;
+                const leftTopCtx = leftTopCanvas.current.getContext('2d');
+                leftTopCtx.fillStyle = '#FFFFFF';
+                leftTopCtx.fillRect(0, 0, 10, 10);
+                leftTopCanvas.current.onmousedown = (e) => {
+                    document.onmousedown = () => {
+                        document.onmousemove = (e) => {
+                            if (e.offsetX > 10 || e.offsetY > 10) {
+                                if (image.objects?.length) {
+                                    const index = image.objects.findIndex(
+                                        (o) => o.keyId === item.keyId
+                                    );
+                                    image.objects[index].xMin = e.offsetX;
+                                    image.objects[index].yMin = e.offsetY;
+                                    dragChangeWidthAndHeight(e, index);
+                                }
+                            }
+                        };
+
+                        document.onmouseup = () => {
+                            document.onmousemove = null;
+                            document.onmousedown = null;
+                            document.onmouseup = null;
+                            flagDrawBbox = false;
+                            canvas.onmousemove = null;
+                            canvas.onmouseup = null;
+                        };
+                    };
+                };
+
+                // 左下角
+                leftBottomCanvas.current.width = 10;
+                leftBottomCanvas.current.height = 10;
+                leftBottomCanvas.current.style.cssText = `top:${
+                    y2 - 5
+                }px;left:${x1 - 5}px;cursor:ne-resize`;
+                const leftBottomCtx = leftBottomCanvas.current.getContext('2d');
+                leftBottomCtx.fillStyle = '#FFFFFF';
+                leftBottomCtx.fillRect(0, 0, 10, 10);
+                leftBottomCanvas.current.onmousedown = (e) => {
+                    document.onmousedown = () => {
+                        document.onmousemove = (e) => {
+                            if (e.offsetX > 10 || e.offsetY > 10) {
+                                if (image.objects?.length) {
+                                    const index = image.objects.findIndex(
+                                        (o) => o.keyId === item.keyId
+                                    );
+                                    image.objects[index].xMin = e.offsetX;
+                                    image.objects[index].yMax = e.offsetY;
+                                    dragChangeWidthAndHeight(e, index);
+                                }
+                            }
+                        };
+
+                        document.onmouseup = () => {
+                            document.onmousemove = null;
+                            document.onmousedown = null;
+                            document.onmouseup = null;
+                            flagDrawBbox = false;
+                            canvas.onmousemove = null;
+                            canvas.onmouseup = null;
+                        };
+                    };
+                };
+
+                // 右上角
+                rightTopCanvas.current.width = 10;
+                rightTopCanvas.current.height = 10;
+                rightTopCanvas.current.style.cssText = `top:${y1 - 5}px;left:${
+                    x2 - 5
+                }px;cursor:sw-resize`;
+                const rightTopCtx = rightTopCanvas.current.getContext('2d');
+                rightTopCtx.fillStyle = '#FFFFFF';
+                rightTopCtx.fillRect(0, 0, 10, 10);
+                rightTopCanvas.current.onmousedown = (e) => {
+                    document.onmousedown = () => {
+                        document.onmousemove = (e) => {
+                            if (e.offsetX > 10 || e.offsetY > 10) {
+                                if (image.objects?.length) {
+                                    const index = image.objects.findIndex(
+                                        (o) => o.keyId === item.keyId
+                                    );
+                                    image.objects[index].xMax = e.offsetX;
+                                    image.objects[index].yMin = e.offsetY;
+                                    dragChangeWidthAndHeight(e, index);
+                                }
+                            }
+                        };
+
+                        document.onmouseup = () => {
+                            document.onmousemove = null;
+                            document.onmousedown = null;
+                            document.onmouseup = null;
+                            flagDrawBbox = false;
+                            canvas.onmousemove = null;
+                            canvas.onmouseup = null;
+                        };
+                    };
+                };
+
+                // 右下角
+                rightBottomCanvas.current.width = 10;
+                rightBottomCanvas.current.height = 10;
+                rightBottomCanvas.current.style.cssText = `top:${
+                    y2 - 5
+                }px;left:${x2 - 5}px;cursor:nw-resize`;
+                const rightBottomCtx =
+                    rightBottomCanvas.current.getContext('2d');
+                rightBottomCtx.fillStyle = '#FFFFFF';
+                rightBottomCtx.fillRect(0, 0, 10, 10);
+                rightBottomCanvas.current.onmousedown = (e) => {
+                    document.onmousedown = () => {
+                        document.onmousemove = (e) => {
+                            if (e.offsetX > 10 || e.offsetY > 10) {
+                                if (image.objects?.length) {
+                                    const index = image.objects.findIndex(
+                                        (o) => o.keyId === item.keyId
+                                    );
+                                    image.objects[index].xMax = e.offsetX;
+                                    image.objects[index].yMax = e.offsetY;
+                                    dragChangeWidthAndHeight(e, index);
+                                }
+                            }
+                        };
+                        document.onmouseup = () => {
+                            document.onmousemove = null;
+                            document.onmousedown = null;
+                            document.onmouseup = null;
+                            flagDrawBbox = false;
+                            canvas.onmousemove = null;
+                            canvas.onmouseup = null;
+                        };
+                    };
+                };
+            }
+            ctx.beginPath();
+            ctx.lineTo(x2, y1);
+            ctx.lineTo(x2, y2);
+            ctx.lineTo(x1, y2);
+            ctx.lineTo(x1, y1);
+            ctx.fillStyle = utilsColorChange(ReactColor);
+            ctx.fill();
+            ctx.closePath();
+            ctx.save();
+        }
+    };
     // 充值obj
-    function resetDataNewObj() {
+    const resetDataNewObj = () => {
         obj = {};
         color = selectValue?.[0]?.labelColor || selectValue?.labelColor;
         value = selectValue?.[0]?.value || selectValue?.value;
@@ -520,18 +595,32 @@ export default function PicMark() {
         obj.value = value;
         obj.label = label;
         obj.keyId = Math.random().toFixed(4);
-    }
-    //  背景画布
-    function flush_canvas() {
+        setObjValueArr(image.objects);
+    };
+    // 背景画布绘制 #ffffff
+    const flushCanvas = () => {
         ctx.fillStyle = 'rgb(255, 255, 255)';
         ctx.fillRect(0, 0, canW, canH);
-    }
+    };
     // 更改line颜色
     const onChangeLineColor = (e) => {
         setRadioValue(e.target.value);
     };
     // 确认框
-    function confirmBox(resData) {
+    const confirmBox = (resData) => {
+        if (Object.prototype.toString.call(radioValue) !== '[object Object]') {
+            selectValue = radioValueList.filter(
+                (i) => i.value === radioValue
+            )[0];
+            setPageKey(Math.random());
+            setRadioValue(selectValue);
+        } else {
+            selectValue = radioValueList.filter(
+                (i) => i.value === radioValue?.value
+            )[0];
+            setPageKey(Math.random());
+            setRadioValue(selectValue);
+        }
         if ('w' in obj && obj.w !== 0) {
             xMin = obj.x;
             yMin = obj.y;
@@ -549,18 +638,17 @@ export default function PicMark() {
         }
         if (resData?.length) {
             image.objects = resData;
-            resetDataNewObj();
             showOriginImg();
             return true;
         }
         // 没有划线路线
         return false;
-    }
-    // 颜色转换
-    const utilsColorChange = (color) => {
-        return colorChange.hexToRgb(color || '#000000').rgba;
     };
-    //保存标注结果
+    // 颜色转换
+    const utilsColorChange = (fillColor) => {
+        return colorChange.hexToRgb(fillColor || '#000000').rgba;
+    };
+    // 保存标注结果
     const saveObj = () => {
         if (image?.objects?.length) {
             const objArr = [];
@@ -579,168 +667,394 @@ export default function PicMark() {
                     height: parseInt(target.h),
                 });
             }
-            selectValue = objArr;
             console.log('标注数组：', objArr);
-            // Tjt: 传给后端的数据
             const imRes = { imgName: image.src, objArr };
             const blob = new Blob([JSON.stringify(imRes)], { type: '' });
             const imgName = image.src.split('.')[0];
             const jsonFile = imgName + '.json';
-            saveJson(jsonFile, blob);
+            saveJSON(jsonFile, blob);
             return;
         }
-        alert('未进行任何标注');
+        message.error('未进行任何标注');
     };
-    //保存json文件
-    function saveJson(file, data) {
-        //下载为json文件
-        const Link = document.createElement('a');
-        Link.download = file;
-        Link.style.display = 'none';
+    // 保存json文件
+    const saveJSON = (file, JSONData) => {
+        // 下载为json文件
+        const link = document.createElement('a');
+        link.download = file;
+        link.style.display = 'none';
         // 字符内容转变成blob地址
-        Link.href = URL.createObjectURL(data);
+        link.href = URL.createObjectURL(JSONData);
         // 触发点击
-        document.body.appendChild(Link);
-        Link.click();
+        document.body.appendChild(link);
+        link.click();
         // 然后移除
-        document.body.removeChild(Link);
-    }
+        document.body.removeChild(link);
+    };
+    // 获取详情
+    const getContentInfo = () => {
+        axios
+            .get(
+                'https://tianqiapi.com/api?version=v6&appid=12382165&appsecret=9QN9R6Ma&city=杭州'
+            )
+            .then((res) => {
+                res = {
+                    success: true,
+                    errorCode: null,
+                    errorMessage: null,
+                    data: {
+                        detailData: {
+                            id: 51042,
+                            gmtCreate: 1674487914000,
+                            gmtModified: 1674487914000,
+                            sceneId: null,
+                            taskId: null,
+                            taskRecordId: null,
+                            dialogId: null,
+                            title: null,
+                            sourceContent:
+                                'https://station-img.oss-cn-hangzhou.aliyuncs.com/bpm/20220530/0c8cc470521f4850964e90f307c76b41/Screenshot_20220527_102922_com.tencent.mm.jpg',
+                            robotRecognition: null,
+                            humanRecognition: null,
+                            nluResult: null,
+                            comment: null,
+                            nodeId: null,
+                            topicId: null,
+                            status: 300,
+                            operatorId: null,
+                            operatorName: null,
+                            dataSetId: 55,
+                        },
+                        tagList: [
+                            {
+                                id: 640,
+                                gmtCreate: 1674487965000,
+                                gmtModified: 1674487965000,
+                                labelKey: 'tag3',
+                                labelType: 'category',
+                                color: '#a4dd00',
+                                labelName: 'tag2',
+                                sourceContent:
+                                    'https://station-img.oss-cn-hangzhou.aliyuncs.com/bpm/20220530/0c8cc470521f4850964e90f307c76b41/Screenshot_20220527_102922_com.tencent.mm.jpg',
+                                comment: null,
+                                feature: null,
+                                operatorId: null,
+                                operatorName: null,
+                                taskDetailId: 51042,
+                                taskRecordId: null,
+                                taskId: null,
+                                dataSetId: 55,
+                                dataIndex: null,
+                            },
+                        ],
+                        nextDetailId: 51043,
+                    },
+                };
 
+                const { detailData } = res.data;
+                // 初始化
+                init();
+                image.src = detailData?.sourceContent || '';
+            });
+    };
+    // 获取标签列表
+    const getTagTableData = (id) => {
+        axios
+            .get(
+                'https://tianqiapi.com/api?version=v6&appid=12382165&appsecret=9QN9R6Ma&city=杭州'
+            )
+            .then((res) => {
+                res = {
+                    success: true,
+                    errorCode: null,
+                    errorMessage: null,
+                    data: {
+                        category: [
+                            {
+                                id: 111,
+                                gmtCreate: 1674487927000,
+                                gmtModified: 1674487927000,
+                                labelName: 'tag1',
+                                labelKey: 'tag2',
+                                labelType: 'category',
+                                color: '#fcdc00',
+                                dataSetId: 55,
+                            },
+                            {
+                                id: 112,
+                                gmtCreate: 1674487935000,
+                                gmtModified: 1674487935000,
+                                labelName: 'tag2',
+                                labelKey: 'tag3',
+                                labelType: 'category',
+                                color: '#a4dd00',
+                                dataSetId: 55,
+                            },
+                            {
+                                id: 113,
+                                gmtCreate: 1674487939000,
+                                gmtModified: 1674487939000,
+                                labelName: 'tag3',
+                                labelKey: 'tag4',
+                                labelType: 'category',
+                                color: '#fda1ff',
+                                dataSetId: 55,
+                            },
+                        ],
+                    },
+                };
+                if (res.data?.category?.length) {
+                    res.data.category.forEach((o) => {
+                        o.label = o.labelName;
+                        o.value = o.labelKey;
+                        o.labelColor = o.color;
+                    });
+                    selectValue = res.data?.category?.at(0);
+                    setRadioValue(res.data.category?.at(0));
+                    setRadioValueList(res.data.category);
+                    return;
+                }
+                setRadioValueList([]);
+            });
+    };
     // 显隐标注
-
     useEffect(() => {
-        init();
-        // 获取已存的数据;
+        getContentInfo();
+        // 最后获取 标签
         setTimeout(() => {
-            getData();
-        }, 0);
-
- 
+            getTagTableData();
+        });
     }, []);
-
+    // radio切换
     useEffect(() => {
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        selectValue = radioValueList.filter((i) => i.value === radioValue);
-        resetDataNewObj();
-        showImage(image);
-        ctx.fillStyle = utilsColorChange(selectValue?.labelColor);
-        ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
-        ctx.save();
+        if (
+            Object.prototype.toString.call(radioValue) === '[object Object]' ||
+            Object.prototype.toString.call(radioValue) === '[object String]'
+        ) {
+            if (radioValueList.length) {
+                selectValue = radioValueList.filter(
+                    (i) => i.value === (radioValue?.value || radioValue)
+                )[0];
+
+                resetDataNewObj();
+            }
+        }
+      
     }, [radioValue]);
+    // 刷新
+    useEffect(() => {
+        if (image?.objects?.at(-1)) {
+            console.log('===>触发确认<===');
+        }
+    }, [pageKey]);
+
     return (
-        <>
-            <header>
-                <div className="operation">
-                    <Button
-                        type="primary"
-                        icon={<MinusOutlined />}
-                        onClick={() => zoomOutPicture(image)}
-                    />
-                    <Button
-                        type="primary"
-                        icon={<PlusOutlined />}
-                        onClick={() => enlargedPicture(null, image)}
-                    />
-                    <Button
-                        onClick={() => {
-                            if (resValue.length) {
-                                !confirmBox(resValue) &&
-                                    alert('未选择目标区域！');
-                                return;
-                            }
-                            !confirmBox() && alert('未选择目标区域！');
-                        }}
-                    >
-                        确认
-                    </Button>
-                    <Button onClick={() => saveObj()}>完成图片标注</Button>
-                    <Button
-                        type="dashed"
-                        onClick={() => {
-                            resValue = [];
-                            image.objects = [];
-                            showOriginImg();
-                        }}
-                    >
-                        重新标注图片
-                    </Button>
-                    <div className="labelSelect">
+        <div id="object-detection-container">
+            <div className="object-detection">
+                <div className="title">
+                    <div className="save-operation">
+                        <Button
+                            type="primary"
+                            icon={<PlusOutlined />}
+                            onClick={() => {
+                                zoomOutPicture(image);
+                            }}
+                        ></Button>
+                        <Button
+                            type="primary"
+                            icon={<MinusOutlined />}
+                            onClick={() => {
+                                enlargedPicture(null, image);
+                            }}
+                        ></Button>
+                        <Button
+                            type="primary"
+                            onClick={() => {
+                                !confirmBox(image?.objects) &&
+                                    message.error('未选择目标区域！');
+                            }}
+                        >
+                            确认
+                        </Button>
+                        <Button onClick={() => saveObj()}>完成图片标注</Button>
+                        <Button
+                            type="dashed"
+                            onClick={() => {
+                                image.objects = [];
+                                showOriginImg();
+                            }}
+                        >
+                            重新标注图片
+                        </Button>
+                        <div className="labelSelect"></div>
+                    </div>
+                    <div className="label-operation">
                         <Radio.Group
                             onChange={onChangeLineColor}
-                            value={radioValue}
+                            value={radioValue?.value || radioValue}
                         >
-                            {radioValueList.map((i) => (
-                                <Radio
-                                    key={i.value}
-                                    value={i.value}
-                                    style={{ color: i.labelColor }}
-                                >
-                                    {i.label}
-                                </Radio>
+                            {radioValueList?.map((i) => (
+                                <>
+                                    <Radio
+                                        key={i.value}
+                                        value={i.value}
+                                        style={{ color: i.labelColor }}
+                                    >
+                                        {i.label}
+                                    </Radio>
+                                </>
                             ))}
                         </Radio.Group>
+                        <Divider />
                     </div>
                 </div>
-            </header>
-
-            <div className="container">
-                <div id="canvas">
-                    <canvas width="1920" height="1080" ref={canvas}></canvas>
+                <div className="content-container">
+                    <div id="canvas">
+                        {/* 承载容器 */}
+                        <canvas id="drawer" ref={canvas}></canvas>
+                        {/* 红框容器 */}
+                        <canvas
+                            className="border-canvas"
+                            ref={borderCanvas}
+                        ></canvas>
+                        {/* 左上角 */}
+                        <canvas
+                            className="border-canvas"
+                            ref={leftTopCanvas}
+                        ></canvas>
+                        {/* 左下角 */}
+                        <canvas
+                            className="border-canvas"
+                            ref={leftBottomCanvas}
+                        ></canvas>
+                        {/* 右上角 */}
+                        <canvas
+                            className="border-canvas"
+                            ref={rightTopCanvas}
+                        ></canvas>
+                        {/* 右上角 */}
+                        <canvas
+                            className="border-canvas"
+                            ref={rightBottomCanvas}
+                        ></canvas>
+                    </div>
                 </div>
 
-                <div className="operation-area">
-                    <div className="card-title">操作</div>
-                    <ul className="radio-label">
-                        {objValueArr?.map((v, i) => (
-                            <li
-                                className={cnames(
-                                    'li-radio-content',
-                                    v.isSelect && v.isShow
-                                        ? 'radio-select'
-                                        : null,
-                                    v.isShow ? null : 'opacity'
-                                )}
-                                key={v.keyId}
-                                onClick={() => {
-                                    [...objValueArr].forEach(
-                                        (item) => (item.isSelect = false)
-                                    );
-                                    objValueArr[i].isSelect = true;
-                                    setObjValueArr([...objValueArr]);
-                                }}
-                            >
-                                <div
-                                    className="li-radio"
-                                    style={{ background: v.labelColor }}
-                                >
-                                    {v.label}
-                                </div>
-                                <div className="li-operation">
-                                    <i
-                                        className={cnames(
-                                            'iconfont',
-                                            v.isShow ? 'tjtyanjing' : 'tjtbiyan'
-                                        )}
-                                        onClick={() => {
-                                            objValueArr[i].isShow =
-                                                !objValueArr[i].isShow;
-                                            setObjValueArr([...objValueArr]);
-                                            console.log([...objValueArr]);
-                                            console.log('isShow===>', i);
-                                        }}
-                                    ></i>
-                                    <i
-                                        className="iconfont tjtlajitong1"
-                                        onClick={() => {
-                                            console.log(i);
-                                        }}
-                                    ></i>
-                                </div>
-                            </li>
-                        ))}
-                    </ul>
+                <div className="next-btn">
+                    <Button
+                        type="primary"
+                        className="prev-btn"
+                        onClick={() => {}}
+                    >
+                        上一条
+                    </Button>
+                    <Button type="primary" onClick={() => {}}>
+                        下一条
+                    </Button>
                 </div>
             </div>
-        </>
+            <div className="operation-area">
+                <div className="card-title">操作</div>
+                <ul className="radio-label">
+                    {objValueArr?.map((v, i) => (
+                        <li
+                            className={cNames(
+                                'li-radio-content',
+                                v?.isSelect && v?.isShow
+                                    ? 'radio-select'
+                                    : null,
+                                v?.isShow ? null : 'opacity'
+                            )}
+                            key={v?.keyId}
+                            onMouseEnter={() => {
+                                const selectItem = [...objValueArr].at(i);
+                                const { x, y, width, height } = selectItem;
+                                borderCanvas.current.style.cssText = `top:${y}px;left:${x}px`;
+                                borderCanvas.current.width = width;
+                                borderCanvas.current.height = height;
+                                const borderCtx =
+                                    borderCanvas.current.getContext('2d');
+                                borderCtx.strokeStyle = 'red';
+                                borderCtx.lineWidth = 5;
+                                borderCtx.strokeRect(0, 0, width, height); // 绘制红色边框矩形
+                            }}
+                            onMouseLeave={() => {
+                                borderCanvas.current.style.cssText = `top:auto;left:auto`;
+                                borderCanvas.current.width = 0;
+                                borderCanvas.current.height = 0;
+                            }}
+                            onClick={() => {
+                                if (isDelete) {
+                                    [...objValueArr].forEach((item) => {
+                                        item.isSelect = false;
+                                    });
+                                    isDelete = false;
+                                    return;
+                                }
+                                [...objValueArr].forEach((item) => {
+                                    item.isSelect = false;
+                                });
+                                objValueArr.at(i).isSelect = true;
+                                setObjValueArr([...objValueArr]);
+                            }}
+                        >
+                            <div
+                                className="li-radio"
+                                style={{ background: v?.labelColor }}
+                            >
+                                {v.label}
+                            </div>
+                            <div className="li-operation">
+                                <i
+                                    className={cNames(
+                                        'iconfont',
+                                        v.isShow ? 'tjtyanjing' : 'tjtbiyan'
+                                    )}
+                                    onClick={() => {
+                                        objValueArr[i].isShow =
+                                            !objValueArr[i].isShow;
+                                        image.objects[i].isShow =
+                                            objValueArr[i].isShow;
+                                        setObjValueArr([...objValueArr]);
+                                        confirmBox(image.objects);
+                                    }}
+                                ></i>
+                                <i
+                                    className="iconfont tjtlajitong1"
+                                    onClick={() => {
+                                        if (
+                                            [...objValueArr].length === 1 &&
+                                            i === 0
+                                        ) {
+                                            setObjValueArr([]);
+                                            isDelete = true;
+                                            image.objects = [];
+                                            showOriginImg();
+                                            borderCanvas.current.style.cssText = `top:auto;left:auto`;
+                                            borderCanvas.current.width = 0;
+                                            borderCanvas.current.height = 0;
+                                            return;
+                                        }
+
+                                        [...objValueArr].splice(i, 1);
+                                        [...objValueArr].forEach((item) => {
+                                            item.isSelect = false;
+                                        });
+                                        isDelete = true;
+                                        setObjValueArr([...objValueArr]);
+                                        image.objects.splice(i, 1);
+                                        confirmBox(image.objects);
+
+                                        borderCanvas.current.style.cssText = `top:auto;left:auto`;
+                                        borderCanvas.current.width = 0;
+                                        borderCanvas.current.height = 0;
+                                    }}
+                                ></i>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </div>
     );
 }

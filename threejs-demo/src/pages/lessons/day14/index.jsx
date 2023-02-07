@@ -42,26 +42,44 @@ export default function ThreeComponent() {
         directionalLight.position.set(20, 20, 20); // 平行光位置（类似太阳所在位置）
         scene.add(directionalLight);
 
-        // 创建纹理
-        const textureLoader = new THREE.TextureLoader();
+        // 1️⃣多纹理图片加载管理器 🌟 onProgress 可以使用
+        const textureLoadManager = new THREE.LoadingManager(
+            // onLoad
+            () => {
+                console.log('纹理加载结束！');
+            },
+            // onProgress 
+            (url, progress, total) => {
+                console.log('纹理url:',url);
+                console.log('纹理加载进度:',progress, Number((progress/total)*100).toFixed(2)+'%');
+                console.log('纹理需要加载总数:',total);
+            },
+            // onError
+            () => {
+                console.log('纹理加载失败');
+            }
+        );
+
+        // 创建纹理 2️⃣ new THREE.TextureLoader( 纹理图片加载管理器 )
+        const textureLoader = new THREE.TextureLoader(textureLoadManager);
         // 创建基础纹理
 
-        // * 加载纹理钩子
+        // * 加载纹理钩子  （单张图片）
         const mapTexture = textureLoader.load(
             require('./2k/vlzraabfw_2K_Albedo.jpg'),
             // onLoad
-            () => {
-                console.log('纹理图片加载结束!');
+            (texture) => {
+                console.log('纹理图片加载结束！',texture);
             },
-            // onProgress
-            () => { 
-                console.log('纹理图片加载中');
-            }
+            // onProgress  🌟暂不支持💡
+            () => {
+                console.log('纹理图片加载中！');
+            },
             // onError
-            // Tjt: 11
+            () => {
+                console.log('纹理图片加载错误！');
+            }
         );
-    
-
 
         // 设置基础纹理图片算法
         // mapTexture.magFilter = THREE.NearestFilter;

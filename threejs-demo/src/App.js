@@ -17,13 +17,14 @@ const items = routerPaths.map((item, index) => ({
 function App() {
     // 是否收缩侧边栏
     const [collapsed, setCollapsed] = useState(false);
+    const [width, setWidth] = useState();
     const navigate = useNavigate();
     return (
         <>
   
             <Layout>
                 <Sider
-                    width={400}
+                    width={width}
                     collapsible
                     collapsed={collapsed}
                     onCollapse={(value) => setCollapsed(value)}

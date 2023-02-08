@@ -1,6 +1,7 @@
 import PackagePreview3D from '../pages/装箱demo';
 import PicMark from '../pages/pic-mark';
 import TextMark from '../pages/text-mark';
+import MarkdownCom from '../pages/markdown';
 // import Day1Com from '../pages/lessons/day1';
 // import Day2Com from '../pages/lessons/day2';
 // import Day3Com from '../pages/lessons/day3';
@@ -193,11 +194,14 @@ export const routerPaths = [
                 key: 'texture-demo',
             },
 
-            
+            {
+                label: 'Markdown组件',
+                icon: <MyIcon type="icon-xuegao" />,
+                elementPath: 'markdown',
+                key: 'markdown',
+            },
         ],
     },
- 
-  
 ];
 
 export function RouterCom2() {

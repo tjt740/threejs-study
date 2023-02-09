@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 //* ----s----
 /*
 * pnpm i @toast-ui/editor
-* pnpm i @toast-ui/editor-plugin-chart
+* pnpm i @toast-ui/editor-plugin-chart   <图表>功能组件
 * pnpm i @toast-ui/editor-plugin-code-syntax-highlight
-* pnpm i @toast-ui/editor-plugin-color-syntax
+* pnpm i @toast-ui/editor-plugin-color-syntax   <文本颜色修改>功能组件 
 * pnpm i @toast-ui/editor-plugin-table-merged-cell
 * pnpm i @toast-ui/editor-plugin-uml
 
@@ -14,8 +14,20 @@ import React, { useState, useEffect, useRef } from 'react';
 import Editor from '@toast-ui/editor';
 // chart 组件
 import chart from '@toast-ui/editor-plugin-chart';
-// <代码高亮>功能组件 
-import colorSyntax from '@toast-ui/editor-plugin-code-syntax-highlight';
+// <文本颜色修改>功能组件
+import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
+import './editor-plugin-color-syntax.css';
+// <代码高亮>功能
+import Prism from 'prismjs';
+import 'prismjs/components/prism-clojure.js';
+import 'prismjs/themes/prism.css';
+import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
+import '@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css';
+// <UML>功能
+import uml from '@toast-ui/editor-plugin-uml';
+// <table>功能
+import tableMergedCell from '@toast-ui/editor-plugin-table-merged-cell';
+import '@toast-ui/editor-plugin-table-merged-cell/dist/toastui-editor-plugin-table-merged-cell.css';
 // 国际化
 import '@toast-ui/editor/dist/i18n/zh-cn';
 // 样式
@@ -32,9 +44,8 @@ export default function MarkdownCom() {
         minWidth: 100,
         maxWidth: 600,
         minHeight: 100,
-        maxHeight: 300
-      };
-
+        maxHeight: 300,
+    };
 
     // 自定义工具栏btn
     function createLastButton() {
@@ -77,15 +88,14 @@ export default function MarkdownCom() {
                     },
                 ],
                 // 默认自带
-                ['heading', 'bold', 'italic', 'strike',],
+                ['heading', 'bold', 'italic', 'strike'],
                 ['hr', 'quote'],
                 ['ul', 'ol', 'task', 'indent', 'outdent'],
                 ['table', 'image', 'link'],
                 ['code', 'codeblock'],
             ],
 
-
-            //图表 
+            //图表
             /* 
             $$chart
             ,category1,category2
@@ -109,7 +119,13 @@ export default function MarkdownCom() {
             language: 'zh-CN', // 国际化语言
             placeholder: '请输入内容', // placeholder
             // 外链插件 chart 代码高亮 uml
-            plugins: [[chart, chartOptions,colorSyntax]]
+            plugins: [
+                [chart, chartOptions],
+                colorSyntax,
+                [codeSyntaxHighlight, { highlighter: Prism }],
+                [uml],
+                [tableMergedCell],
+            ],
         });
 
         editor.insertToolbarItem(
@@ -140,7 +156,7 @@ export default function MarkdownCom() {
 
         setTimeout(() => {
             // 清空
-            editor.reset();
+            // editor.reset();
         }, 6000);
     }, []);
 

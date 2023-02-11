@@ -20,6 +20,7 @@
     "dat.gui": "^0.7.9",
     "gsap": "^3.11.3",
     "moment": "^2.29.4",
+    "prismjs": "^1.29.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.4.2",

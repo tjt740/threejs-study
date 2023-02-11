@@ -20,6 +20,7 @@ specifiers:
   gsap: ^3.11.3
   less: ^4.1.3
   moment: ^2.29.4
+  prismjs: ^1.29.0
   react: ^18.2.0
   react-dom: ^18.2.0
   react-router-dom: ^6.4.2
@@ -47,6 +48,7 @@ dependencies:
   dat.gui: registry.npmmirror.com/dat.gui/0.7.9
   gsap: registry.npmmirror.com/gsap/3.11.4
   moment: registry.npmmirror.com/moment/2.29.4
+  prismjs: registry.npmmirror.com/prismjs/1.29.0
   react: registry.npmmirror.com/react/18.2.0
   react-dom: registry.npmmirror.com/react-dom/18.2.0_react@18.2.0
   react-router-dom: registry.npmmirror.com/react-router-dom/6.8.1_biqbaboplfbrettd7655fr4n2y

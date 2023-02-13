@@ -30,45 +30,20 @@ export default function ThreeComponent() {
         scene.add(axesHelper);
 
         //* start
-      
+        // 创建平面几何体 (置换贴图使用 10,10)
+        const planeGeometry = new THREE.PlaneGeometry(30, 30, 10, 10);
 
-        //1️⃣ 创建环境光 + 强度
+        // 创建环境光 + 强度
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
         scene.add(ambientLight);
 
-        //2️⃣ 创建平行光 + 强度
+        // 创建平行光 + 强度
         const directionalLight = new THREE.DirectionalLight(0xffffff, 0.75);
-        // 平行光位置（类似太阳所在位置）
-        directionalLight.position.set(20, 20, 20); 
+        directionalLight.position.set(20, 20, 20); // 平行光位置（类似太阳所在位置）
         scene.add(directionalLight);
 
-        //3️⃣ 创建圆形几何体 
-        const geometry = new THREE.SphereGeometry(15, 32, 16);
-        
-        //4️⃣ 初始化cubeTextureLoader 立方体纹理加载器
-        const loader = new THREE.CubeTextureLoader();
-        //5️⃣ 加载CubeTexture的一个类。 内部使用ImageLoader来加载文件。
-        const cubeTexture = loader.load([
-            require('./environmentMaps/0/px.jpg'),
-            require('./environmentMaps/0/nx.jpg'),
-            require('./environmentMaps/0/py.jpg'),
-            require('./environmentMaps/0/ny.jpg'),
-            require('./environmentMaps/0/pz.jpg'),
-            require('./environmentMaps/0/nx.jpg'),
-        ]);
-        //6️⃣ 使用标准网格材质渲染 环境贴图
-        const material = new THREE.MeshStandardMaterial({
-            // 金属度
-            metalness: 1,
-            // 粗糙度
-            roughness: 0.1,
-            //7️⃣ 环境纹理贴图
-            envMap: cubeTexture,
-        });
-        //8️⃣ 生成圆形几何体
-        const sphereCube = new THREE.Mesh(geometry, material);
-        scene.add(sphereCube);
 
+        
         //* end
 
         // 模拟平行光（太阳）所在位置

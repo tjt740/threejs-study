@@ -3,14 +3,26 @@ import * as THREE from 'three';
 // 导入轨道控制器 只能通过这种方法
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
+//1️⃣ 导入rgbe/hdr二进制格式文件加载器
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
+
 export default function ThreeComponent() {
     const container = useRef(null);
 
     const init = () => {
         // 创建场景
         const scene = new THREE.Scene();
-        // 更改场景背景
-        scene.background = new THREE.Color('#999999');
+
+        //* start
+
+        const rgbeLoader = new RGBELoader();
+        rgbeLoader.loadAsync(require('./hdr/003.hdr')).then((res) => {
+            console.log('加载hdr图片成功');
+            // 用HDR图片更改场景背景
+            scene.background = res;
+        });
+
+        //* end
 
         // 创建摄像机
         const camera = new THREE.PerspectiveCamera(
@@ -20,7 +32,7 @@ export default function ThreeComponent() {
             1000
         );
         // 设置摄像机位置
-        camera.position.set(0, 0, 30);
+        camera.position.set(0, 0, 80);
         // 将摄像机添加进场景中
         scene.add(camera);
 
@@ -29,47 +41,44 @@ export default function ThreeComponent() {
         //  坐标辅助线添加到场景中
         scene.add(axesHelper);
 
-        //* start
-      
-
-        //1️⃣ 创建环境光 + 强度
+        // 创建环境光 + 强度
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
         scene.add(ambientLight);
 
-        //2️⃣ 创建平行光 + 强度
+        // 创建平行光 + 强度
         const directionalLight = new THREE.DirectionalLight(0xffffff, 0.75);
         // 平行光位置（类似太阳所在位置）
-        directionalLight.position.set(20, 20, 20); 
+        directionalLight.position.set(20, 20, 20);
         scene.add(directionalLight);
 
-        //3️⃣ 创建圆形几何体 
-        const geometry = new THREE.SphereGeometry(15, 32, 16);
-        
-        //4️⃣ 初始化cubeTextureLoader 立方体纹理加载器
+        // 初始化cubeTextureLoader 立方体纹理加载器
         const loader = new THREE.CubeTextureLoader();
-        //5️⃣ 加载CubeTexture的一个类。 内部使用ImageLoader来加载文件。
-        const cubeTexture = loader.load([
+
+        // 加载CubeTexture的一个类。 内部使用ImageLoader来加载文件。
+        const envMapTexture = loader.load([
             require('./environmentMaps/0/px.jpg'),
             require('./environmentMaps/0/nx.jpg'),
             require('./environmentMaps/0/py.jpg'),
             require('./environmentMaps/0/ny.jpg'),
             require('./environmentMaps/0/pz.jpg'),
-            require('./environmentMaps/0/nx.jpg'),
+            require('./environmentMaps/0/nz.jpg'),
         ]);
-        //6️⃣ 使用标准网格材质渲染 环境贴图
+
+        // 创建球形几何体
+        const geometry = new THREE.SphereGeometry(15, 32, 16);
+
+        // 使用标准网格材质渲染 环境贴图
         const material = new THREE.MeshStandardMaterial({
             // 金属度
             metalness: 1,
             // 粗糙度
             roughness: 0.1,
-            //7️⃣ 环境纹理贴图
-            envMap: cubeTexture,
+            // 环境纹理贴图
+            envMap: envMapTexture,
         });
-        //8️⃣ 生成圆形几何体
-        const sphereCube = new THREE.Mesh(geometry, material);
-        scene.add(sphereCube);
-
-        //* end
+        // 生成圆形几何体
+        const sphere = new THREE.Mesh(geometry, material);
+        scene.add(sphere);
 
         // 模拟平行光（太阳）所在位置
         const sunCube = new THREE.Mesh(

@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import { Layout, Menu ,} from 'antd';
+import { Layout, Menu } from 'antd';
 import './index.css';
 import { useNavigate } from 'react-router-dom';
 import { RouterCom2, routerPaths } from './router/index.jsx'; //
-
-
 
 const { Content, Sider } = Layout;
 const items = routerPaths.map((item, index) => ({
@@ -21,9 +19,9 @@ function App() {
     const navigate = useNavigate();
     return (
         <>
-  
             <Layout>
                 <Sider
+                    className="dynamic-side"
                     width={width}
                     collapsible
                     collapsed={collapsed}
@@ -37,6 +35,7 @@ function App() {
                         }}
                     />
                 </Sider>
+                <div> </div>
                 <Layout className="site-layout">
                     <Content>
                         <RouterCom2 />

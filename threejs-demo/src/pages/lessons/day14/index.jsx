@@ -15,6 +15,7 @@ export default function ThreeComponent() {
 
         //* start
 
+        
         const rgbeLoader = new RGBELoader();
         rgbeLoader.loadAsync(require('./hdr/003.hdr')).then((res) => {
             console.log('加载hdr图片成功');

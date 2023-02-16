@@ -14,14 +14,53 @@ export default function ThreeComponent() {
         const scene = new THREE.Scene();
 
         //* start
-
-        
-        const rgbeLoader = new RGBELoader();
-        rgbeLoader.loadAsync(require('./hdr/003.hdr')).then((res) => {
+        const loadManager = new THREE.LoadingManager(
+            // onLoad
+            () => {
+                console.log('纹理加载结束！');
+            },
+            // onProgress
+            (url, progress, total) => {
+                console.log('纹理url:', url);
+                console.log(
+                    '纹理加载进度:',
+                    progress,
+                    Number((progress / total) * 100).toFixed(2) + '%'
+                );
+                console.log('纹理需要加载总数:', total);
+            },
+            // onError
+            () => {
+                console.log('纹理加载失败');
+            }
+        );
+        //2️⃣ 导入hdr图像加载器
+        const rgbeLoader = new RGBELoader(loadManager);
+        //3️⃣ 资源较大，使用异步加载 <异步加载?
+        rgbeLoader.loadAsync(require('./hdr/004.hdr')).then((texture) => {
             console.log('加载hdr图片成功');
-            // 用HDR图片更改场景背景
-            scene.background = res;
+            // 纹理贴图映射模式 <https://threejs.org/docs/index.html#api/zh/constants/Textures>
+            texture.mapping = THREE.EquirectangularReflectionMapping;
+            //将加载的材质texture设置给背景和环境
+            scene.background = texture;
+            scene.environment = texture;
         });
+
+        // 立方几何体
+        const boxGeometry = new THREE.BoxGeometry(20, 20, 20);
+        //5️⃣ 默认不给立方体添加材质，通过scene.environment
+        const boxMaterial = new THREE.MeshStandardMaterial({
+            // 金属度
+            metalness: 1,
+            // 粗糙度
+            roughness: 0.1,
+            // 不设置环境纹理贴图
+            // envMap: envMapTexture,
+        });
+        // 立方体
+        const cube = new THREE.Mesh(boxGeometry, boxMaterial);
+        cube.position.set(50, 0, 0);
+        scene.add(cube);
 
         //* end
 
@@ -43,11 +82,11 @@ export default function ThreeComponent() {
         scene.add(axesHelper);
 
         // 创建环境光 + 强度
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 1);
         scene.add(ambientLight);
 
         // 创建平行光 + 强度
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.75);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
         // 平行光位置（类似太阳所在位置）
         directionalLight.position.set(20, 20, 20);
         scene.add(directionalLight);

@@ -161,6 +161,13 @@ export const routerPaths = [
                 elementPath: 'lessons/day14',
                 key: 'lessons/day14',
             },
+
+            {
+                label: '清除物体',
+                icon: <MyIcon type="icon-hebaodan" />,
+                elementPath: 'lessons/day15',
+                key: 'lessons/day15',
+            },
         ],
     },
     {
@@ -196,7 +203,7 @@ export const routerPaths = [
 
             {
                 label: 'Markdown组件',
-                icon: <MyIcon type="icon-xuegao" />,
+                icon: <MyIcon type="icon-kesong" />,
                 elementPath: 'markdown',
                 key: 'markdown',
             },

@@ -3,14 +3,66 @@ import * as THREE from 'three';
 // 导入轨道控制器 只能通过这种方法
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
+//1️⃣ 导入rgbe/hdr二进制格式文件加载器
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
+
 export default function ThreeComponent() {
     const container = useRef(null);
 
     const init = () => {
         // 创建场景
         const scene = new THREE.Scene();
-        // 更改场景背景
-        scene.background = new THREE.Color('#999999');
+
+        //* start
+        const loadManager = new THREE.LoadingManager(
+            // onLoad
+            () => {
+                console.log('纹理加载结束！');
+            },
+            // onProgress
+            (url, progress, total) => {
+                console.log('纹理url:', url);
+                console.log(
+                    '纹理加载进度:',
+                    progress,
+                    Number((progress / total) * 100).toFixed(2) + '%'
+                );
+                console.log('纹理需要加载总数:', total);
+            },
+            // onError
+            () => {
+                console.log('纹理加载失败');
+            }
+        );
+        //2️⃣ 导入hdr图像加载器
+        const rgbeLoader = new RGBELoader(loadManager);
+        //3️⃣ 资源较大，使用异步加载 <异步加载?
+        rgbeLoader.loadAsync(require('./hdr/004.hdr')).then((texture) => {
+            console.log('加载hdr图片成功');
+            // 纹理贴图映射模式 <https://threejs.org/docs/index.html#api/zh/constants/Textures>
+            texture.mapping = THREE.EquirectangularReflectionMapping;
+            //将加载的材质texture设置给背景和环境
+            scene.background = texture;
+            scene.environment = texture;
+        });
+
+        // 立方几何体
+        const boxGeometry = new THREE.BoxGeometry(20, 20, 20);
+        //5️⃣ 默认不给立方体添加材质，通过scene.environment
+        const boxMaterial = new THREE.MeshStandardMaterial({
+            // 金属度
+            metalness: 1,
+            // 粗糙度
+            roughness: 0.1,
+            // 不设置环境纹理贴图
+            // envMap: envMapTexture,
+        });
+        // 立方体
+        const cube = new THREE.Mesh(boxGeometry, boxMaterial);
+        cube.position.set(50, 0, 0);
+        scene.add(cube);
+
+        //* end
 
         // 创建摄像机
         const camera = new THREE.PerspectiveCamera(
@@ -29,22 +81,20 @@ export default function ThreeComponent() {
         //  坐标辅助线添加到场景中
         scene.add(axesHelper);
 
-        //* start
-
-        //1️⃣ 创建环境光 + 强度
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
+        // 创建环境光 + 强度
+        const ambientLight = new THREE.AmbientLight(0xffffff, 1);
         scene.add(ambientLight);
 
-        //2️⃣ 创建平行光 + 强度
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.75);
+        // 创建平行光 + 强度
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
         // 平行光位置（类似太阳所在位置）
         directionalLight.position.set(20, 20, 20);
         scene.add(directionalLight);
 
-        //3️⃣ 初始化cubeTextureLoader 立方体纹理加载器
+        // 初始化cubeTextureLoader 立方体纹理加载器
         const loader = new THREE.CubeTextureLoader();
 
-        //4️⃣ 加载CubeTexture的一个类。 内部使用ImageLoader来加载文件。
+        // 加载CubeTexture的一个类。 内部使用ImageLoader来加载文件。
         const envMapTexture = loader.load([
             require('./environmentMaps/0/px.jpg'),
             require('./environmentMaps/0/nx.jpg'),
@@ -54,44 +104,21 @@ export default function ThreeComponent() {
             require('./environmentMaps/0/nz.jpg'),
         ]);
 
-        //5️⃣ 创建球形几何体
+        // 创建球形几何体
         const geometry = new THREE.SphereGeometry(15, 32, 16);
 
-        //6️⃣ 使用标准网格材质渲染 环境贴图
+        // 使用标准网格材质渲染 环境贴图
         const material = new THREE.MeshStandardMaterial({
             // 金属度
             metalness: 1,
             // 粗糙度
             roughness: 0.1,
-            //7️⃣ 环境纹理贴图
+            // 环境纹理贴图
             envMap: envMapTexture,
         });
-        //8️⃣ 生成圆形几何体
+        // 生成圆形几何体
         const sphere = new THREE.Mesh(geometry, material);
         scene.add(sphere);
-
-        // 立方几何体
-        const boxGeometry = new THREE.BoxGeometry(20, 20, 20);
-        // 材质
-        const boxMaterial = new THREE.MeshStandardMaterial({
-            // 金属度
-            metalness: 1,
-            // 粗糙度
-            roughness: 0.1,
-            // 不设置环境纹理贴图
-            // envMap: envMapTexture,
-        });
-        // 立方体
-        const cube = new THREE.Mesh(boxGeometry, boxMaterial);
-        cube.position.set(50, 0, 0);
-        scene.add(cube);
-
-        //9️⃣ 设置场景背景<背景贴图>
-        scene.background = envMapTexture;
-        //🔟 给所有的物体添加默认的<环境贴图> 👇
-        scene.environment = envMapTexture;
-
-        //* end
 
         // 模拟平行光（太阳）所在位置
         const sunCube = new THREE.Mesh(

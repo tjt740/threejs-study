@@ -168,6 +168,13 @@ export const routerPaths = [
                 elementPath: 'lessons/day15',
                 key: 'lessons/day15',
             },
+            {
+                label: '灯光与阴影',
+                icon: <MyIcon type="icon-bangbangtang" />,
+                elementPath: 'lessons/day16',
+                key: 'lessons/day16',
+            },
+            
         ],
     },
     {
@@ -200,13 +207,18 @@ export const routerPaths = [
                 elementPath: 'texture-demo',
                 key: 'texture-demo',
             },
-
             {
                 label: 'Markdown组件',
                 icon: <MyIcon type="icon-kesong" />,
                 elementPath: 'markdown',
                 key: 'markdown',
             },
+            {
+                label: '自定义几何体展示',
+                icon: <MyIcon type="icon-chengzhi" />,
+                elementPath: 'custom-geometry',
+                key: 'custom-geometry',
+            }
         ],
     },
 ];

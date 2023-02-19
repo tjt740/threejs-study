@@ -3,7 +3,7 @@ import * as THREE from 'three';
 // 导入轨道控制器 只能通过这种方法
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
-export default function ThreeComponent() {
+export default function CustomCom() {
     const container = useRef(null);
 
     const init = () => {
@@ -16,58 +16,146 @@ export default function ThreeComponent() {
             0.1,
             1000
         );
-        camera.position.set(0, 0, 40);
+        camera.position.set(0, 0, 10);
         scene.add(camera);
 
+        const color = new THREE.Color(
+            Math.random(),
+            Math.random(),
+            Math.random()
+        );
         /*
          * ------------ start ----------
          */
-        // 设置灯光和阴影
-        // 1. 设置自然光、平行光、<标准>网格材质（带PBR属性的都可以）  材质要满足能够对光照有反应
-        // 2. 设置渲染器开启阴影计算 renderer.shadowMap.enabled = true; https://threejs.org/docs/index.html?q=render#api/zh/renderers/WebGLRenderer
-        // 3. 设置光照能产生动态阴影  directionalLight.castShadow = true; https://threejs.org/docs/index.html#api/zh/lights/DirectionalLight
-        // 4. 设置投射阴影的物体投射阴影 sphere.castShadow = true; https://threejs.org/docs/index.html?q=objec#api/zh/core/Object3D
-        // 5. 设置被投射的物体接收阴影  planGeometry.receiveShadow = true; https://threejs.org/docs/index.html?q=objec#api/zh/core/Object3D
+//初始化BufferGeometry
 
-        // 创建环境光 + 强度
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-        scene.add(ambientLight);
+const geometry = new THREE.BufferGeometry()
 
-        // 创建平行光 + 强度
-        const directionalLight = new THREE.DirectionalLight(new THREE.Color('hsl( 0.1, 1, 0.95 )'), 0.5);
-        // 平行光位置（类似太阳所在位置）   
-    
-        // directionalLight.focus = 1200;
-        // directionalLight.angle = Math.PI / 1;
-        directionalLight.position.set(10, 10, 10);
-        //3️⃣ 设置光照能产生动态阴影
-        directionalLight.castShadow = true;
-        scene.add(directionalLight);
+//设置顶点坐标
 
-        // 创建球形几何体 
-        // Ps: 这个5 改成10 阴影就成 方形了 ？
-        const sphereGeometry = new THREE.SphereGeometry(5, 64, 16);
-        // 使用标准网格材质渲染 环境贴图
-        const material = new THREE.MeshStandardMaterial();
-        // 生成圆形几何体
-        const sphere = new THREE.Mesh(sphereGeometry, material);
+const vertices = new Float32Array([
+ //底部的矩形
+ -3, 0, 0,
+ -3, 0, 2,
+ 3, 0, 2,
+ 
+ -3, 0, 0,
+ 3, 0, 2,
+ 3, 0, 0,
+ //顶部的矩形
+ -1.5, 2, 0.5,
+ -1.5, 2, 1.5,
+ 1.5, 2, 1.5,
+ -1.5, 2, 0.5,
+ 1.5, 2, 1.5,
+ 1.5, 2, 0.5,
+ //侧面
+-3,0,0,
+-1.5,2,1.5,
+-1.5,2,0.5,
+ -3,0,0,
+ -3,0,2,
+ -1.5,2,1.5,
+ 1.5,2,1.5,
+ 3,0,0,
+ 1.5,2,0.5,
+ 3,0,2,
+ 3,0,0,
+    1.5, 2, 1.5,
+ 
+ //正面
+ 3,0,2,
+ -1.5,2,1.5,
+ -3,0,2,
+ 3,0,2,
+ 1.5,2,1.5,
+ -1.5,2,1.5,
+
+ //背面
+ -1.5,2,0.5,
+ 3,0,0,
+ -3,0,0.5,
+
+ 1.5,2,0.5,
+ 3,0,0,
+ -1.5,2,0.5,
+ //底面
+ -3,0,2,
+ -3,0,0,
+ 3,0,2,
+
+     3,0,0,
+ 3,0,2,
+ -3,0,0
+])
+
+  
+
+
+///连接顶点
+
+geometry.setAttribute("position", new THREE.BufferAttribute(vertices, 3))
+
+//材质
+
+const material = new THREE.MeshBasicMaterial({  color,
+    opacity: 0.3,
+    transparent: true, });
+
+//生成物体
+const cube = new THREE.Mesh(geometry, material);
+scene.add(cube);
+
+        // let splinepts = [];
+        // splinepts.push(new THREE.Vector2(0, 0));
+        // splinepts.push(new THREE.Vector2(0, 20));
+        // splinepts.push(new THREE.Vector2(10, 30));
+        // splinepts.push(new THREE.Vector2(30, 30));
+        // splinepts.push(new THREE.Vector2(40, 20));
+        // splinepts.push(new THREE.Vector2(40, 0));
+
+        // let splineShape = new THREE.Shape(splinepts);
+        // let geometry = new THREE.ShapeGeometry(splineShape);
+        // let mesh = new THREE.Mesh(
+        //     geometry,
+        //     new THREE.MeshBasicMaterial({
+        //         side: THREE.DoubleSide,
+        //         color,
+        //         opacity: 0.3,
+        //         transparent: true,
+        //     })
+        // );
+        // scene.add(mesh);
+
+        // const length = 12, width = 8;
+
+        // const shape = new THREE.Shape();
+        // shape.moveTo( 0,0 );
+        // shape.lineTo( 0, 8 );
+        // shape.lineTo( 12, 8 );
+        // shape.lineTo( 12, 0 );
+        // shape.lineTo( 0, 0 );
         
-        //4️⃣ 设置物体投射阴影
-        sphere.castShadow = true;
-        scene.add(sphere);
-
-        // 创建平面
-        const planGeometry = new THREE.PlaneGeometry(100, 100);
-        const planMaterial = new THREE.MeshStandardMaterial({
-            side: THREE.DoubleSide,
-        });
-        const plan = new THREE.Mesh(planGeometry, planMaterial);
-        // 改变位置
-        plan.rotation.x = Math.PI / 2;
-        plan.position.y = -8;
-        //5️⃣ 平面几何接收阴影
-        plan.receiveShadow = true;
-        scene.add(plan);
+        // const extrudeSettings = {
+        //     steps: 2,
+        //     depth: 16,
+        //     bevelEnabled: true,
+        //     bevelThickness: 4,
+        //     bevelSize: 4,
+        //     bevelOffset: 0,
+        //     bevelSegments: 1
+        // };
+        
+        // const geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
+        // const material = new THREE.MeshBasicMaterial({
+        //     side: THREE.DoubleSide,
+        //             color,
+        //             opacity: 0.7,
+        //     transparent: true,
+        // });
+        // const mesh = new THREE.Mesh( geometry, material ) ;
+        // scene.add( mesh );
+        
         /*
          * ------------ end ----------
          */
@@ -93,10 +181,7 @@ export default function ThreeComponent() {
                 )
                 .height.split('px')[0]
         );
-
         renderer.setSize(WIDTH, HEIGHT);
-        //2️⃣ 设置渲染器开启阴影计算
-        renderer.shadowMap.enabled = true;
 
         // 渲染函数
         function render(t) {

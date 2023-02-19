@@ -134,7 +134,7 @@ export default function ThreeComponent() {
 
     return (
         <>
-            清除物体
+            灯光与阴影
             <div id="container" ref={container}></div>
         </>
     );

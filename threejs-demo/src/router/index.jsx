@@ -200,7 +200,6 @@ export const routerPaths = [
                 elementPath: 'text-mark',
                 key: 'text-mark',
             },
-
             {
                 label: '测试纹理demo',
                 icon: <MyIcon type="icon-yuzijiang" />,
@@ -218,7 +217,14 @@ export const routerPaths = [
                 icon: <MyIcon type="icon-chengzhi" />,
                 elementPath: 'custom-geometry',
                 key: 'custom-geometry',
+            },
+            {
+                label: 'emoji表情',
+                icon: <MyIcon type="icon-kele" />,
+                elementPath: 'emoji表情',
+                key: 'emoji',
             }
+            
         ],
     },
 ];

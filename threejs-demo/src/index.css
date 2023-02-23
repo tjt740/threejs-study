@@ -72,3 +72,7 @@ code {
     right: -16px;
     transform: translateY(-50%);
 }
+
+#preview {
+    display:none
+}

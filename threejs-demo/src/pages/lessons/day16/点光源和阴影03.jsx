@@ -46,31 +46,26 @@ export default function ThreeComponent() {
         pointLight.intensity = 3;
         // 设置<点光源>光照功率，默认为 4。 pointLight.intensity * 4 * Math.PI;
         pointLight.power = pointLight.intensity * 300 * Math.PI;
-        //1️⃣ <点光源>位置设置
-        // pointLight.position.set(10, 15, 15);
-        // scene.add(pointLight);
+        // <点光源>位置设置
+        pointLight.position.set(10, 15, 15);
+        scene.add(pointLight);
 
-        gui.add(pointLight, 'power')
-            .min(pointLight.intensity * 1 * Math.PI)
-            .max(pointLight.intensity * 30 * Math.PI)
-            .step(1)
-            .name('点光源的灯光功率');
-        gui.add(pointLight, 'distance')
-            .min(1)
-            .max(500)
-            .step(1)
-            .name('点光源的照射范围');
+        gui.add(pointLight, 'power').min(pointLight.intensity * 1 * Math.PI).max(pointLight.intensity * 30 * Math.PI).step(1).name('点光源的灯光功率');
+        gui.add(pointLight,'distance').min(1).max(500).step(1).name('点光源的照射范围')
+
+
+
+
 
         // 模拟灯光位置
         const mockSphereGeometry = new THREE.SphereGeometry(1, 32, 16);
         const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
         const mockSphere = new THREE.Mesh(mockSphereGeometry, sphereMaterial);
-        //2️⃣ 小球位置设置
         mockSphere.position.set(10, 15, 15);
-        //3️⃣ 小球上添加点光源
-        mockSphere.add(pointLight);
         scene.add(mockSphere);
 
+       
+      
         // 设置阴影分辨率,值越大分辨率越高,默认 512*512
         pointLight.shadow.mapSize.set(3072, 3072);
         // 设置阴影的边缘模糊度
@@ -85,7 +80,7 @@ export default function ThreeComponent() {
         pointLight.shadow.camera.bottom = -5;
         pointLight.shadow.camera.left = -5;
         pointLight.shadow.camera.right = 5;
-        // scene.add(pointLight);
+        scene.add(pointLight);
 
         // 创建球形几何体
         // Ps: 这个5 改成10 阴影就成 方形了 ？
@@ -113,6 +108,10 @@ export default function ThreeComponent() {
         plan.receiveShadow = true;
         scene.add(plan);
 
+        /*
+         * ------------ end ----------
+         */
+
         //  创建XYZ直角坐标系  (红色代表 X 轴. 绿色代表 Y 轴. 蓝色代表 Z 轴.)
         const axesHelper = new THREE.AxesHelper(25);
         //  坐标辅助线添加到场景中
@@ -136,27 +135,15 @@ export default function ThreeComponent() {
         );
 
         renderer.setSize(WIDTH, HEIGHT);
-        // 设置渲染器开启阴影计算
+        //2️⃣ 设置渲染器开启阴影计算
         renderer.shadowMap.enabled = true;
-        // 设置渲染器像素比:
-        renderer.setPixelRatio(window.devicePixelRatio);
-        // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能.
-        renderer.physicallyCorrectLights = true;
-
-        //4️⃣ 创建时钟
-        const clock = new THREE.Clock();
+       // 设置渲染器像素比:
+       renderer.setPixelRatio(window.devicePixelRatio);
+       // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能.
+       renderer.physicallyCorrectLights = true;
+ 
         // 渲染函数
         function render(t) {
-            // clock.getElapsedTime()
-            // 5️⃣ 设置圆周运动
-            let second = clock.getElapsedTime();
-            mockSphere.position.x = Math.sin(second) * 10;
-            mockSphere.position.z = Math.cos(second) * 10;
-            // mockSphere.position.y = Math.sin(second) * 5;
-            /*
-             * ------------ end ----------
-             */
-
             controls.update();
             renderer.render(scene, camera);
             // 动画帧

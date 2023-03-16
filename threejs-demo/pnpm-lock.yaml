@@ -4,6 +4,9 @@ specifiers:
   '@ant-design/icons': ^5.0.1
   '@emoji-mart/data': ^1.1.2
   '@emoji-mart/react': ^1.1.1
+  '@svgdotjs/svg.draggable.js': ^3.0.2
+  '@svgdotjs/svg.js': ^3.1.2
+  '@svgdotjs/svg.panzoom.js': ^2.1.2
   '@testing-library/jest-dom': ^5.16.5
   '@testing-library/react': ^13.4.0
   '@testing-library/user-event': ^13.5.0
@@ -22,12 +25,14 @@ specifiers:
   gh-pages: ^4.0.0
   gsap: ^3.11.3
   less: ^4.1.3
+  less-loader: ^11.1.0
   moment: ^2.29.4
   prismjs: ^1.29.0
   react: ^18.2.0
   react-dom: ^18.2.0
   react-router-dom: ^6.4.2
   react-scripts: 5.0.1
+  svg.resize.js: ^1.4.3
   three: ^0.145.0
   three-orbitcontrols: ^2.110.3
   typescript: ^4.8.4
@@ -37,6 +42,9 @@ dependencies:
   '@ant-design/icons': registry.npmmirror.com/@ant-design/icons/5.0.1_biqbaboplfbrettd7655fr4n2y
   '@emoji-mart/data': registry.npmmirror.com/@emoji-mart/data/1.1.2
   '@emoji-mart/react': registry.npmmirror.com/@emoji-mart/react/1.1.1_kyrnz3vmphzqyjjk2ivrm6bcsu
+  '@svgdotjs/svg.draggable.js': registry.npmmirror.com/@svgdotjs/svg.draggable.js/3.0.2
+  '@svgdotjs/svg.js': registry.npmmirror.com/@svgdotjs/svg.js/3.1.2
+  '@svgdotjs/svg.panzoom.js': registry.npmmirror.com/@svgdotjs/svg.panzoom.js/2.1.2
   '@testing-library/jest-dom': registry.npmmirror.com/@testing-library/jest-dom/5.16.5
   '@testing-library/react': registry.npmmirror.com/@testing-library/react/13.4.0_biqbaboplfbrettd7655fr4n2y
   '@testing-library/user-event': registry.npmmirror.com/@testing-library/user-event/13.5.0
@@ -53,12 +61,14 @@ dependencies:
   dat.gui: registry.npmmirror.com/dat.gui/0.7.9
   emoji-mart: registry.npmmirror.com/emoji-mart/5.5.2
   gsap: registry.npmmirror.com/gsap/3.11.4
+  less-loader: registry.npmmirror.com/less-loader/11.1.0_less@4.1.3
   moment: registry.npmmirror.com/moment/2.29.4
   prismjs: registry.npmmirror.com/prismjs/1.29.0
   react: registry.npmmirror.com/react/18.2.0
   react-dom: registry.npmmirror.com/react-dom/18.2.0_react@18.2.0
   react-router-dom: registry.npmmirror.com/react-router-dom/6.8.1_biqbaboplfbrettd7655fr4n2y
   react-scripts: registry.npmmirror.com/react-scripts/5.0.1_j5ip3o3v6sktjzl5cxtjyfbuo4
+  svg.resize.js: registry.npmmirror.com/svg.resize.js/1.4.3
   three: registry.npmmirror.com/three/0.145.0
   three-orbitcontrols: registry.npmmirror.com/three-orbitcontrols/2.110.3_three@0.145.0
   typescript: registry.npmmirror.com/typescript/4.9.5
@@ -2827,6 +2837,29 @@ packages:
       string.prototype.matchall: registry.npmmirror.com/string.prototype.matchall/4.0.8
     dev: false
 
+  registry.npmmirror.com/@svgdotjs/svg.draggable.js/3.0.2:
+    resolution: {integrity: sha512-yqCJe/w1q3IK51zRiqB42rsvQHyX5oqg/Eck02TDRhRv+pQ7sSHJfdyljiGkqoFW4i/1sIpnqYmiLDeM12Nhsw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@svgdotjs/svg.draggable.js/-/svg.draggable.js-3.0.2.tgz}
+    name: '@svgdotjs/svg.draggable.js'
+    version: 3.0.2
+    engines: {node: '>= 0.8.0'}
+    dependencies:
+      '@svgdotjs/svg.js': registry.npmmirror.com/@svgdotjs/svg.js/3.1.2
+    dev: false
+
+  registry.npmmirror.com/@svgdotjs/svg.js/3.1.2:
+    resolution: {integrity: sha512-0ZCWTiuRjCXT2SUoVDiu+8DLuRQlkxZbO680Y2QkV7jNsULzJajrx6A3MxA/IBQg6UGV5csgPZ8w7U57hZSK+A==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@svgdotjs/svg.js/-/svg.js-3.1.2.tgz}
+    name: '@svgdotjs/svg.js'
+    version: 3.1.2
+    dev: false
+
+  registry.npmmirror.com/@svgdotjs/svg.panzoom.js/2.1.2:
+    resolution: {integrity: sha512-0Nzo2TRlTebW3pzfAPtHx8Ye7Y3kuMEkK7hwVJi0SgQUB/vstjg7fvCJxB++EqsuDEetP0/SC+4CpLMVm6Lh2g==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@svgdotjs/svg.panzoom.js/-/svg.panzoom.js-2.1.2.tgz}
+    name: '@svgdotjs/svg.panzoom.js'
+    version: 2.1.2
+    dependencies:
+      '@svgdotjs/svg.js': registry.npmmirror.com/@svgdotjs/svg.js/3.1.2
+    dev: false
+
   registry.npmmirror.com/@svgr/babel-plugin-add-jsx-attribute/5.4.0:
     resolution: {integrity: sha512-ZFf2gs/8/6B8PnSofI0inYXr2SDNTDScPXhN7k5EqD4aZ3gi6u+rbmZHVB8IM3wDyx8ntKACZbtXSm7oZGRqVg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@svgr/babel-plugin-add-jsx-attribute/-/babel-plugin-add-jsx-attribute-5.4.0.tgz}
     name: '@svgr/babel-plugin-add-jsx-attribute'
@@ -5135,7 +5168,6 @@ packages:
     version: 2.0.6
     dependencies:
       is-what: registry.npmmirror.com/is-what/3.14.1
-    dev: true
 
   registry.npmmirror.com/copy-to-clipboard/3.3.3:
     resolution: {integrity: sha512-2KV8NhB5JqC3ky0r9PMCAZKbUHSwtEo4CwCs0KXgruG43gX5PMqDEBbVU4OUzw2MuAWUfsuFmWvEKG5QRfSnJA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/copy-to-clipboard/-/copy-to-clipboard-3.3.3.tgz}
@@ -6018,7 +6050,6 @@ packages:
     requiresBuild: true
     dependencies:
       prr: registry.npmmirror.com/prr/1.0.1
-    dev: true
     optional: true
 
   registry.npmmirror.com/error-ex/1.3.2:
@@ -7620,7 +7651,6 @@ packages:
     engines: {node: '>=0.10.0'}
     hasBin: true
     requiresBuild: true
-    dev: true
     optional: true
 
   registry.npmmirror.com/immer/9.0.19:
@@ -8006,7 +8036,6 @@ packages:
     resolution: {integrity: sha512-sNxgpk9793nzSs7bA6JQJGeIuRBQhAaNGG77kzYQgMkrID+lS6SlK07K5LaptscDlSaIgH+GPFzf+d75FVxozA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/is-what/-/is-what-3.14.1.tgz}
     name: is-what
     version: 3.14.1
-    dev: true
 
   registry.npmmirror.com/is-wsl/2.2.0:
     resolution: {integrity: sha512-fKzAra0rGJUUBwGBgNkHZuToZcn+TtXHpeCgmkMJMMYx1sQDYaCSyjJBSCa2nH1DGm7s3n1oBnohoVTBaN7Lww==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/is-wsl/-/is-wsl-2.2.0.tgz}
@@ -9007,6 +9036,20 @@ packages:
       language-subtag-registry: registry.npmmirror.com/language-subtag-registry/0.3.22
     dev: false
 
+  registry.npmmirror.com/less-loader/11.1.0_less@4.1.3:
+    resolution: {integrity: sha512-C+uDBV7kS7W5fJlUjq5mPBeBVhYpTIm5gB09APT9o3n/ILeaXVsiSFTbZpTJCJwQ/Crczfn3DmfQFwxYusWFug==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/less-loader/-/less-loader-11.1.0.tgz}
+    id: registry.npmmirror.com/less-loader/11.1.0
+    name: less-loader
+    version: 11.1.0
+    engines: {node: '>= 14.15.0'}
+    peerDependencies:
+      less: ^3.5.0 || ^4.0.0
+      webpack: ^5.0.0
+    dependencies:
+      klona: registry.npmmirror.com/klona/2.0.6
+      less: registry.npmmirror.com/less/4.1.3
+    dev: false
+
   registry.npmmirror.com/less/4.1.3:
     resolution: {integrity: sha512-w16Xk/Ta9Hhyei0Gpz9m7VS8F28nieJaL/VyShID7cYvP6IL5oHeL6p4TXSDJqZE/lNv0oJ2pGVjJsRkfwm5FA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/less/-/less-4.1.3.tgz}
     name: less
@@ -9027,7 +9070,6 @@ packages:
       source-map: registry.npmmirror.com/source-map/0.6.1
     transitivePeerDependencies:
       - supports-color
-    dev: true
 
   registry.npmmirror.com/leven/3.1.0:
     resolution: {integrity: sha512-qsda+H8jTaUaN/x5vzW2rzc+8Rw4TAQ/4KjB46IwK5VH+IlVeeeje/EoZRpiXvIqjFgK84QffqPztGI3VBLG1A==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/leven/-/leven-3.1.0.tgz}
@@ -9214,7 +9256,6 @@ packages:
     dependencies:
       pify: registry.npmmirror.com/pify/4.0.1
       semver: registry.npmmirror.com/semver/5.7.1
-    dev: true
     optional: true
 
   registry.npmmirror.com/make-dir/3.1.0:
@@ -9450,7 +9491,6 @@ packages:
       sax: registry.npmmirror.com/sax/1.2.4
     transitivePeerDependencies:
       - supports-color
-    dev: true
     optional: true
 
   registry.npmmirror.com/negotiator/0.6.3:
@@ -9825,7 +9865,6 @@ packages:
     name: parse-node-version
     version: 1.0.1
     engines: {node: '>= 0.10'}
-    dev: true
 
   registry.npmmirror.com/parse5/6.0.1:
     resolution: {integrity: sha512-Ofn/CTFzRGTTxwpNEs9PP93gXShHcTq255nzRYSKe8AkVpZY7e1fpmTfOyoIvjP5HG7Z2ZM7VS9PPhQGW2pOpw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/parse5/-/parse5-6.0.1.tgz}
@@ -9930,7 +9969,6 @@ packages:
     name: pify
     version: 4.0.1
     engines: {node: '>=6'}
-    dev: true
     optional: true
 
   registry.npmmirror.com/pinkie-promise/2.0.1:
@@ -11167,7 +11205,6 @@ packages:
     resolution: {integrity: sha512-yPw4Sng1gWghHQWj0B3ZggWUm4qVbPwPFcRG8KyxiU7J2OHFSoEHKS+EZ3fv5l1t9CyCiop6l/ZYeWbrgoQejw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/prr/-/prr-1.0.1.tgz}
     name: prr
     version: 1.0.1
-    dev: true
     optional: true
 
   registry.npmmirror.com/psl/1.9.0:
@@ -12621,7 +12658,6 @@ packages:
     name: semver
     version: 5.7.1
     hasBin: true
-    dev: true
     optional: true
 
   registry.npmmirror.com/semver/6.3.0:
@@ -13204,6 +13240,31 @@ packages:
     resolution: {integrity: sha512-e4hG1hRwoOdRb37cIMSgzNsxyzKfayW6VOflrwvR+/bzrkyxY/31WkbgnQpgtrNp1SdpJvpUAGTa/ZoiPNDuRQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/svg-parser/-/svg-parser-2.0.4.tgz}
     name: svg-parser
     version: 2.0.4
+    dev: false
+
+  registry.npmmirror.com/svg.js/2.7.1:
+    resolution: {integrity: sha512-ycbxpizEQktk3FYvn/8BH+6/EuWXg7ZpQREJvgacqn46gIddG24tNNe4Son6omdXCnSOaApnpZw6MPCBA1dODA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/svg.js/-/svg.js-2.7.1.tgz}
+    name: svg.js
+    version: 2.7.1
+    dev: false
+
+  registry.npmmirror.com/svg.resize.js/1.4.3:
+    resolution: {integrity: sha512-9k5sXJuPKp+mVzXNvxz7U0uC9oVMQrrf7cFsETznzUDDm0x8+77dtZkWdMfRlmbkEEYvUn9btKuZ3n41oNA+uw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/svg.resize.js/-/svg.resize.js-1.4.3.tgz}
+    name: svg.resize.js
+    version: 1.4.3
+    engines: {node: '>= 0.8.0'}
+    dependencies:
+      svg.js: registry.npmmirror.com/svg.js/2.7.1
+      svg.select.js: registry.npmmirror.com/svg.select.js/2.1.2
+    dev: false
+
+  registry.npmmirror.com/svg.select.js/2.1.2:
+    resolution: {integrity: sha512-tH6ABEyJsAOVAhwcCjF8mw4crjXSI1aa7j2VQR8ZuJ37H2MBUbyeqYr5nEO7sSN3cy9AR9DUwNg0t/962HlDbQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/svg.select.js/-/svg.select.js-2.1.2.tgz}
+    name: svg.select.js
+    version: 2.1.2
+    engines: {node: '>= 0.8.0'}
+    dependencies:
+      svg.js: registry.npmmirror.com/svg.js/2.7.1
     dev: false
 
   registry.npmmirror.com/svgo/1.3.2:

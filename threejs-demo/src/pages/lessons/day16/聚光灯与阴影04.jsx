@@ -34,59 +34,75 @@ export default function ThreeComponent() {
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
         scene.add(ambientLight);
 
-        // 创建<点光源> （类似灯泡）
-        const pointLight = new THREE.PointLight(0xff0000, 1);
-        // 设置<点光源>照射范围距离，值越大，照射范围越远。默认值为100。
-        pointLight.distance = 100;
-        // 设置<点光源>动态阴影（真实阴影）
-        pointLight.castShadow = true;
-        // 设置<点光源>光线衰退量，越大灯光越弱，默认值为2
-        pointLight.decay = 2;
-        // 设置<点光源>光照强度，默认为1
-        pointLight.intensity = 3;
-        // 设置<点光源>光照功率，默认为 4。 pointLight.intensity * 4 * Math.PI;
-        pointLight.power = pointLight.intensity * 300 * Math.PI;
-        //1️⃣ <点光源>位置设置
-        // pointLight.position.set(10, 15, 15);
-        // scene.add(pointLight);
 
-        gui.add(pointLight, 'power')
-            .min(pointLight.intensity * 1 * Math.PI)
-            .max(pointLight.intensity * 30 * Math.PI)
-            .step(1)
-            .name('点光源的灯光功率');
-        gui.add(pointLight, 'distance')
-            .min(1)
-            .max(500)
-            .step(1)
-            .name('点光源的照射范围');
+        // 创建聚光灯
+        const spotLight = new THREE.SpotLight();
+        // <聚光灯> 灯光颜色
+        spotLight.color = new THREE.Color(0xffffff);
+        // <聚光灯> 光照强度,默认值为1
+        spotLight.intensity = 2;
+        // <聚光的> 灯光光照功率,默认为 4。 pointLight.intensity * 4 * Math.PI;
+        spotLight.power = spotLight.intensity * 200 * Math.PI;
+        // <聚光灯> 发出光源的距离，其强度根据光源的距离线性衰减。 值越大,照的越远
+        spotLight.distance = 100;
+        // <聚光灯> 光线散射角度，最大为Math.PI/2。 默认值为 Math.PI/3。
+        spotLight.angle = Math.PI / 3;
+        // <聚光灯> 沿着光照距离的衰减量。 值越大,灯光效果越弱,默认为2,现实光默认为2.🌟renderer必须加 
+        spotLight.decay = 2;
+        // <聚光灯> 聚光锥的半影衰减百分比(光圈边缘模糊度)。在0和1之间的值。 默认值为 0.0。
+        spotLight.penumbra = 0.3;
+        // <聚光灯> 动态阴影,默认是false
+        spotLight.castShadow = true;
+
+
+        // <聚光灯> 阴影分辨率
+        spotLight.shadow.mapSize.set(3072, 3072);
+        // <聚光灯> 阴影边缘模糊度
+        spotLight.shadow.radius = 50;
+        // 设置<聚光灯>投射相机的属性
+        // 设置<聚光灯>相机投射阴影时，距离近点（<聚光灯>位置）的距离
+        spotLight.shadow.camera.near = 0.5;
+        // 设置<聚光灯>相机投射阴影时，距离远点（<聚光灯>位置）的距离
+        spotLight.shadow.camera.far = 100;
+        // 设置<聚光灯>相机投射阴影的位置（暂时没发现有啥用）
+        spotLight.shadow.camera.top = 5;
+        spotLight.shadow.camera.bottom = -5;
+        spotLight.shadow.camera.left = -5;
+        spotLight.shadow.camera.right = 5;
+
+   
+        // <聚光灯> 位置设置
+        spotLight.position.set(10, 10, 0);
+        scene.add(spotLight);
+
+
+        gui.width = 300;
+        gui.add(spotLight.position, 'z').min(0).max(10).step(1).name('光线位置');
+        gui.add(spotLight, 'intensity').min(0.5).max(5).step(1).name('光照强度');
+        gui.add(spotLight, 'power').min(spotLight.intensity * 1 * Math.PI).max(spotLight.intensity * 200 * Math.PI).step(1).name('聚光灯的灯光功率');
+        gui.add(spotLight, 'distance').min(50).max(500).step(1).name('发出光源的距离');
+        gui.add(spotLight, 'angle').min(Math.PI/10).max(Math.PI/2).step(Math.PI/10).name('光线散射角度');
+        gui.add(spotLight, 'decay').min(1).max(10).step(1).name('光照衰减量');
+        gui.add(spotLight, 'penumbra').min(0.1).max(1).step(0.1).name('光圈边缘模糊度');
+        gui.add(spotLight, 'castShadow', { '开': true, '关': false }).name('是否开启动态阴影').onChange((v) => { 
+            console.log(v);
+            spotLight.castShadow = Boolean(v);  
+        })
+
+
+
+
+
 
         // 模拟灯光位置
         const mockSphereGeometry = new THREE.SphereGeometry(1, 32, 16);
         const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
         const mockSphere = new THREE.Mesh(mockSphereGeometry, sphereMaterial);
-        //2️⃣ 小球位置设置
-        mockSphere.position.set(10, 15, 15);
-        //3️⃣ 小球上添加点光源
-        mockSphere.add(pointLight);
+        mockSphere.position.set(10, 10, 0);
         scene.add(mockSphere);
 
-        // 设置阴影分辨率,值越大分辨率越高,默认 512*512
-        pointLight.shadow.mapSize.set(3072, 3072);
-        // 设置阴影的边缘模糊度
-        pointLight.shadow.radius = 50;
-        // 设置<点光源>投射相机的属性
-        // 设置<点光源>相机投射阴影时，距离近点（<点光源>位置）的距离
-        pointLight.shadow.camera.near = 0.5;
-        // 设置<点光源>相机投射阴影时，距离远点（<点光源>位置）的距离
-        pointLight.shadow.camera.far = 100;
-        // 设置<点光源>相机投射阴影的位置（暂时没发现有啥用）
-        pointLight.shadow.camera.top = 5;
-        pointLight.shadow.camera.bottom = -5;
-        pointLight.shadow.camera.left = -5;
-        pointLight.shadow.camera.right = 5;
-        // scene.add(pointLight);
-
+       
+   
         // 创建球形几何体
         // Ps: 这个5 改成10 阴影就成 方形了 ？
         const sphereGeometry = new THREE.SphereGeometry(5, 64, 16);
@@ -113,6 +129,10 @@ export default function ThreeComponent() {
         plan.receiveShadow = true;
         scene.add(plan);
 
+        /*
+         * ------------ end ----------
+         */
+
         //  创建XYZ直角坐标系  (红色代表 X 轴. 绿色代表 Y 轴. 蓝色代表 Z 轴.)
         const axesHelper = new THREE.AxesHelper(25);
         //  坐标辅助线添加到场景中
@@ -120,6 +140,7 @@ export default function ThreeComponent() {
 
         // 初始化<渲染器>
         const renderer = new THREE.WebGLRenderer();
+       
         const WIDTH = Number(
             window
                 .getComputedStyle(
@@ -136,27 +157,20 @@ export default function ThreeComponent() {
         );
 
         renderer.setSize(WIDTH, HEIGHT);
+        camera.updateProjectionMatrix();
+
+        
+        // 设置像素比 使图形锯齿 消失
+        renderer.setPixelRatio(window.devicePixelRatio);
         // 设置渲染器开启阴影计算
         renderer.shadowMap.enabled = true;
-        // 设置渲染器像素比:
-        renderer.setPixelRatio(window.devicePixelRatio);
         // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能.
         renderer.physicallyCorrectLights = true;
 
-        //4️⃣ 创建时钟
-        const clock = new THREE.Clock();
+        
+
         // 渲染函数
         function render(t) {
-            // clock.getElapsedTime()
-            // 5️⃣ 设置圆周运动
-            let second = clock.getElapsedTime();
-            mockSphere.position.x = Math.sin(second) * 10;
-            mockSphere.position.z = Math.cos(second) * 10;
-            // mockSphere.position.y = Math.sin(second) * 5;
-            /*
-             * ------------ end ----------
-             */
-
             controls.update();
             renderer.render(scene, camera);
             // 动画帧
@@ -189,6 +203,7 @@ export default function ThreeComponent() {
             // 设置渲染器像素比:
             renderer.setPixelRatio(window.devicePixelRatio);
         });
+     
     };
 
     useEffect(() => {
@@ -198,7 +213,7 @@ export default function ThreeComponent() {
 
     return (
         <>
-            灯光和阴影
+            聚光灯和阴影
             <div id="container" ref={container}></div>
         </>
     );

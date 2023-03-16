@@ -76,3 +76,8 @@ code {
 #preview {
     display:none
 }
+
+.ant-menu{
+    overflow-y:auto;
+    overflow-x: hidden;
+}

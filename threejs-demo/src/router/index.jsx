@@ -1,7 +1,7 @@
 import PackagePreview3D from '../pages/装箱demo';
-import PicMark from '../pages/pic-mark';
-import TextMark from '../pages/text-mark';
-import MarkdownCom from '../pages/markdown';
+// import PicMark from '../pages/pic-mark';
+// import TextMark from '../pages/text-mark';
+// import MarkdownCom from '../pages/markdown';
 // import Day1Com from '../pages/lessons/day1';
 // import Day2Com from '../pages/lessons/day2';
 // import Day3Com from '../pages/lessons/day3';
@@ -58,6 +58,7 @@ const MyIcon = createFromIconfontCN({
 // （二）
 // 懒加载
 const LazyLoad = (path) => {
+
     //传入在view 下的路径
     const LazyCom = React.lazy(() => import(`../pages/${path}`));
     return (
@@ -174,7 +175,12 @@ export const routerPaths = [
                 elementPath: 'lessons/day16',
                 key: 'lessons/day16',
             },
-            
+            {
+                label: '粒子/点特效',
+                icon: <MyIcon type="icon-hebaodan" />,
+                elementPath: 'lessons/day17',
+                key: 'lessons/day17',
+            },
         ],
     },
     {
@@ -223,8 +229,13 @@ export const routerPaths = [
                 icon: <MyIcon type="icon-kele" />,
                 elementPath: 'emoji表情',
                 key: 'emoji',
-            }
-            
+            },
+            {
+                label: 'svg标注',
+                icon: <MyIcon type="icon-bingkuai" />,
+                elementPath: 'svg-mark',
+                key: 'svg-mark',
+            },
         ],
     },
 ];
@@ -253,7 +264,7 @@ export function RouterCom2() {
         (prev, v) =>
             prev.concat(
                 v.children.map((i) => {
-                    return { path: i.key, element: LazyLoad(i.elementPath) };
+                    return { path: i?.key, element: LazyLoad(i?.elementPath) };
                 })
             ),
         []

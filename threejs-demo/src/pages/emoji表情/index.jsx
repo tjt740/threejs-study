@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import data from '@emoji-mart/data';
 import i18n from '@emoji-mart/data/i18n/zh.json';
 
@@ -8,12 +8,8 @@ import './index.less';
 window.i18n = i18n;
 export default function EmojiCom() {
     const [value, setValue] = useState(null);
-  
 
-    useEffect(() => { 
-      
-      
-    },[])
+    useEffect(() => {}, []);
 
     return (
         <>
@@ -23,12 +19,12 @@ export default function EmojiCom() {
             <Picker
                 i18n={i18n}
                 data={data}
-                locale='zh'
-                perLine='8'
-                searchPosition= 'none'
+                locale="zh"
+                perLine="8"
+                searchPosition="none"
                 // previewPosition="none"
                 onEmojiSelect={(v) => {
-                    console.log(v,);
+                    console.log(v);
                     setValue(v.native);
                 }}
             />

@@ -260,6 +260,13 @@ export const routerPaths = [
                 elementPath: '银河系demo',
                 key: '银河系demo',
             },
+            {
+                label: '3d滚动页面',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: '3d滚动页面',
+                key: '3d滚动页面',
+            },
+            
         ],
     },
 ];

@@ -69,6 +69,8 @@ export default function ThreeComponent() {
         mockSphere.position.set(10, 15, 15);
         //3️⃣ 小球上添加点光源
         mockSphere.add(pointLight);
+
+        
         scene.add(mockSphere);
 
         // 设置阴影分辨率,值越大分辨率越高,默认 512*512

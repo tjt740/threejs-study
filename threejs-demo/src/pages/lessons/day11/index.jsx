@@ -22,7 +22,10 @@ export default function ThreeComponent() {
         for (let i = 0; i <= 20; i++) {
             // 创建几何体
             const geometry = new THREE.BufferGeometry();
-            const vertexPosition = new Float32Array(9);
+            // 创建多少个点，三个点为一组三角形
+            const count = 9;
+            
+            const vertexPosition = new Float32Array(count);
             //     const vertexPosition =new  Float32Array([
             //         1.0, 1.0, 0,  // 顶点1,XYZ坐标
             //         1.0, 5.0, 0,  // 顶点2,XYZ坐标
@@ -32,10 +35,11 @@ export default function ThreeComponent() {
             //         1.0, 1.0, 0,
             //    ]);
             // 设置每个物体里的顶点坐标
-            for (let j = 0; j < 9; j++) {
+            for (let j = 0; j < count; j++) {
                 vertexPosition[j] = Math.random() * 10 - 5;
             }
-            console.log('geometry:', geometry);
+            // console.log(vertexPosition);
+            // console.log('geometry:', geometry);
             geometry.setAttribute(
                 'position',
                 new THREE.BufferAttribute(vertexPosition, 3)

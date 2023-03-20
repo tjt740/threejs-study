@@ -187,6 +187,12 @@ export const routerPaths = [
                 elementPath: 'lessons/day18',
                 key: 'lessons/day18',
             },
+            {
+                label: 'cannon-es 物理引擎',
+                icon: <MyIcon type="icon-haixing" />,
+                elementPath: 'lessons/day19',
+                key: 'lessons/day19',
+            },
         ],
     },
     {

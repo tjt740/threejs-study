@@ -64,7 +64,6 @@ export default function ThreeComponent() {
         })        
 
 
-
         scene.add(directionalLight);
 
         // 创建球形几何体

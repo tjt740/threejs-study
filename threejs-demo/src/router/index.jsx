@@ -272,6 +272,14 @@ export const routerPaths = [
                 elementPath: '3d滚动页面',
                 key: '3d滚动页面',
             },
+            {
+                label: '点击屏幕创建立方体撞击地面',
+                icon: <MyIcon type="icon-050-forest" />,
+                elementPath: '点击屏幕创建立方体撞击地面',
+                key: '点击屏幕创建立方体撞击地面',
+            },
+
+            
             
         ],
     },

@@ -69,7 +69,9 @@ export default function ThreeComponent() {
         const axesHelper = new THREE.AxesHelper(25);
         //  坐标辅助线添加到场景中
         scene.add(axesHelper);
-
+        /*
+         * ------------ start ----------
+         */
         // 创建环境光 + 强度
         const ambientLight = new THREE.AmbientLight(0xffffff, 1);
         scene.add(ambientLight);
@@ -92,24 +94,14 @@ export default function ThreeComponent() {
         directionalLight.shadow.mapSize.set(3072, 3072);
         scene.add(directionalLight);
 
-        /*
-         * ------------ start ----------
-         */
-        // 创建矩形几何体
-        const THREEBoxArr = [];
-        const createTHREEBoxGeometry = () => {
-            const boxGeometry = new THREE.BoxGeometry(2, 2, 2);
-            const boxMaterial = new THREE.MeshStandardMaterial();
-            const box = new THREE.Mesh(boxGeometry, boxMaterial);
-            box.castShadow = true;
-            THREEBoxArr.push(box);
-            scene.add(box);
-            return;
-        };
-
+        // 创建球体和地面
+        const sphereGeometry = new THREE.SphereGeometry(3, 32, 16);
+        const sphereMaterial = new THREE.MeshStandardMaterial();
+        const sphere1 = new THREE.Mesh(sphereGeometry, sphereMaterial);
+        sphere1.castShadow = true;
+        scene.add(sphere1);
 
         // 创建地面
-        const createTHREEPlaneGeometry = () => {     
         const floorGeometry = new THREE.PlaneGeometry(60, 60);
         const floorMaterial = new THREE.MeshStandardMaterial({
             side: THREE.DoubleSide,
@@ -119,10 +111,7 @@ export default function ThreeComponent() {
         floor.rotation.x = -Math.PI / 2;
         floor.position.y = -7;
         scene.add(floor);
-        }
-        createTHREEPlaneGeometry();
 
-        
         // 利用cannon创建物理世界
         // 1.
         // const world = new CANNON.World({
@@ -133,68 +122,52 @@ export default function ThreeComponent() {
         world.gravity.set(0, -9.8, 0); // x,y,z 方向力; 各个方向的力
 
         // Ps: Q1: THREE.js是渲染引擎 ， Cannon-es是物理引擎，怎么将两者结合呢？
-        // Tjt: 在物理世界力创造矩形几何体
+        // Tjt: 在物理世界力创造小球
 
-        const CANNONBoxArr = [];
+        // 创造物理世界小球
+        const cannonSphereGeometry = new CANNON.Sphere(3);
         // 创造物理世界材质
-        const cannonBoxMaterial = new CANNON.Material();
-        const createCANNONBoxShape = () => {
-            // 创造物理世界矩形几何体
-            // Ps: 必须是THREE.js几何体的长宽高一半
-            const cannonBoxGeometry = new CANNON.Box(new CANNON.Vec3(1, 1, 1));
+        const cannonSphereMaterial = new CANNON.Material();
+        // 创造物理世界的物体
+        const cannonSphere = new CANNON.Body({
+            // 物体
+            shape: cannonSphereGeometry,
+            // 物体材质
+            material: cannonSphereMaterial,
+            // 物体质量
+            mass: 1, // 重量
+            // 物体位置
+            position: new CANNON.Vec3(0, 0, 0), // X,Y,Z位置，同THREE.js中的小球位置一致
+        });
+        // 将物理世界物体 放入物理世界中
+        world.addBody(cannonSphere);
 
-            // 创造物理世界的物体
-            const cannonBox = new CANNON.Body({
-                // 物体
-                shape: cannonBoxGeometry,
-                // 物体材质
-                material: cannonBoxMaterial,
-                // 物体质量
-                mass: 1, // 重量
-                // 物体位置
-                position: new CANNON.Vec3(0, 0, 0), // X,Y,Z位置，同THREE.js中的矩形几何体位置一致
-            });
-
-            CANNONBoxArr.push(cannonBox);
-            // 将物理世界物体 放入物理世界中
-            world.addBody(cannonBox);
-
-
-             // 添加监听矩形几何体碰撞事件
-            cannonBox.addEventListener('collide', onCollideFn);
-            
-        };
-
+        // 创建物理世界平面
+        const cannonPlaneShape = new CANNON.Plane();
         // 创造物理世界平面材质
         const cannonPlaneMaterial = new CANNON.Material();
-        const createCANNONPlaneShape = () => {
-            // 创建物理世界平面
-            const cannonPlaneShape = new CANNON.Plane();
-            // 创造物理世界载体
-            const cannonPlaneBody = new CANNON.Body();
-            // 添加
-            cannonPlaneBody.addShape(cannonPlaneShape);
-            // 设置物理世界地面材质
-            cannonPlaneBody.material = cannonPlaneMaterial;
-            // 物体质量： 0时将不受重力影响；
-            cannonPlaneBody.mass = 0;
-            // 设置物理世界地面位置
-            cannonPlaneBody.position.set(0, -7, 0);
-            // 旋转物理世界平面
-            cannonPlaneBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0); // 沿着x轴设置旋转角度 同👇
-            // cannonPlaneBody.quaternion.setFromAxisAngle(
-            //     new CANNON.Vec3(1, 0, 0),
-            //     -Math.PI / 2
-            // );
-            //  将物理世界物体 放入物理世界中
-            world.addBody(cannonPlaneBody);
-        };
-        //
-        createCANNONPlaneShape();
+        // 创造物理世界载体
+        const cannonPlaneBody = new CANNON.Body();
+        // 添加
+        cannonPlaneBody.addShape(cannonPlaneShape);
+        // 设置物理世界地面材质
+        cannonPlaneBody.material = cannonPlaneMaterial;
+        // 物体质量： 0时将不受重力影响；
+        cannonPlaneBody.mass = 0;
+        // 设置物理世界地面位置
+        cannonPlaneBody.position.set(0, -7, 0);
+        // 旋转物理世界平面
+        cannonPlaneBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0); // 沿着x轴设置旋转角度 同👇
+        // cannonPlaneBody.quaternion.setFromAxisAngle(
+        //     new CANNON.Vec3(1, 0, 0),
+        //     -Math.PI / 2
+        // );
+        //  将物理世界物体 放入物理世界中
+        world.addBody(cannonPlaneBody);
 
-        // 将矩形几何体材质 和 地面材质关联在一起，设置摩擦系数，使之仿真现实。https://pmndrs.github.io/cannon-es/docs/classes/ContactMaterial.html
+        // 将小球材质 和 地面材质关联在一起，设置摩擦系数，使之仿真现实。https://pmndrs.github.io/cannon-es/docs/classes/ContactMaterial.html
         const cannonContactMaterial = new CANNON.ContactMaterial(
-            cannonBoxMaterial,
+            cannonSphereMaterial,
             cannonPlaneMaterial,
             {
                 friction: 0.3, // 摩擦力
@@ -223,14 +196,8 @@ export default function ThreeComponent() {
             }
         }
 
-
-        
-        container.current.addEventListener('click', () => {
-            createTHREEBoxGeometry();
-            createCANNONBoxShape();
-           
-        });
-
+        // 添加监听小球碰撞事件
+        cannonSphere.addEventListener('collide', onCollideFn);
 
         /*
          * ------------ end ----------
@@ -258,11 +225,8 @@ export default function ThreeComponent() {
             const deltaTime = clock.getDelta();
             //9️⃣ 监听更新物理引擎里世界的物体
             world.step(1 / 120, deltaTime);
-            // 将THREE.js 中的矩形几何体与 物理世界中矩形几何体相互绑定
-            // sphere1.position.copy(cannonSphere.position); // === sphere1.position = cannonCube.position;
-            THREEBoxArr.forEach((item,index) => { 
-                item.position.copy(CANNONBoxArr[index].position);
-            })
+            // 将THREE.js 中的小球与 物理世界中小球相互绑定
+            sphere1.position.copy(cannonSphere.position); // === sphere1.position = cannonCube.position;
 
             renderer.render(scene, camera);
             // 动画帧

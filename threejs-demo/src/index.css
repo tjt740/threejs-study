@@ -81,3 +81,7 @@ code {
     overflow-y:auto;
     overflow-x: hidden;
 }
+
+.ant-menu::-webkit-scrollbar{
+    display: none;
+}

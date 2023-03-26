@@ -50,7 +50,7 @@ export default function ThreeComponent() {
                 )
                 .height.split('px')[0]
         );
-        renderer.setSize(WIDTH, HEIGHT);
+        renderer.setSize(window.innerWidth, window.innerHeight);
         console.log(renderer);
 
         // 获取Clock 跟踪时间，解决 Date now() 不准的问题；

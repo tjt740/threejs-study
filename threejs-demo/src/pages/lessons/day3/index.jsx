@@ -45,7 +45,7 @@ export default function ThreeComponent() {
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
         controls.dampingFactor = 0.1;
-        renderer.setSize(WIDTH, HEIGHT);
+        renderer.setSize(window.innerWidth, window.innerHeight);
         console.log(renderer);
 
         // 渲染函数

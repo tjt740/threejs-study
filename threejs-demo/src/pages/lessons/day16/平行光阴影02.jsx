@@ -117,7 +117,7 @@ export default function ThreeComponent() {
                 .height.split('px')[0]
         );
 
-        renderer.setSize(WIDTH, HEIGHT);
+        renderer.setSize(window.innerWidth, window.innerHeight);
         //2️⃣ 设置渲染器开启阴影计算
         renderer.shadowMap.enabled = true;
         // 设置渲染器像素比:

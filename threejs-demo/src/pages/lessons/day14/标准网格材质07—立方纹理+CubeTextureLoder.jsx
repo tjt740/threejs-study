@@ -117,7 +117,7 @@ export default function ThreeComponent() {
                 )
                 .height.split('px')[0]
         );
-        renderer.setSize(WIDTH, HEIGHT);
+        renderer.setSize(window.innerWidth, window.innerHeight);
         // 轨道控制器
         const controls = new OrbitControls(camera, renderer.domElement);
         // 控制器阻尼

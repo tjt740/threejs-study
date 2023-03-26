@@ -220,7 +220,7 @@ export default function ThreeComponent() {
                 .height.split('px')[0]
         );
 
-        renderer.setSize(WIDTH, HEIGHT);
+        renderer.setSize(window.innerWidth, window.innerHeight);
         camera.updateProjectionMatrix();
 
         // 设置像素比 使图形锯齿 消失

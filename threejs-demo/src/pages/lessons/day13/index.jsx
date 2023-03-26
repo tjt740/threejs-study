@@ -100,7 +100,7 @@ export default function ThreeComponent() {
                 )
                 .height.split('px')[0]
         );
-        renderer.setSize(WIDTH, HEIGHT);
+        renderer.setSize(window.innerWidth, window.innerHeight);
         // 渲染函数
         function render(t) {
             controls.update();

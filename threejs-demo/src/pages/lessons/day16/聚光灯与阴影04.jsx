@@ -156,7 +156,7 @@ export default function ThreeComponent() {
                 .height.split('px')[0]
         );
 
-        renderer.setSize(WIDTH, HEIGHT);
+        renderer.setSize(window.innerWidth, window.innerHeight);
         camera.updateProjectionMatrix();
 
         

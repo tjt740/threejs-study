@@ -134,15 +134,17 @@ export default function ThreeComponent() {
         //  坐标辅助线添加到场景中
         scene.add(axesHelper);
 
-        renderer.setSize(WIDTH, HEIGHT);
-        camera.updateProjectionMatrix();
-
-        // 设置像素比 使图形锯齿 消失
-        renderer.setPixelRatio(window.devicePixelRatio);
-        // 设置渲染器开启阴影计算
-        renderer.shadowMap.enabled = true;
-        // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能.
-        renderer.physicallyCorrectLights = true;
+         // 改变渲染器尺寸
+         renderer.setSize(window.innerWidth, window.innerHeight);
+         // 设置像素比 使图形锯齿 消失
+         renderer.setPixelRatio(window.devicePixelRatio);
+         // 设置渲染器开启阴影计算
+         renderer.shadowMap.enabled = true;
+         // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能.
+         renderer.physicallyCorrectLights = true;
+         //  更新camera 投影矩阵
+         camera.updateProjectionMatrix();
+ 
 
         // 渲染函数
         const clock = new THREE.Clock();

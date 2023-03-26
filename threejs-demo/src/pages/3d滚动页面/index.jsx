@@ -334,7 +334,7 @@ export default function ThreeComponent() {
         //  坐标辅助线添加到场景中
         scene.add(axesHelper);
 
-        renderer.setSize(WIDTH, HEIGHT);
+        renderer.setSize(window.innerWidth, window.innerHeight);
         camera.updateProjectionMatrix();
 
         // 设置像素比 使图形锯齿 消失

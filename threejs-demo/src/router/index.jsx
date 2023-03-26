@@ -193,6 +193,18 @@ export const routerPaths = [
                 elementPath: 'lessons/day19',
                 key: 'lessons/day19',
             },
+            {
+                label: '原生Webgl创建物体',
+                icon: <MyIcon type="icon-box-parcel-package-delivery-pack-office-facd" />,
+                elementPath: 'lessons/day20',
+                key: 'lessons/day20',
+            },
+            {
+                label: '认识着色器',
+                icon: <MyIcon type="icon-kele" />,
+                elementPath: 'lessons/day21',
+                key: 'lessons/day21',
+            },
         ],
     },
     {

@@ -157,6 +157,12 @@ export default function ThreeComponent() {
                 position: new CANNON.Vec3(0, 0, 0), // X,Y,Z位置，同THREE.js中的矩形几何体位置一致
             });
 
+            // 设置施加力的方向
+            cannonBox.applyLocalForce(
+                new CANNON.Vec3(200, 0, 0), // 几何体受力大小和位置 （往X轴偏移）
+                new CANNON.Vec3(20, 0, 0) // 受力的目标点（移动到多少位置停止）
+            )
+
             CANNONBoxArr.push(cannonBox);
             // 将物理世界物体 放入物理世界中
             world.addBody(cannonBox);
@@ -235,7 +241,7 @@ export default function ThreeComponent() {
 
 
       
-        renderer.setSize(WIDTH, HEIGHT);
+        renderer.setSize(window.innerWidth, window.innerHeight);
         camera.updateProjectionMatrix();
 
         // 设置像素比 使图形锯齿 消失

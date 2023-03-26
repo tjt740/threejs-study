@@ -517,7 +517,7 @@ export default function PackagePreview3D() {
         scene.add(camera);
         raycaster.intersectObjects(scene.children);
         renderer.outputEncoding = THREE.sRGBEncoding;
-        renderer.setSize(WIDTH, HEIGHT);
+        renderer.setSize(window.innerWidth, window.innerHeight);
         // 控制器阻尼
         controls.enableDamping = true;
         // 动态阻尼系数
@@ -581,7 +581,7 @@ export default function PackagePreview3D() {
             // 更新camera 投影矩阵
             camera.updateProjectionMatrix();
             // 更新渲染器
-            renderer.setSize(WIDTH, HEIGHT);
+            renderer.setSize(window.innerWidth, window.innerHeight);
             // 设置渲染器像素比:
             renderer.setPixelRatio(window.devicePixelRatio);
         });

@@ -62,20 +62,41 @@ export default function ThreeComponent() {
             
             */
             vertexShader: `   
+                precision lowp float;
                 attribute vec3 position;
+                // 顶点着色器 uv 传给片元着色器 step1
                 attribute vec2 uv;
+
                 uniform mat4 modelMatrix;
                 uniform mat4 viewMatrix;
                 uniform mat4 projectionMatrix;
 
+                // 顶点着色器 uv 传给片元着色器 step2
+                varying vec2 vUv;
+                // highp  -2^16 - 2^16
+                // mediump -2^10 - 2^10
+                // lowp -2^8 - 2^8
+                
+                varying float vElevation;
+
                 void main(){
+                    // 顶点着色器 uv 传给片元着色器 step3
+                    vUv = uv; 
                     gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4( position, 1.0 ) ;
                 }    
-            `, 
+            `,
+            
             // 片元着色器
             fragmentShader: `
+                precision lowp float;
+                // 顶点着色器 uv 传给片元着色器 step4
+                varying vec2 vUv;
+                varying float vElevation;
+                
                 void main(){
-                    gl_FragColor = vec4(0.0, 1.0, 1.0, 0.3); // rgba 红黄蓝
+                    // 顶点着色器 uv 传给片元着色器 step5
+                    gl_FragColor = vec4(vUv, 0.0, 1.0);
+                    // gl_FragColor = vec4(0.0, 1.0, 1.0, 0.3); // rgba 红黄蓝
                 }
             `,
             side: THREE.DoubleSide,

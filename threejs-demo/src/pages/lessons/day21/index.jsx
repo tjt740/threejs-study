@@ -21,6 +21,7 @@ export default function ThreeComponent() {
             1000
         );
         camera.position.set(0, 0, 30);
+        // camera.lookAt(scene.position);
         scene.add(camera);
 
         // 初始化<渲染器>

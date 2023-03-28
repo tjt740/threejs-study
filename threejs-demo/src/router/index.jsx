@@ -290,7 +290,12 @@ export const routerPaths = [
                 elementPath: '点击屏幕创建立方体撞击地面',
                 key: '点击屏幕创建立方体撞击地面',
             },
-
+            {
+                label: '标准网格材质泥路',
+                icon: <MyIcon type="icon-050-forest" />,
+                elementPath: '标准网格材质泥路',
+                key: '标准网格材质泥路',
+            },
             
             
         ],

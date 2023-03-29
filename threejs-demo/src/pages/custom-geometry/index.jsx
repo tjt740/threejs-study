@@ -2,95 +2,33 @@ import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 // 导入轨道控制器 只能通过这种方法
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-
+import * as dat from 'dat.gui';
 export default function CustomCom() {
     const container = useRef(null);
 
     const init = () => {
         const scene = new THREE.Scene();
         // 场景颜色
-        scene.background = new THREE.Color(0x444444);
+        scene.background = new THREE.Color(0x969696);
         const camera = new THREE.PerspectiveCamera(
-            90,
+            75,
             window.innerWidth / window.innerHeight,
             0.1,
             1000
         );
-        camera.position.set(0, 0, 400);
+        camera.position.set(0, 100, 600);
+
+        const gui = new dat.GUI();
+        const cameraGui = gui.addFolder('调整相机视角');
+        cameraGui.add(camera.position, 'x').min(1).max(1000).step(10);
+        cameraGui.add(camera.position, 'y').min(1).max(1000).step(10);
+        cameraGui.add(camera.position, 'z').min(1).max(1000).step(10);
+
         scene.add(camera);
 
-        const color = new THREE.Color(
-            Math.random(),
-            Math.random(),
-            Math.random()
-        );
         /*
          * ------------ start ----------
          */
-        //初始化BufferGeometry
-
-        const geometry = new THREE.BufferGeometry();
-
-        //设置顶点坐标
-
-        const vertices = new Float32Array([
-            //底部的矩形
-            -3, 0, 0, -3, 0, 2, 3, 0, 2,
-
-            -3, 0, 0, 3, 0, 2, 3, 0, 0,
-            //顶部的矩形
-            -1.5, 2, 0.5, -1.5, 2, 1.5, 1.5, 2, 1.5, -1.5, 2, 0.5, 1.5, 2, 1.5,
-            1.5, 2, 0.5,
-            //侧面
-            -3, 0, 0, -1.5, 2, 1.5, -1.5, 2, 0.5, -3, 0, 0, -3, 0, 2, -1.5, 2,
-            1.5, 1.5, 2, 1.5, 3, 0, 0, 1.5, 2, 0.5, 3, 0, 2, 3, 0, 0, 1.5, 2,
-            1.5,
-
-            //正面
-            3, 0, 2, -1.5, 2, 1.5, -3, 0, 2, 3, 0, 2, 1.5, 2, 1.5, -1.5, 2, 1.5,
-
-            //背面
-            -1.5, 2, 0.5, 3, 0, 0, -3, 0, 0.5,
-
-            1.5, 2, 0.5, 3, 0, 0, -1.5, 2, 0.5,
-            //底面
-            -3, 0, 2, -3, 0, 0, 3, 0, 2,
-
-            3, 0, 0, 3, 0, 2, -3, 0, 0,
-        ]);
-
-        ///连接顶点
-
-        geometry.setAttribute(
-            'position',
-            new THREE.BufferAttribute(vertices, 3)
-        );
-
-        //材质
-
-        const material = new THREE.MeshBasicMaterial({
-            color,
-            opacity: 0.3,
-            wireframe: true,
-            transparent: true,
-        });
-
-        //生成物体
-        const cube = new THREE.Mesh(geometry, material);
-        scene.add(cube);
-
-       
-
-        // for(let i =0 ; i< 12; i++){
-        //     let aspect = 12/ 4;
-        //     if(i < aspect){
-        //     let j = i * 4 ;
-        //     let a = j;
-        //     let b = j+1 ;
-        //     let c = j+ 2;
-        //         let d = j+3
-        //         console.log(a , b , c,d );
-        //     }}
 
         const points = [];
         const res = [
@@ -113,10 +51,10 @@ export default function CustomCom() {
             [0, 0, 200],
             // [0, 0, 0],//
             // 第二层
-            [-50, 75, 0],
-            [250, 75, 0],
-            [250, 75, 200],
-            [-50, 75, 200],
+            [-50, 55, 0],
+            [250, 55, 0],
+            [250, 55, 200],
+            [-50, 55, 200],
             // [-50, 75, 0],//
             // 第三层
             [-50, 150, 0],
@@ -126,7 +64,108 @@ export default function CustomCom() {
             // [-50, 150, 0],//
         ];
 
-        const fn = (vertices) => {
+        // 垂直线数组
+        const groupVertical = new THREE.Group();
+        const layers2 = (vertices) => {
+            // 基层
+            const proportion = vertices.length / 4;
+            // 数组数
+            const floorNum = vertices.length / 3;
+            // 柱数
+            const lengthNumber =
+                vertices.length / 2 + vertices.length / proportion / 2;
+
+            const verticesArr1 = [];
+            const verticesArr2 = [];
+            const verticesArr3 = [];
+            const verticesArr4 = [];
+
+            for (let i = 0; i < vertices.length; i++) {
+                const j = i * 4;
+                const a = j;
+                const b = j + 1;
+                const c = j + 2;
+                const d = j + 3;
+
+                if (j < vertices.length) {
+                    verticesArr1.push(
+                        new THREE.Vector3(
+                            vertices[a][0],
+                            vertices[a][1],
+                            vertices[a][2]
+                        )
+                    );
+                    verticesArr2.push(
+                        new THREE.Vector3(
+                            vertices[b][0],
+                            vertices[b][1],
+                            vertices[b][2]
+                        )
+                    );
+                    verticesArr3.push(
+                        new THREE.Vector3(
+                            vertices[c][0],
+                            vertices[c][1],
+                            vertices[c][2]
+                        )
+                    );
+                    verticesArr4.push(
+                        new THREE.Vector3(
+                            vertices[d][0],
+                            vertices[d][1],
+                            vertices[d][2]
+                        )
+                    );
+
+                    if (verticesArr1.length > 2) {
+                        verticesArr1.shift();
+                        verticesArr2.shift();
+                        verticesArr3.shift();
+                        verticesArr4.shift();
+                    }
+                    if (verticesArr1.length === 2) {
+                        const verticesArrList = [
+                            verticesArr1,
+                            verticesArr2,
+                            verticesArr3,
+                            verticesArr4,
+                        ];
+                        for (let k = 0; k < verticesArrList.length; k++) {
+                            const geo =
+                                new THREE.BufferGeometry().setFromPoints(
+                                    verticesArrList[k]
+                                );
+                            const verticalLine = new THREE.Line(
+                                geo,
+                                new THREE.MeshBasicMaterial({
+                                    color: new THREE.Color(0x000000),
+                                })
+                            );
+                            groupVertical.add(verticalLine);
+                            groupVertical.position.x = -100;
+                        }
+                    }
+                }
+            }
+            scene.add(groupVertical);
+        };
+        const newArr2 = layers2(res);
+        // const geo2 = new THREE.BufferGeometry().setFromPoints([
+        //     // new THREE.Vector3(0, 0, 0),
+        //     // new THREE.Vector3(-50, 75, 0),
+        //     new THREE.Vector3(200, 0, 0),
+        //     new THREE.Vector3(250, 75, 0),
+        // ]);
+        // const line2 = new THREE.Line(
+        //     geo2,
+        //     new THREE.MeshBasicMaterial({ color: new THREE.Color(0x000000) })
+        // );
+        // groupVertical.add(line2);
+        // // groupVertical.position.x = -200;
+        // scene.add(groupVertical);
+
+        // layers
+        const layers = (vertices) => {
             const proportion = vertices.length / 4;
             return vertices.reduce(
                 (prev, _, idx) => {
@@ -134,7 +173,11 @@ export default function CustomCom() {
                         let j = idx * 4;
                         let startIndex = j;
                         let endIndex = j + 3;
-                        prev.splice(endIndex + 1 + idx, 0, vertices[startIndex]);
+                        prev.splice(
+                            endIndex + 1 + idx,
+                            0,
+                            vertices[startIndex]
+                        );
                     }
 
                     return prev;
@@ -143,22 +186,15 @@ export default function CustomCom() {
             );
         };
 
-        const newArr = fn(res);
-
-
+        const newArr = layers(res);
         // 画线点层数
         const proportionNewArr = newArr.length / 5;
         // 横线数组
         const groupHorizontal = new THREE.Group();
-        // 垂直线数组
-        const groupVertical = new THREE.Group();
-        const geo2 = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(-50, 75, 0)]);
-        const line2 = new THREE.Line(geo2, new THREE.MeshBasicMaterial({color:new THREE.Color(0x7777ff)}))
-        groupVertical.add(line2);
-        scene.add(groupVertical);
-
-        const material2 = new THREE.LineBasicMaterial({
-            color: 0x0000ff,
+        // 材质
+        const material = new THREE.LineBasicMaterial({
+            color: 0x000000,
+            linewidth: 1,
         });
         for (let i = 0; i < newArr.length; i++) {
             const verticesArr = [];
@@ -170,7 +206,6 @@ export default function CustomCom() {
             const e = j + 4;
 
             if (i < proportionNewArr) {
-            
                 verticesArr.push(
                     new THREE.Vector3(newArr[a][0], newArr[a][1], newArr[a][2]),
                     new THREE.Vector3(newArr[b][0], newArr[b][1], newArr[b][2]),
@@ -178,44 +213,43 @@ export default function CustomCom() {
                     new THREE.Vector3(newArr[d][0], newArr[d][1], newArr[d][2]),
                     new THREE.Vector3(newArr[e][0], newArr[e][1], newArr[e][2])
                 );
-              
-                const geometry = new THREE.BufferGeometry().setFromPoints(verticesArr);
-                console.log(verticesArr);
-                const line = new THREE.Line(geometry, material2);
+
+                const geometry = new THREE.BufferGeometry().setFromPoints(
+                    verticesArr
+                );
+                // console.log(verticesArr);
+                const line = new THREE.Line(geometry, material);
                 groupHorizontal.add(line);
+                groupHorizontal.position.x = -100;
             }
         }
-        console.log(groupHorizontal);
         scene.add(groupHorizontal);
 
+        const planeGeometry = new THREE.PlaneGeometry(500, 500);
+        const placeMaterial = new THREE.MeshBasicMaterial({
+            color: 0x7c8891,
+            side: THREE.DoubleSide,
+        });
+        const floor = new THREE.Mesh(planeGeometry, placeMaterial);
+        floor.rotation.x = -(Math.PI / 2);
+        floor.position.set(0, -10, 100);
 
-
-
-        // res.forEach((v,i) => {
-        //     points[i] = new THREE.Vector3(v[0], v[1], v[2]);
-        // })
-
-        // console.log(points);
-        // // points.push( new THREE.Vector3( - 10, 0, 0 ) );
-        // // points.push( new THREE.Vector3( 0, 10, 0 ) );
-        // // points.push( new THREE.Vector3( 10, 0, 0 ) );
-
-        // const geometry2 = new THREE.BufferGeometry().setFromPoints( points );
-
-        // const line = new THREE.Line( geometry2, material2 );
-        // scene.add( line );
+        scene.add(floor);
 
         /*
          * ------------ end ----------
          */
 
         //  创建XYZ直角坐标系  (红色代表 X 轴. 绿色代表 Y 轴. 蓝色代表 Z 轴.)
-        const axesHelper = new THREE.AxesHelper(25);
+        const axesHelper = new THREE.AxesHelper(1000);
         //  坐标辅助线添加到场景中
         // scene.add(axesHelper);
 
         // 初始化<渲染器>
-        const renderer = new THREE.WebGLRenderer();
+        const renderer = new THREE.WebGLRenderer({
+            antialias: true,
+            alpha: true,
+        });
         const WIDTH = Number(
             window
                 .getComputedStyle(
@@ -245,6 +279,11 @@ export default function CustomCom() {
         // 控制器阻尼
         controls.enableDamping = true;
 
+        //
+        camera.updateProjectionMatrix();
+
+        // 设置像素比 使图形锯齿 消失
+        renderer.setPixelRatio(window.devicePixelRatio);
         // 渲染
         render();
 

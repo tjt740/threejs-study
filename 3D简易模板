@@ -21,7 +21,10 @@ export default function ThreeComponent() {
         scene.add(camera);
 
         // 初始化<渲染器>
-        const renderer = new THREE.WebGLRenderer();
+        const renderer =  new THREE.WebGLRenderer({
+            antialias: true, // 消除锯齿
+            alpha: true, // 背景透明
+        });
 
         const WIDTH = Number(
             window

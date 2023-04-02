@@ -3,7 +3,8 @@ import * as THREE from 'three';
 // 导入轨道控制器 只能通过这种方法
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as dat from 'dat.gui';
-import vertexShader from './shader/basic/vertex.glsl';
+
+
 
 export default function ThreeComponent() {
     const container = useRef(null);
@@ -20,6 +21,7 @@ export default function ThreeComponent() {
             1000
         );
         camera.position.set(0, 0, 30);
+        // camera.lookAt(scene.position);
         scene.add(camera);
 
         // 初始化<渲染器>
@@ -47,39 +49,70 @@ export default function ThreeComponent() {
         
         // 创建平面几何体
         const planGeometry = new THREE.PlaneGeometry(20, 20, 64, 64);
+       
         // 创建平面材质
-        const planeMaterial = new THREE.MeshBasicMaterial({
-            color: new THREE.Color('#00ff00'),
+        //🌟 改用原始着色器材质 （顶点着色器 + 片元着色器）
+        const rawMaterial = new THREE.RawShaderMaterial({
+            // 顶点着色器
+            /*
+            shader中有三种类型的变量: uniforms, attributes, 和 varyings
+                ● Uniforms是所有顶点都具有相同的值的变量。 比如     <投影矩阵>*<视图矩阵>*<模型矩阵>*<顶点坐标> 灯光，雾，和阴影贴图就是被储存在uniforms中的数据。 uniforms可以通过顶点着色器和片元着色器来访问。
+                ● Attributes 与每个顶点关联的变量。例如，顶点位置，法线和顶点颜色都是存储在attributes中的数据。attributes 只 可以在顶点着色器中访问。
+                ● Varyings 是从顶点着色器传递到片元着色器的变量。对于每一个片元，每一个varying的值将是相邻顶点值的平滑插值。
+                注意：在shader 内部，uniforms和attributes就像常量；你只能使用JavaScript代码通过缓冲区来修改它们的值。
+            
+            */
+            vertexShader: `   
+                precision lowp float;
+                attribute vec3 position;
+                // 顶点着色器 uv 传给片元着色器 step1
+                attribute vec2 uv;
+
+                uniform mat4 modelMatrix;
+                uniform mat4 viewMatrix;
+                uniform mat4 projectionMatrix;
+
+                // 顶点着色器 uv 传给片元着色器 step2
+                varying vec2 vUv;
+                // highp  -2^16 - 2^16
+                // mediump -2^10 - 2^10
+                // lowp -2^8 - 2^8
+                
+                varying float vElevation;
+
+                void main(){
+                    // 顶点着色器 uv 传给片元着色器 step3
+                    vUv = uv; 
+                    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4( position, 1.0 ) ;
+                }    
+            `,
+            
+            // 片元着色器
+            fragmentShader: `
+                precision lowp float;
+                // 顶点着色器 uv 传给片元着色器 step4
+                varying vec2 vUv;
+                varying float vElevation;
+                
+                void main(){
+                    // 顶点着色器 uv 传给片元着色器 step5
+                    gl_FragColor = vec4(vUv, 0.0, 1.0);
+                    // gl_FragColor = vec4(0.0, 1.0, 1.0, 0.3); // rgba 红黄蓝
+                }
+            `,
             side: THREE.DoubleSide,
-        });
-
-        //🌟 改用着色器材质 （顶点着色器 + 片元着色器）
-        //1️⃣ 顶点着色器，必须用GLSL代码格式才行
-        // 顶点着色器，顶点变换过程 两种写法
-        /*
-        1. gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
-        2.gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4( position, 1.0 );
-        */
-        const vertexShader = `
-            void main(){
-                gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4( position, 1.0 ) ;
-            }
-        `;
-        //2️⃣ 片元着色器，必须用GLSL代码格式才行
-        const fragmentShader = `
-            void main(){
-                gl_FragColor = vec4(0.0, 1.0, 1.0, 0.3); // rgba 红黄蓝
-            }
-        `;
-
-        // 使用shaderMaterial 构建shaderMaterial材质
-        const shaderMaterial = new THREE.ShaderMaterial({
-            vertexShader,
-            fragmentShader,
+            // uniforms: {
+            //     uTime: {
+            //       value: 0,
+            //     },
+            //     uTexture: {
+            //       value: texture,
+            //     },
+            //   },
         });
 
         // 构建平面几何体
-        const planeCube = new THREE.Mesh(planGeometry, shaderMaterial);
+        const planeCube = new THREE.Mesh(planGeometry, rawMaterial);
         // 将几何体添加到场景中
         scene.add(planeCube);
 

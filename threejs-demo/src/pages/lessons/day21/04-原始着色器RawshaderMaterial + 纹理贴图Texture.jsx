@@ -192,7 +192,7 @@ export default function ThreeComponent() {
             // 获取秒数
             const time = clock.getElapsedTime();
 
-            //2️⃣ 改变rawMaterial里的uTime
+            // 改变rawMaterial里的uTime
             rawMaterial.uniforms.uTime.value = time;
 
             renderer.render(scene, camera);
@@ -235,7 +235,7 @@ export default function ThreeComponent() {
 
     return (
         <>
-           原始着色器RawshaderMaterial纹理贴图Texture
+            着色器
             <div id="container" ref={container}></div>
         </>
     );

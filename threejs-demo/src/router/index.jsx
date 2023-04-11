@@ -205,6 +205,12 @@ export const routerPaths = [
                 elementPath: 'lessons/day21',
                 key: 'lessons/day21',
             },
+            {
+                label: '学习GLSL内置函数',
+                icon: <MyIcon type="icon-kele" />,
+                elementPath: 'lessons/day22',
+                key: 'lessons/day22',
+            },
         ],
     },
     {
@@ -296,6 +302,14 @@ export const routerPaths = [
                 elementPath: '标准网格材质泥路',
                 key: '标准网格材质泥路',
             },
+            {
+                label: '原始着色器RawshaderMaterial纹理贴图Texture',
+                icon: <MyIcon type="icon-zhangyuxiaowanzi" />,
+                elementPath: '原始着色器RawshaderMaterial纹理贴图Texture',
+                key: '原始着色器RawshaderMaterial纹理贴图Texture',
+            },
+            
+
             
             
         ],

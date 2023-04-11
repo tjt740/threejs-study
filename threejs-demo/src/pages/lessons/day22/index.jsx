@@ -56,9 +56,13 @@ export default function ThreeComponent() {
                 // highp  -2^16 - 2^16
                 // mediump -2^10 - 2^10
                 // lowp -2^8 - 2^8
-                
                 precision highp float;
     
+                // 顶点着色器 uv 传给片元着色器 step1（固有属性）
+                attribute vec2 uv;
+                // 顶点着色器 uv 传给片元着色器 step2
+                varying vec2 vUv;
+
                 attribute vec3 position;            
     
                 uniform mat4 modelMatrix;
@@ -66,7 +70,8 @@ export default function ThreeComponent() {
                 uniform mat4 projectionMatrix;
 
                 void main(){     
-
+                    // 顶点着色器 uv 传给片元着色器 step3
+                    vUv = uv; 
                     // 声明 <模型矩阵>*<顶点坐标> 位置 (-0.5,0.5)
                     vec4  modelPosition  =  modelMatrix * vec4( position, 1.0 ); 
         
@@ -80,11 +85,22 @@ export default function ThreeComponent() {
                 // highp  -2^16 - 2^16
                 // mediump -2^10 - 2^10
                 // lowp -2^8 - 2^8
-                
                 precision highp float;
       
-                void main(){              
-                    gl_FragColor = vec4(1.0, 0.0, 1.0, 1.0);
+                // 顶点着色器 uv 传给片元着色器 step4
+                varying vec2 vUv;
+
+                void main(){             
+                    // 顶点着色器 uv 传给片元着色器 step5 
+                    gl_FragColor =  vec4(vUv, 1.0, 1.0);
+                    // gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); // 红色
+                    // gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0); // 绿色
+                    // gl_FragColor = vec4(1.0, 1.0, 0.0, 1.0); // 黄色
+                    // gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0); // 白色
+                    // gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0); // 黑色
+
+                    // 利用vUv实现x轴渐变
+                    gl_FragColor = vec4(vUv.x,vUv.x,vUv.x,1.0);
                 }
             `,
             side: THREE.DoubleSide,
@@ -162,7 +178,7 @@ export default function ThreeComponent() {
 
     return (
         <>
-            原始着色器RawshaderMaterial纹理贴图Texture
+            使用内置glsl函数
             <div id="container" ref={container}></div>
         </>
     );

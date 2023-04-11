@@ -63,9 +63,13 @@ export default function ThreeComponent() {
             
             */
             vertexShader: `   
+            // highp  -2^16 - 2^16
+            // mediump -2^10 - 2^10
+            // lowp -2^8 - 2^8
+            
                 precision lowp float;
                 attribute vec3 position;
-                // 顶点着色器 uv 传给片元着色器 step1
+                // 顶点着色器 uv 传给片元着色器 step1 （固有属性）
                 attribute vec2 uv;
 
                 uniform mat4 modelMatrix;
@@ -74,10 +78,7 @@ export default function ThreeComponent() {
 
                 // 顶点着色器 uv 传给片元着色器 step2
                 varying vec2 vUv;
-                // highp  -2^16 - 2^16
-                // mediump -2^10 - 2^10
-                // lowp -2^8 - 2^8
-                
+        
                 varying float vElevation;
 
                 void main(){

@@ -99,11 +99,60 @@ export default function ThreeComponent() {
                     // gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0); // 白色
                     // gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0); // 黑色
 
-                    // 利用vUv实现x轴渐变
+                    // 利用vUv实现x轴渐变 (从左向右)
                     gl_FragColor = vec4(vUv.x,vUv.x,vUv.x,1.0);
+
+                    // 利用vUv实现x轴渐变 (从右向左)
+                    gl_FragColor = vec4(1.0-vUv.x, 1.0-vUv.x, 1.0-vUv.x, 1.0);
+
+                    // 利用vUv实现y轴渐变 (从下到上)
+                    gl_FragColor = vec4(vUv.y,vUv.y,vUv.y,1.0);
+
+                    // 利用vUv实现y轴渐变 (从上到下)
+                    gl_FragColor = vec4(1.0-vUv.y*0.2, 1.0-vUv.y*0.5, vUv.y*0.74, 1.0);
+
+                    // 利用GLSL内置函数
+                    // 模等于
+                    /* step1 声明变量 ， 
+                        模等于 mod(x, y)， x:变量，y: 模等于参数，  
+                        1.0 - vUv.y * 10.0：从上向下 
+                        10.0 ：10条变化。
+                    */
+                    // float strength = mod( 1.0 - vUv.y * 10.0 , 1.0);
+                    // step2 使用变量
+                    // gl_FragColor = vec4(strength,strength,strength,1.0);
+
+                    // step(edge, x) 判断，如果x < edge，返回0.0，否则返回1.0；
+                    // 如果 mod( 1.0 - vUv.y * 10.0 , 1.0) < 0.5 就等于0.0 黑色，否则就是白色。 1.0 - vUv.y * 10.0： 从上到下， 10.0：10条
+                    // float strength = step( 0.5 , mod( 1.0 - vUv.y * 10.0 , 1.0)); 
+                    // gl_FragColor = vec4(strength,strength,strength,1.0);
+
+                    // 条纹相加
+                    // float strength = step( 0.8 , mod( 1.0 - vUv.y * 10.0 , 1.0)); // 黑色从上到下
+                    // strength +=  step( 0.8 , mod( vUv.x * 10.0 , 1.0));  // 黑色从左到右
+                    // gl_FragColor = vec4(strength,strength,strength,1.0);
+
+                    // 条纹相减
+                    // float strength = step( 0.8 , mod( 1.0 - vUv.y * 10.0 , 1.0)); // 黑色从上到下
+                    // strength -=  step( 0.8 , mod( vUv.x * 10.0 , 1.0));  // 黑色从左到右
+                    // gl_FragColor = vec4(strength,strength,strength,1.0);
+
+                    // 条纹相乘 
+                    // float strength = step( 0.8 , mod( 1.0 - vUv.y * 10.0 , 1.0)); // 黑色从上到下
+                    // strength *=  step( 0.8 , mod( vUv.x * 10.0 , 1.0));  // 黑色从左到右
+                    // gl_FragColor = vec4(strength,strength,strength,1.0);
+
+                    // 
+                    float barX = step(0.4,mod( vUv.x * 10.0 , 1.0)) * step( 0.8, mod(vUv.y * 10.0 ,1.0));
+                    float barY = step(0.4,mod( vUv.y * 10.0 , 1.0)) * step( 0.8, mod(vUv.x * 10.0 ,1.0));
+                    float strength  = barX + barY;
+                    // gl_FragColor = vec4(strength,strength,strength, 1.0);
+                    gl_FragColor = vec4(vUv,1.0,strength);
+
                 }
             `,
             side: THREE.DoubleSide,
+            transparent: true,
         });
 
         // 构建平面几何体

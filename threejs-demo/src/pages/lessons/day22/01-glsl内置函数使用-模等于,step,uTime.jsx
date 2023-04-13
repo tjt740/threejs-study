@@ -99,39 +99,63 @@ export default function ThreeComponent() {
 
                 void main(){             
                     // 顶点着色器 uv 传给片元着色器 step5 
-                    // abs(x) 绝对值
-                    // float strength  =abs(vUv.x - 0.5); // 0.5 0.3 0.2 0.0 0.25 0.5...
+                    gl_FragColor =  vec4(vUv, 1.0, 1.0);
+                    // gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); // 红色
+                    // gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0); // 绿色
+                    // gl_FragColor = vec4(1.0, 1.0, 0.0, 1.0); // 黄色
+                    // gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0); // 白色
+                    // gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0); // 黑色
+
+                    // 利用vUv实现x轴渐变 (从左向右)
+                    gl_FragColor = vec4(vUv.x,vUv.x,vUv.x,1.0);
+
+                    // 利用vUv实现x轴渐变 (从右向左)
+                    gl_FragColor = vec4(1.0-vUv.x, 1.0-vUv.x, 1.0-vUv.x, 1.0);
+
+                    // 利用vUv实现y轴渐变 (从下到上)
+                    gl_FragColor = vec4(vUv.y,vUv.y,vUv.y,1.0);
+
+                    // 利用vUv实现y轴渐变 (从上到下)
+                    gl_FragColor = vec4(1.0-vUv.y*0.2, 1.0-vUv.y*0.5, vUv.y*0.74, 1.0);
+
+                    // 利用GLSL内置函数
+                    // 模等于
+                    /* step1 声明变量 ， 
+                        模等于 mod(x, y)， x:变量，y: 模等于参数，  
+                        1.0 - vUv.y * 10.0：从上向下 
+                        10.0 ：10条变化。
+                    */
+                    // float strength = mod( 1.0 - vUv.y * 10.0 , 1.0);
+                    // step2 使用变量
                     // gl_FragColor = vec4(strength,strength,strength,1.0);
 
-                    // 取两个值中的最小值
-                    // float strength = min(abs(vUv.x - 0.5), abs(vUv.y - 0.5));
+                    // step(edge, x) 判断，如果x < edge，返回0.0，否则返回1.0；
+                    // 如果 mod( 1.0 - vUv.y * 10.0 , 1.0) < 0.5 就等于0.0 黑色，否则就是白色。 1.0 - vUv.y * 10.0： 从上到下， 10.0：10条
+                    // float strength = step( 0.5 , mod( 1.0 - vUv.y * 10.0 , 1.0)); 
                     // gl_FragColor = vec4(strength,strength,strength,1.0);
 
-                    // 取两个值中的最大值
-                    // float strength = max(abs(vUv.x - 0.5), abs(vUv.y - 0.5));
+                    // 条纹相加
+                    // float strength = step( 0.8 , mod( 1.0 - vUv.y * 10.0 , 1.0)); // 黑色从上到下
+                    // strength +=  step( 0.8 , mod( vUv.x * 10.0 , 1.0));  // 黑色从左到右
                     // gl_FragColor = vec4(strength,strength,strength,1.0);
 
-                    // 配合 step 使用 （外白内黑 相框）
-                    // float strength = step(0.4,max(abs(vUv.x - 0.5), abs(vUv.y - 0.5)));
+                    // 条纹相减
+                    // float strength = step( 0.8 , mod( 1.0 - vUv.y * 10.0 , 1.0)); // 黑色从上到下
+                    // strength -=  step( 0.8 , mod( vUv.x * 10.0 , 1.0));  // 黑色从左到右
                     // gl_FragColor = vec4(strength,strength,strength,1.0);
 
-                    // 配合 step 使用  （外黑内白 相框）
-                    // float strength = 1.0-step(0.4,max(abs(vUv.x - 0.5), abs(vUv.y - 0.5)));
+                    // 条纹相乘 
+                    // float strength = step( 0.8 , mod( 1.0 - vUv.y * 10.0 , 1.0)); // 黑色从上到下
+                    // strength *=  step( 0.8 , mod( vUv.x * 10.0 , 1.0));  // 黑色从左到右
                     // gl_FragColor = vec4(strength,strength,strength,1.0);
 
-                    // <向下取整> 形成渐变 （从左往右 黑→白） 偏黑
-                    // float strength = floor(vUv.x * 10.0) /10.0;
-                    // gl_FragColor = vec4(strength,strength,strength,1.0); 
+                    // 
+                    float barX = step(0.4,mod( (vUv.x + uTime * 0.1) * 10.0 , 1.0)) * step( 0.8, mod(vUv.y * 10.0 ,1.0));
+                    float barY = step(0.4,mod((vUv.y + uTime * 0.1) * 10.0 , 1.0)) * step( 0.8, mod(vUv.x * 10.0 ,1.0));
+                    float strength  = barX + barY;
+                    // gl_FragColor = vec4(strength,strength,strength, 1.0);
+                    gl_FragColor = vec4(vUv,1.0,strength);
 
-                    // <向上取整> 形成渐变 （从左往右 黑→白） 偏白
-                    // float strength = ceil(vUv.x * 10.0) /10.0;
-                    // gl_FragColor = vec4(strength,strength,strength,1.0); 
-
-                    // <向上取整> 上下渐变网格 （从左往右，从上到下 黑→白） 偏白
-                    float x = ceil(vUv.x * 10.0) /10.0;
-                    float y = ceil((1.0 - vUv.y) * 10.0) /10.0;
-                    float strength = x * y ;
-                    gl_FragColor = vec4(strength,strength,strength,1.0); 
                 }
             `,
             side: THREE.DoubleSide,

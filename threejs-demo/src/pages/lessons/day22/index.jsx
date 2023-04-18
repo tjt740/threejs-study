@@ -96,6 +96,14 @@ export default function ThreeComponent() {
                 // 获取时间
                 uniform float uTime; 
 
+                // 随机数
+                uniform vec2 u_resolution;
+                float random (vec2 st) {
+                    return fract(sin(dot(st.xy,
+                                         vec2(12.9898,78.233)))*
+                        43758.5453123);
+                }
+                
 
                 void main(){             
                     // 顶点着色器 uv 传给片元着色器 step5 
@@ -128,22 +136,27 @@ export default function ThreeComponent() {
                     // gl_FragColor = vec4(strength,strength,strength,1.0); 
 
                     // <向上取整> 上下渐变网格 （从左往右，从上到下 黑→白） 偏白
-                    float x = ceil(vUv.x * 10.0) /10.0;
-                    float y = ceil((1.0 - vUv.y) * 10.0) /10.0;
-                    float strength = x * y ;
-                    gl_FragColor = vec4(strength,strength,strength,1.0); 
+                    // float x = ceil(vUv.x * 10.0) /10.0;
+                    // float y = ceil((1.0 - vUv.y) * 10.0) /10.0;
+                    // float strength = x * y ;
+                    // gl_FragColor = vec4(strength,strength,strength,1.0); 
+
+                    // 随机数 (1)
+                    float strength = random(vUv);
+                    gl_FragColor =vec4(strength,strength,strength,1);
+                    // 随机数 (2)
+                    gl_FragColor = vec4(vec3(random( vUv )),1.0);
                 }
             `,
             side: THREE.DoubleSide,
-            transparent: true,
+            // transparent: true,
              // 材质里设置 uTime ，初始值为 0， 然后在render里设置value的值
              uniforms: {
                 // 变量
                 uTime: {
                     // 【固定】value
                     value:0
-                },
-               
+                },  
             }
         });
 

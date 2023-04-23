@@ -308,8 +308,13 @@ export const routerPaths = [
                 elementPath: '原始着色器RawshaderMaterial纹理贴图Texture',
                 key: '原始着色器RawshaderMaterial纹理贴图Texture',
             },
+            {
+                label: '原始着色器材质生成旋转星星',
+                icon: <MyIcon type="icon-zhangyuxiaowanzi" />,
+                elementPath: '原始着色器材质生成旋转星星',
+                key: '原始着色器材质生成旋转星星',
+            },
             
-
             
             
         ],

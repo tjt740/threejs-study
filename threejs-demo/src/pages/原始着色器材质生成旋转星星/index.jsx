@@ -47,10 +47,10 @@ export default function ThreeComponent() {
         // 创建平面几何体
         const planGeometry = new THREE.PlaneGeometry(20, 20, 64, 64);
 
-        // 创建平面材质
+        //1️⃣ 创建平面材质
         //🌟 改用原始着色器材质 （顶点着色器 + 片元着色器）
         const rawMaterial = new THREE.RawShaderMaterial({
-            // 顶点着色器
+            //2️⃣ 顶点着色器
             vertexShader: `   
                 // 设置精度  
                 // highp  -2^16 - 2^16
@@ -58,9 +58,9 @@ export default function ThreeComponent() {
                 // lowp -2^8 - 2^8
                 precision highp float;
     
-                // 顶点着色器 uv 传给片元着色器 step1（固有属性）
+                //3️⃣ 顶点着色器 uv 传给片元着色器 step1（固有属性）
                 attribute vec2 uv;
-                // 顶点着色器 uv 传给片元着色器 step2
+                //4️⃣ 顶点着色器 uv 传给片元着色器 step2
                 varying vec2 vUv;
 
              
@@ -72,7 +72,7 @@ export default function ThreeComponent() {
                 uniform mat4 projectionMatrix;
 
                 void main(){     
-                    // 顶点着色器 uv 传给片元着色器 step3
+                    //5️⃣ 顶点着色器 uv 传给片元着色器 step3
                     vUv = uv; 
                     // 声明 <模型矩阵>*<顶点坐标> 位置 (-0.5,0.5)
                     vec4  modelPosition  =  modelMatrix * vec4( position, 1.0 ); 
@@ -89,22 +89,15 @@ export default function ThreeComponent() {
                 // lowp -2^8 - 2^8
                 precision highp float;
       
-                // 顶点着色器 uv 传给片元着色器 step4
+                //6️⃣ 顶点着色器 uv 传给片元着色器 step4
                 varying vec2 vUv;
 
 
                 // 获取时间
                 uniform float uTime; 
 
-                // 随机数
-                uniform vec2 u_resolution;
-                float random (vec2 st) {
-                    return fract(sin(dot(st.xy,
-                                         vec2(12.9898,78.233)))*
-                        43758.5453123);
-                }
 
-                // 旋转函数
+                //7️⃣ 旋转函数
                 vec2 rotate(vec2 uv, float rotation, vec2 mid)
                 {
                     return vec2(
@@ -115,63 +108,8 @@ export default function ThreeComponent() {
                 
 
                 void main(){             
-                    // 顶点着色器 uv 传给片元着色器 step5 
-                    // abs(x) 绝对值
-                    // float strength  =abs(vUv.x - 0.5); // 0.5 0.3 0.2 0.0 0.25 0.5...
-                    // gl_FragColor = vec4(strength,strength,strength,1.0);
-
-                    // 取两个值中的最小值
-                    // float strength = min(abs(vUv.x - 0.5), abs(vUv.y - 0.5));
-                    // gl_FragColor = vec4(strength,strength,strength,1.0);
-
-                    // 取两个值中的最大值
-                    // float strength = max(abs(vUv.x - 0.5), abs(vUv.y - 0.5));
-                    // gl_FragColor = vec4(strength,strength,strength,1.0);
-
-                    // 配合 step 使用 （外白内黑 相框）
-                    // float strength = step(0.4,max(abs(vUv.x - 0.5), abs(vUv.y - 0.5)));
-                    // gl_FragColor = vec4(strength,strength,strength,1.0);
-
-                    // 配合 step 使用  （外黑内白 相框）
-                    // float strength = 1.0-step(0.4,max(abs(vUv.x - 0.5), abs(vUv.y - 0.5)));
-                    // gl_FragColor = vec4(strength,strength,strength,1.0);
-
-                    // <向下取整> 形成渐变 （从左往右 黑→白） 偏黑
-                    // float strength = floor(vUv.x * 10.0) /10.0;
-                    // gl_FragColor = vec4(strength,strength,strength,1.0); 
-
-                    // <向上取整> 形成渐变 （从左往右 黑→白） 偏白
-                    // float strength = ceil(vUv.x * 10.0) /10.0;
-                    // gl_FragColor = vec4(strength,strength,strength,1.0); 
-
-                    // <向上取整> 上下渐变网格 （从左往右，从上到下 黑→白） 偏白
-                    // float x = ceil(vUv.x * 10.0) /10.0;
-                    // float y = ceil((1.0 - vUv.y) * 10.0) /10.0;
-                    // float strength = x * y ;
-                    // gl_FragColor = vec4(strength,strength,strength,1.0); 
-
-                    // 随机数 (1)
-                    // float strength = ceil(vUv.x * 10.0)/10.0 * ceil(vUv.y * 10.9)/10.0;
-                    // strength = random(vec2(strength,strength));
-                    // gl_FragColor =vec4(strength,strength,strength,1);
-                    // 随机数 (2)
-                    // gl_FragColor = vec4(vec3(random( vUv )),1.0);
-                    
-                    // 使用length(x), 返回向量x的长度 
-                    // float strength = length(vUv);
-                    // gl_FragColor = vec4(vec3(strength),1.0);
-
-                    // 使用distance(p0,p1), 计算向量p0，p1之间的距离
-                    // 左下角距离中心之间的距离
-                    // float strength =  distance(vUv,vec2(0.5,0.5)); 
-                    // gl_FragColor = vec4(vec3(strength),1.0);
-                    // float barX = 0.15 / distance(vec2(vUv.x, (vUv.y-0.5)*5.0 + 0.5),vec2(0.5,0.5))  ; 
-                    // float barY = 0.15 / distance(vec2((vUv.x-0.5)*5.0+0.5, vUv.y),vec2(0.5,0.5))  ; 
-                    // float strength =  barX * barY;
-                    // gl_FragColor = vec4(vec3(strength),strength);
-                
-
-                    // 使用旋转函数 旋转星星 / 四角飞镖
+                   
+                    //8️⃣ 使用旋转函数 旋转星星 / 四角飞镖
                     // 3.1415926：因为没有Π，所以用3.1415926； 0.25：45度
                     // vec2 rotateUv = rotate(vUv,3.1415926*0.25,vec2(0.5));
                     vec2 rotateUv = rotate(vUv,uTime,vec2(0.5));
@@ -180,17 +118,14 @@ export default function ThreeComponent() {
                     float strength =  (barX *5.0 )* (barY *5.0);
                     gl_FragColor = vec4(vec3(strength),strength);
 
-
-     
-
-
                 }
             `,
             side: THREE.DoubleSide,
+            //🔟 设置材质透明
             transparent: true,
-             // 材质里设置 uTime ，初始值为 0， 然后在render里设置value的值
+             //1️⃣1️⃣ 材质里设置 uTime ，初始值为 0， 然后在render里设置value的值
              uniforms: {
-                // 变量
+                //1️⃣2️⃣ 变量
                 uTime: {
                     // 【固定】value
                     value:0
@@ -203,10 +138,7 @@ export default function ThreeComponent() {
         // 将几何体添加到场景中
         scene.add(planeCube);
 
-        /*
-         * ------------end ----------
-         */
-
+        
         //  创建XYZ直角坐标系  (红色代表 X 轴. 绿色代表 Y 轴. 蓝色代表 Z 轴.)
         const axesHelper = new THREE.AxesHelper(25);
         //  坐标辅助线添加到场景中
@@ -224,15 +156,19 @@ export default function ThreeComponent() {
         camera.updateProjectionMatrix();
 
         // 渲染函数
+        //1️⃣4️⃣ 使用时钟
         const clock = new THREE.Clock();
         function render(t) {
             controls.update();
-            // 获取秒数
+            //1️⃣5️⃣ 获取秒数
             const time = clock.getElapsedTime();
 
-            // 改变rawMaterial里的uTime
+            //1️⃣6️⃣ 改变rawMaterial里的uTime
             rawMaterial.uniforms.uTime.value = time;
-
+        
+        /*
+         * ------------end ----------
+         */
 
             renderer.render(scene, camera);
             // 动画帧
@@ -274,7 +210,7 @@ export default function ThreeComponent() {
 
     return (
         <>
-            使用内置glsl函数
+           原始着色器材质生成旋转星星
             <div id="container" ref={container}></div>
         </>
     );

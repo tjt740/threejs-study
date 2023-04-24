@@ -10,8 +10,8 @@ export default function ThreeComponent() {
     const init = () => {
         const scene = new THREE.Scene();
         // 场景颜色
-        // scene.background = new THREE.Color(0x444444);
-        scene.background = new THREE.Color(0x000000);
+        scene.background = new THREE.Color(0x444444);
+        // scene.background = new THREE.Color(0x000000);
         const camera = new THREE.PerspectiveCamera(
             90,
             window.innerWidth / window.innerHeight,
@@ -92,6 +92,8 @@ export default function ThreeComponent() {
                 // 顶点着色器 uv 传给片元着色器 step4
                 varying vec2 vUv;
 
+                #define PI 3.1415926535897932384626433832795
+
 
                 // 获取时间
                 uniform float uTime; 
@@ -153,7 +155,7 @@ export default function ThreeComponent() {
                     // 随机数 (1)
                     // float strength = ceil(vUv.x * 10.0)/10.0 * ceil(vUv.y * 10.9)/10.0;
                     // strength = random(vec2(strength,strength));
-                    // gl_FragColor =vec4(strength,strength,strength,1);
+                    // gl_FragColor = vec4(vec3(strength),1.0);
                     // 随机数 (2)
                     // gl_FragColor = vec4(vec3(random( vUv )),1.0);
                     
@@ -174,16 +176,107 @@ export default function ThreeComponent() {
                     // 使用旋转函数 旋转星星 / 四角飞镖
                     // 3.1415926：因为没有Π，所以用3.1415926； 0.25：45度
                     // vec2 rotateUv = rotate(vUv,3.1415926*0.25,vec2(0.5));
-                    vec2 rotateUv = rotate(vUv,uTime,vec2(0.5));
-                    float barX = 0.15 / distance(vec2(rotateUv.x, (rotateUv.y-0.5)*10.0 + 0.5),vec2(0.5,0.5))  ; 
-                    float barY = 0.15 / distance(vec2((rotateUv.x-0.5)*10.0+0.5, rotateUv.y),vec2(0.5,0.5))  ; 
-                    float strength =  (barX *5.0 )* (barY *5.0);
-                    gl_FragColor = vec4(vec3(strength),strength);
+                    // vec2 rotateUv = rotate(vUv,uTime,vec2(0.5));
+                    // float barX = 0.15 / distance(vec2(rotateUv.x, (rotateUv.y-0.5)*10.0 + 0.5),vec2(0.5,0.5))  ; 
+                    // float barY = 0.15 / distance(vec2((rotateUv.x-0.5)*10.0+0.5, rotateUv.y),vec2(0.5,0.5))  ; 
+                    // float strength =  (barX *5.0 )* (barY *5.0);
+                    // gl_FragColor = vec4(vec3(strength),strength);
 
 
-     
+                    // 日本国旗
+                    // float strength = step(0.5, distance(vUv ,vec2(0.5)) +0.25 );
+                    // gl_FragColor = vec4(255,strength,strength,1.0);
+                   
+                    // 日本国旗 (外红内白)
+                    // float strength = 1.0 - step(0.5, distance(vUv ,vec2(0.5)) +0.25 );
+                    // gl_FragColor = vec4(255,strength,strength,1.0);
+
+                    // 黑点光晕
+                    // float strength = abs( distance(vUv ,vec2(0.5)) +0.1);
+                    // gl_FragColor = vec4(vec3(strength),1.0);
 
 
+                    // 波浪环
+                    // vec2 waveUv = vec2(
+                    //     vUv.x,
+                    //     vUv.y+sin(vUv.x*30.0)*0.1
+                    // );
+                    // float strength = 1.0 - step(0.01,abs(distance(waveUv,vec2(0.5))-0.25));
+                    // gl_FragColor = vec4(vec3(strength),1.0);
+
+                    // 油泼画
+                    // vec2 waveUv = vec2(
+                    //      vUv.x+sin(vUv.y*30.0)*0.1,
+                    //      vUv.y+sin(vUv.x*30.0)*0.1
+                    // );
+                    // float strength = 1.0 - step(0.01,abs(distance(waveUv,vec2(0.5))-0.25));
+                    // gl_FragColor = vec4(vec3(strength),1.0);
+
+                    // vec2 waveUv = vec2(
+                    //     vUv.x+sin(vUv.y*100.0)*0.1,
+                    //     vUv.y+sin(vUv.x*100.0)*0.1
+                    // );
+                    // float strength = 1.0 - step(0.01,abs(distance(waveUv,vec2(0.5))-0.25));
+                    // gl_FragColor = vec4(vec3(strength),1.0);
+
+                    // 👆配合 uTime
+                    // vec2 waveUv = vec2(
+                    //     vUv.x+sin(vUv.y*uTime)*0.1,
+                    //     vUv.y+sin(vUv.x*uTime)*0.1
+                    // );
+                    // float strength = 1.0 - step(0.01,abs(distance(waveUv,vec2(0.5))-0.25));
+                    // gl_FragColor = vec4(vec3(strength),1.0);
+                    
+                
+                    // 根据角度 atan(x) 显示视图
+                    // float angle = atan(vUv.x,vUv.y);
+                    // float strength = angle;
+                    // gl_FragColor = vec4(vec3(strength),1.0);
+
+                    // 根据角度 atan(x) 实现螺旋渐变
+                    // float angle = atan(vUv.x-0.5,vUv.y-0.5);
+                    // float strength = (angle+3.14)/6.28;
+                    // gl_FragColor = vec4(vec3(strength),1.0);
+
+                    // 实现雷达扫射
+                    // float alpha =  1.0 - step(0.5,distance(vUv,vec2(0.5)));
+                    // float angle = atan(vUv.x-0.5,vUv.y-0.5);
+                    // float strength = (angle+3.14)/6.28;
+                    // gl_FragColor =vec4(strength,strength,strength,alpha);
+
+                    // 👆 配合uTime使用
+                    // vec2 rotateUv = rotate(vUv,-uTime*5.0,vec2(0.5));
+                    // float alpha =  1.0 - step(0.5,distance(vUv,vec2(0.5)));
+                    // float angle = atan(rotateUv.x-0.5,rotateUv.y-0.5);
+                    // float strength = (angle+3.14)/6.28;
+                    // gl_FragColor =vec4(strength,strength,strength,alpha);
+                
+                
+                    // 44 万花筒
+                    // float angle = atan(vUv.x-0.5,vUv.y-0.5)/PI;
+                    // float strength = mod(angle*10.0,1.0);
+                    // gl_FragColor = vec4(vec3(strength),1.0);
+                    
+
+                    // 光芒四射
+                    float angle = atan(vUv.x-0.5,vUv.y-0.5)/(2.0*PI);
+                    float strength = sin(angle*100.0);
+                    gl_FragColor = vec4(vec3(strength),1.0);
+                    
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
                 }
             `,
             side: THREE.DoubleSide,

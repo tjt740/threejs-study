@@ -99,12 +99,36 @@ export default function ThreeComponent() {
                 uniform float uTime; 
 
                 // 随机数
-                uniform vec2 u_resolution;
                 float random (vec2 st) {
                     return fract(sin(dot(st.xy,
                                          vec2(12.9898,78.233)))*
                         43758.5453123);
                 }
+                
+                // 噪声
+                float noise (in vec2 st) {
+                    vec2 i = floor(st);
+                    vec2 f = fract(st);
+                
+                    // Four corners in 2D of a tile
+                    float a = random(i);
+                    float b = random(i + vec2(1.0, 0.0));
+                    float c = random(i + vec2(0.0, 1.0));
+                    float d = random(i + vec2(1.0, 1.0));
+                
+                    // Smooth Interpolation
+                
+                    // Cubic Hermine Curve.  Same as SmoothStep()
+                    vec2 u = f*f*(3.0-2.0*f);
+                    // u = smoothstep(0.,1.,f);
+                
+                    // Mix 4 coorners percentages
+                    return mix(a, b, u.x) +
+                            (c - a)* u.y * (1.0 - u.x) +
+                            (d - b) * u.x * u.y;
+                }
+                
+
 
                 // 旋转函数
                 vec2 rotate(vec2 uv, float rotation, vec2 mid)
@@ -259,24 +283,36 @@ export default function ThreeComponent() {
                     
 
                     // 光芒四射
-                    float angle = atan(vUv.x-0.5,vUv.y-0.5)/(2.0*PI);
-                    float strength = sin(angle*100.0);
-                    gl_FragColor = vec4(vec3(strength),1.0);
+                    // float angle = atan(vUv.x-0.5,vUv.y-0.5)/(2.0*PI);
+                    // float strength = sin(angle*100.0);
+                    // gl_FragColor = vec4(vec3(strength),1.0);
                     
                 
+                    // 实现噪声形成波形
+                    // float strength = step(0.5,noise(vUv * 10.0));
+                    // gl_FragColor = vec4(vec3(strength),1.0);
                 
+                    
+                    // 通过时间设置波形
+                    // float strength = step(0.5,noise(vUv * 10.0+uTime)) ;
+                    // gl_FragColor =vec4(strength,strength,strength,1);
+               
+                    // 波纹效果
+                    // float strength = sin(noise(vUv * 10.0)*5.0+uTime) ;
+                    // gl_FragColor =vec4(strength,strength,strength,1);
+               
+                    // 使用混合函数mix(x, y, a) 混合颜色
+                    vec3 purpleColor = vec3(1.0, 0.0, 1.0);
+                    vec3 greenColor = vec3(1.0, 1.0, 1.0);
+                    vec3 uvColor = vec3(vUv,1.0);
+                    float strength = step(0.9,sin(noise(vUv * 10.0)*20.0))  ;
                 
+                    vec3 mixColor =  mix(greenColor,uvColor,strength);
+                    gl_FragColor =vec4(mixColor,1.0);
                 
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
+               
+               
+               
                 }
             `,
             side: THREE.DoubleSide,

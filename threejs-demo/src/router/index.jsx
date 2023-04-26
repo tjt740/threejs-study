@@ -310,9 +310,15 @@ export const routerPaths = [
             },
             {
                 label: '原始着色器材质生成旋转星星',
-                icon: <MyIcon type="icon-zhangyuxiaowanzi" />,
+                icon: <MyIcon type="icon-xiezishousi" />,
                 elementPath: '原始着色器材质生成旋转星星',
                 key: '原始着色器材质生成旋转星星',
+            },
+            {
+                label: '孔明灯-原始着色器',
+                icon: <MyIcon type="icon-paofu" />,
+                elementPath: '孔明灯-原始着色器',
+                key: '孔明灯-原始着色器',
             },
             
             

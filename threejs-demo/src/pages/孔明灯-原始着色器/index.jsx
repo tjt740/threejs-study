@@ -28,6 +28,11 @@ export default function ThreeComponent() {
         // 初始化<渲染器>
         const renderer = new THREE.WebGLRenderer();
 
+        const params = {
+            exposure:2.0
+        }
+       
+        gui.add( params, 'exposure', 0, 4, 0.01 ).onChange( render );
         const WIDTH = Number(
             window
                 .getComputedStyle(
@@ -99,6 +104,8 @@ export default function ThreeComponent() {
         // 渲染函数
         const clock = new THREE.Clock();
         function render(t) {
+            // BUG: 高亮问题 https://threejs.org/examples/webgl_loader_texture_hdr.html
+            renderer.toneMappingExposure = 4.0;
             controls.update();
             // 获取秒数
             const time = clock.getElapsedTime();

@@ -257,7 +257,7 @@ export const routerPaths = [
             {
                 label: 'emoji表情',
                 icon: <MyIcon type="icon-kele" />,
-                elementPath: 'emoji表情',
+                elementPath: 'emoji',
                 key: 'emoji',
             },
             {
@@ -269,8 +269,8 @@ export const routerPaths = [
             {
                 label: '繁星粒子demo',
                 icon: <MyIcon type="icon-008-mushroom" />,
-                elementPath: '繁星粒子demo',
-                key: '繁星粒子demo',
+                elementPath: 'stellar-particle-demo',
+                key: 'stellar-particle-demo',
             },
             {
                 label: '下雪demo',

@@ -275,20 +275,20 @@ export const routerPaths = [
             {
                 label: '下雪demo',
                 icon: <MyIcon type="icon-roujiamo" />,
-                elementPath: '下雪',
-                key: '下雪',
+                elementPath: 'snow-demo',
+                key: 'snow-demo',
             },
             {
                 label: '银河系demo',
                 icon: <MyIcon type="icon-xiezishousi" />,
-                elementPath: '银河系demo',
-                key: '银河系demo',
+                elementPath: 'galaxy-demo',
+                key: 'galaxy-demo',
             },
             {
                 label: '3d滚动页面',
                 icon: <MyIcon type="icon-futejia" />,
-                elementPath: '3d滚动页面',
-                key: '3d滚动页面',
+                elementPath: '3d-scroll-demo',
+                key: '3d-scroll-demo',
             },
             {
                 label: '点击屏幕创建立方体撞击地面',
@@ -317,8 +317,8 @@ export const routerPaths = [
             {
                 label: '孔明灯-原始着色器',
                 icon: <MyIcon type="icon-paofu" />,
-                elementPath: '孔明灯-原始着色器',
-                key: '孔明灯-原始着色器',
+                elementPath: 'fly-light',
+                key: 'fly-light',
             },
             
             

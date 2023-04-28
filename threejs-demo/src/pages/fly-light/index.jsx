@@ -5,7 +5,9 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as dat from 'dat.gui';
 
 //1️⃣ 导入rgbe/hdr二进制格式文件加载器
-import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
+import { RGBELoader } from 'three/addons/loaders/RGBELoader.js'
+// 2️⃣ 导入GLTFLoader，用以JSON（.gltf）格式或二进制（.glb）格式的3D文件渲染
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 export default function ThreeComponent() {
     const container = useRef(null);
@@ -27,12 +29,15 @@ export default function ThreeComponent() {
 
         // 初始化<渲染器>
         const renderer = new THREE.WebGLRenderer();
+        // 设置渲染器编码格式  THREE.NoColorSpace = "" || THREE.SRGBColorSpace = "srgb" || THREE.LinearSRGBColorSpace = "srgb-linear"
+        renderer.outputColorSpace = "srgb"; 
+        // 色调映射 THREE.NoToneMapping || THREE.LinearToneMapping || THREE.ReinhardToneMapping || THREE.CineonToneMapping || THREE.ACESFilmicToneMapping
+        renderer.toneMapping = THREE.ReinhardToneMapping;
+        // 色调映射的曝光级别。默认是1，屏幕是2.2，越低越暗
+        renderer.toneMappingExposure = 2.2;
+        
 
-        const params = {
-            exposure:2.0
-        }
-       
-        gui.add( params, 'exposure', 0, 4, 0.01 ).onChange( render );
+
         const WIDTH = Number(
             window
                 .getComputedStyle(
@@ -71,12 +76,12 @@ export default function ThreeComponent() {
         const rgbeLoader = new RGBELoader(loadManager);
         //3️⃣ 资源较大，使用异步加载 <异步加载?
         rgbeLoader
-            .loadAsync(require('./assets/texture/moonless_golf_4k.hdr'))
+            .loadAsync(require('./assets/texture/scythian_tombs_2k.hdr'))
             .then((texture) => {
                 console.log('加载hdr图片成功');
-                // 纹理贴图映射模式 <https://threejs.org/docs/index.html#api/zh/constants/Textures>
-                texture.mapping = THREE.EquirectangularReflectionMapping;
+                texture.mapping = THREE.EquirectangularRefractionMapping;
                 //将加载的材质texture设置给背景和环境
+            
                 scene.background = texture;
                 scene.environment = texture;
             });

@@ -23,9 +23,22 @@ export default function ThreeComponent() {
             0.1,
             1000
         );
-        camera.position.set(0, 0, 10);
+        //  更新camera 投影矩阵
+        camera.updateProjectionMatrix();
+        // 更新camera 宽高比;
+        camera.aspect = window.innerWidth / window.innerHeight;
+        
         // camera.lookAt(scene.position);
+
+        // 设置相机位置 object3d具有position，属性是一个3维的向量。
+        camera.position.set(0, 0, 50);
+        // 摄像机添加到场景中
         scene.add(camera);
+
+        //  创建XYZ直角坐标系  (红色代表 X 轴. 绿色代表 Y 轴. 蓝色代表 Z 轴.)，帮助我们查看3维坐标轴
+        const axesHelper = new THREE.AxesHelper(25);
+        //  坐标辅助线添加到场景中
+        scene.add(axesHelper);
 
         /*
          * ------------ start ----------
@@ -59,7 +72,7 @@ export default function ThreeComponent() {
                     gPosition = vec4(position,1.0);
 
 
-                    gl_Position = projectionMatrix * viewMatrix * modelMatrix * modelPosition;
+                    gl_Position = projectionMatrix * viewMatrix *  modelPosition;
                 }
             `,
             // 片元着色器
@@ -143,7 +156,27 @@ export default function ThreeComponent() {
                 // });
                 flyLightBox.material = rawMaterial;
                 //8️⃣ 将.glb blend文件加载进场景中
+
                 scene.add(glbScene);
+
+                const glpGroup = new THREE.Group();
+                
+                for (let i = 0; i < 10; i++) {
+                    // 拷贝glbScene
+                    const cloneGlbScene = glbScene.clone(true);
+                    // 设置随机的xyz位置
+                    const x = (Math.random() - 0.5) * 70;
+                    const y = Math.random() * 50 + 5;
+                    const z = (Math.random() - 0.5) * 50;
+                
+                    cloneGlbScene.position.set(x,y,z);
+                
+                    glpGroup.add(cloneGlbScene);
+                }
+
+                glpGroup.add(glbScene);
+                
+                scene.add(glpGroup);
             },
             // onProgress
             () => {
@@ -183,11 +216,6 @@ export default function ThreeComponent() {
                 .height.split('px')[0]
         );
 
-        //  创建XYZ直角坐标系  (红色代表 X 轴. 绿色代表 Y 轴. 蓝色代表 Z 轴.)
-        const axesHelper = new THREE.AxesHelper(25);
-        //  坐标辅助线添加到场景中
-        scene.add(axesHelper);
-
         // 改变渲染器尺寸
         renderer.setSize(window.innerWidth, window.innerHeight);
         // 设置像素比 使图形锯齿 消失
@@ -196,8 +224,6 @@ export default function ThreeComponent() {
         renderer.shadowMap.enabled = true;
         // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能.
         renderer.physicallyCorrectLights = true;
-        //  更新camera 投影矩阵
-        camera.updateProjectionMatrix();
 
         // 渲染函数
         const clock = new THREE.Clock();

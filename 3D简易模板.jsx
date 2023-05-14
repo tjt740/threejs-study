@@ -17,11 +17,25 @@ export default function ThreeComponent() {
             0.1,
             1000
         );
+        //  更新camera 投影矩阵
+        camera.updateProjectionMatrix();
+        // 更新camera 宽高比;
+        camera.aspect = window.innerWidth / window.innerHeight;
+
+        // camera.lookAt(scene.position);
+
+        // 设置相机位置 object3d具有position，属性是一个3维的向量。
         camera.position.set(0, 0, 10);
+        // 摄像机添加到场景中
         scene.add(camera);
 
+        //  创建XYZ直角坐标系  (红色代表 X 轴. 绿色代表 Y 轴. 蓝色代表 Z 轴.)，帮助我们查看3维坐标轴
+        const axesHelper = new THREE.AxesHelper(25);
+        //  坐标辅助线添加到场景中
+        scene.add(axesHelper);
+
         // 初始化<渲染器>
-        const renderer =  new THREE.WebGLRenderer({
+        const renderer = new THREE.WebGLRenderer({
             antialias: true, // 消除锯齿
             alpha: true, // 背景透明
         });
@@ -45,13 +59,12 @@ export default function ThreeComponent() {
          * ------------ start ----------
          */
 
-           // 设置灯光和阴影
+        // 设置灯光和阴影
         // 1. 设置自然光、<点光源>、<标准>网格材质（带PBR属性的都可以）  材质要满足能够对光照有反应
-        // 2. 设置渲染器开启阴影计算 renderer.shadowMap.enabled = true; 
-        // 3. 设置光照能产生动态阴影  directionalLight.castShadow = true; 
+        // 2. 设置渲染器开启阴影计算 renderer.shadowMap.enabled = true;
+        // 3. 设置光照能产生动态阴影  directionalLight.castShadow = true;
         // 4. 设置投射阴影的物体投射阴影 sphereGeometry.castShadow = true;
-        // 5. 设置被投射的物体接收阴影  planGeometry.receiveShadow = true; 
-
+        // 5. 设置被投射的物体接收阴影  planGeometry.receiveShadow = true;
 
         // 创建 n 个矩形
         const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
@@ -81,7 +94,6 @@ export default function ThreeComponent() {
          * ------------end ----------
          */
 
-        
         // 创建射线
         const raycaster = new THREE.Raycaster();
         // 射线捕捉的最远距离,超过该距离后就不会捕捉对应的物体,默认Infinity(无穷远)
@@ -132,23 +144,16 @@ export default function ThreeComponent() {
         // 全局添加点击事件
         window.addEventListener('click', onClick);
 
-        //  创建XYZ直角坐标系  (红色代表 X 轴. 绿色代表 Y 轴. 蓝色代表 Z 轴.)
-        const axesHelper = new THREE.AxesHelper(25);
-        //  坐标辅助线添加到场景中
-        scene.add(axesHelper);
 
-         // 改变渲染器尺寸
-         renderer.setSize(window.innerWidth, window.innerHeight);
-         // 设置像素比 使图形锯齿 消失
-         renderer.setPixelRatio(window.devicePixelRatio);
-         // 设置渲染器开启阴影计算
-         renderer.shadowMap.enabled = true;
-         // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能.
-         renderer.physicallyCorrectLights = true;
-         //  更新camera 投影矩阵
-         camera.updateProjectionMatrix();
- 
-
+        // 改变渲染器尺寸
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        // 设置像素比 使图形锯齿 消失
+        renderer.setPixelRatio(window.devicePixelRatio);
+        // 设置渲染器开启阴影计算
+        renderer.shadowMap.enabled = true;
+        // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能.
+        renderer.physicallyCorrectLights = true;
+   
         // 渲染函数
         const clock = new THREE.Clock();
         function render(t) {
@@ -199,7 +204,6 @@ export default function ThreeComponent() {
 
     return (
         <>
-            物理引擎 cannon-es
             <div id="container" ref={container}></div>
         </>
     );

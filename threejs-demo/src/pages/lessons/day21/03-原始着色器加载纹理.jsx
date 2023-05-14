@@ -4,8 +4,6 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as dat from 'dat.gui';
 
-
-
 export default function ThreeComponent() {
     const container = useRef(null);
     const gui = new dat.GUI();
@@ -47,8 +45,8 @@ export default function ThreeComponent() {
          */
 
         // 创建平面几何体
-        const planGeometry = new THREE.PlaneGeometry(20, 20, 64 ,64 );
-       
+        const planGeometry = new THREE.PlaneGeometry(20, 20, 64, 64);
+
         // 创建平面材质
         //🌟 改用原始着色器材质 （顶点着色器 + 片元着色器）
         const rawMaterial = new THREE.RawShaderMaterial({
@@ -108,7 +106,7 @@ export default function ThreeComponent() {
                     gl_Position = projectionMatrix * viewMatrix * modelPosition;
                 }    
             `,
-            
+
             // 片元着色器
             fragmentShader: `
                 precision highp float;
@@ -127,12 +125,10 @@ export default function ThreeComponent() {
                     
                     //8️⃣ 使用顶点着色器改变片元着色器渲染
                     gl_FragColor = vec4(vUv*vertexHeight , 0.0 , 1.0);
-
                    
                 }
             `,
             side: THREE.DoubleSide,
-            
         });
 
         // 构建平面几何体

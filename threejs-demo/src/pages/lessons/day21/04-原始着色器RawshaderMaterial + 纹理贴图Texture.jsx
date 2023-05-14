@@ -4,8 +4,6 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as dat from 'dat.gui';
 
-
-
 export default function ThreeComponent() {
     const container = useRef(null);
     const gui = new dat.GUI();
@@ -51,8 +49,7 @@ export default function ThreeComponent() {
         const mapTexture = textureLoader.load(require('./texture/ca.jpeg'));
 
         // 创建平面几何体
-        const planGeometry = new THREE.PlaneGeometry(20, 20, 64 ,64 );
-       
+        const planGeometry = new THREE.PlaneGeometry(20, 20, 64, 64);
 
         // 创建平面材质
         //🌟 改用原始着色器材质 （顶点着色器 + 片元着色器）
@@ -67,6 +64,11 @@ export default function ThreeComponent() {
             
             */
             vertexShader: `   
+                // 声明生成顶点着色器“高度” ，越近越亮
+                // highp  -2^16 - 2^16
+                // mediump -2^10 - 2^10
+                // lowp -2^8 - 2^8
+                
                 precision highp float;
                 attribute vec3 position;
                 // 顶点着色器 uv 传给片元着色器 step1
@@ -78,12 +80,9 @@ export default function ThreeComponent() {
 
                 // 顶点着色器 uv 传给片元着色器 step2
                 varying vec2 vUv;
-                // highp  -2^16 - 2^16
-                // mediump -2^10 - 2^10
-                // lowp -2^8 - 2^8
                 
 
-                // 声明生成顶点着色器“高度” ，越近越亮
+                
                 varying float vElevation;
 
                 // 获取时间
@@ -115,7 +114,7 @@ export default function ThreeComponent() {
                     gl_Position = projectionMatrix * viewMatrix * modelPosition;
                 }    
             `,
-            
+
             // 片元着色器
             fragmentShader: `
                 precision highp float;
@@ -152,12 +151,12 @@ export default function ThreeComponent() {
                 // 变量
                 uTime: {
                     // 【固定】value
-                    value:0
+                    value: 0,
                 },
                 uTexture: {
-                    value:mapTexture
-                }
-            }
+                    value: mapTexture,
+                },
+            },
         });
 
         // 构建平面几何体

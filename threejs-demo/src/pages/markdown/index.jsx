@@ -147,6 +147,13 @@ export default function MarkdownCom() {
         setTimeout(() => {
             // 设置值
             editor.setMarkdown('**学了**');
+
+            const res = {
+                "success": true,
+                "result": "以下是一个简单的Python代码，用于冒泡排序数据列表：\n```python\ndef bubble_sort(arr): \n    n = len(arr) \n    for i in range(n): \n        for j in range(0, n - i - 1): \n            if arr[j] > arr[j + 1]: \n                arr[j], arr[j + 1] = arr[j + 1], arr[j]\n    return arr\n```\n要使用这个函数排序给定列表，只需调用函数并传递列表即可。示例代码如下所示：\n```python\narr = [23, 34, 11, 45, 6, 8, 12, 5, 2, 4]\nsorted_arr = bubble_sort(arr) \nprint(sorted_arr) \n```\n输出结果为：\n```\n[2, 4, 5, 6, 8, 11, 12, 23, 34, 45]\n```"
+                
+            }
+            editor.setMarkdown(res.result);
         }, 3000);
 
         setTimeout(() => {

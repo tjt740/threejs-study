@@ -58,7 +58,6 @@ const MyIcon = createFromIconfontCN({
 // （二）
 // 懒加载
 const LazyLoad = (path) => {
-
     //传入在view 下的路径
     const LazyCom = React.lazy(() => import(`../pages/${path}`));
     return (
@@ -195,7 +194,9 @@ export const routerPaths = [
             },
             {
                 label: '原生Webgl创建物体',
-                icon: <MyIcon type="icon-box-parcel-package-delivery-pack-office-facd" />,
+                icon: (
+                    <MyIcon type="icon-box-parcel-package-delivery-pack-office-facd" />
+                ),
                 elementPath: 'lessons/day20',
                 key: 'lessons/day20',
             },
@@ -320,9 +321,12 @@ export const routerPaths = [
                 elementPath: 'fly-light',
                 key: 'fly-light',
             },
-            
-            
-            
+            {
+                label: '烟雾水云',
+                icon: <MyIcon type="icon-tilamisu" />,
+                elementPath: 'smoke-water-cloud',
+                key: 'smoke-water-cloud',
+            },
         ],
     },
 ];

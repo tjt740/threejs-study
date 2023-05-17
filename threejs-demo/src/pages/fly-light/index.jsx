@@ -9,6 +9,9 @@ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 //2️⃣ 导入GLTFLoader，用以JSON（.gltf）格式或二进制（.glb）格式的3D文件渲染
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
+// 导入动画库
+import gsap from 'gsap';
+
 export default function ThreeComponent() {
     const container = useRef(null);
     const gui = new dat.GUI();
@@ -27,7 +30,7 @@ export default function ThreeComponent() {
         camera.updateProjectionMatrix();
         // 更新camera 宽高比;
         camera.aspect = window.innerWidth / window.innerHeight;
-        
+
         // camera.lookAt(scene.position);
 
         // 设置相机位置 object3d具有position，属性是一个3维的向量。
@@ -95,7 +98,8 @@ export default function ThreeComponent() {
                 // ⭐️ 一定要去除 ‘transparent: true,’
                 // 外部
                 if(gl_FrontFacing){
-                    gl_FragColor = vec4(mixColor.xyz,1);
+                    // gl_FragColor = vec4(mixColor.xyz,1);
+                    gl_FragColor = vec4(mixColor.xyz - (vPosition.y-20.0)/80.0 -0.1,1);
                 // 内部
                 }else{
                     gl_FragColor = vec4(mixColor.xyz,0.75);
@@ -160,7 +164,7 @@ export default function ThreeComponent() {
                 scene.add(glbScene);
 
                 const glpGroup = new THREE.Group();
-                
+
                 for (let i = 0; i < 10; i++) {
                     // 拷贝glbScene
                     const cloneGlbScene = glbScene.clone(true);
@@ -168,14 +172,29 @@ export default function ThreeComponent() {
                     const x = (Math.random() - 0.5) * 70;
                     const y = Math.random() * 50 + 5;
                     const z = (Math.random() - 0.5) * 50;
-                
-                    cloneGlbScene.position.set(x,y,z);
-                
+
+                    cloneGlbScene.position.set(x, y, z);
+
+                    // 随机旋转
+                    gsap.to(cloneGlbScene.rotation, {
+                        y: 2 * Math.PI,
+                        duration: 5 * Math.random() * 30,
+                        repeat: -1,
+                    });
+                    // 左右横移
+                    gsap.to(cloneGlbScene.position, {
+                        x: '+=' + Math.random() * 30,
+                        y: '+=' + Math.random() * 60,
+                        duration: 5 * Math.random() * 30,
+                        repeat: -1,
+                        yoyo: true,
+                    });
+
                     glpGroup.add(cloneGlbScene);
                 }
 
                 glpGroup.add(glbScene);
-                
+
                 scene.add(glpGroup);
             },
             // onProgress
@@ -242,6 +261,16 @@ export default function ThreeComponent() {
         // 控制器阻尼
         controls.enableDamping = true;
 
+        // 自动旋转
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 2.0;
+        // 相机最大仰视角 / 最小俯视角  （抬头/低头角度）
+        controls.maxPolarAngle = Math.PI;
+        // 最低90°
+        controls.minPolarAngle = Math.PI / 3;
+        // 控制器的基点 / 控制器的焦点，.object的轨道围绕它运行。 它可以在任何时候被手动更新，以更改控制器的焦点
+        controls.target = new THREE.Vector3(-5, -5, 0);
+
         // 渲染
         render();
 
@@ -266,7 +295,7 @@ export default function ThreeComponent() {
     };
 
     useEffect(() => {
-        // 1. 初始化
+        // 初始化
         init();
     }, []);
 

@@ -29,6 +29,7 @@
         "dat.gui": "^0.7.9",
         "emoji-mart": "^5.5.2",
         "gsap": "^3.11.3",
+        "increase-memory-limit": "^1.0.7",
         "less-loader": "^11.1.0",
         "moment": "^2.29.4",
         "prismjs": "^1.29.0",

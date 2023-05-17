@@ -144,7 +144,6 @@ export default function ThreeComponent() {
         // 全局添加点击事件
         window.addEventListener('click', onClick);
 
-
         // 改变渲染器尺寸
         renderer.setSize(window.innerWidth, window.innerHeight);
         // 设置像素比 使图形锯齿 消失
@@ -153,7 +152,7 @@ export default function ThreeComponent() {
         renderer.shadowMap.enabled = true;
         // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能.
         renderer.physicallyCorrectLights = true;
-   
+
         // 渲染函数
         const clock = new THREE.Clock();
         function render(t) {
@@ -173,6 +172,15 @@ export default function ThreeComponent() {
         const controls = new OrbitControls(camera, renderer.domElement);
         // 控制器阻尼
         controls.enableDamping = true;
+        // 自动旋转
+        controls.autoRotate = false;
+        controls.autoRotateSpeed = 2.0;
+        // 控制器最大仰视角 / 最小俯视角  （抬头/低头角度）
+        controls.maxPolarAngle = Math.PI;
+        // 控制器最小俯视角
+        controls.minPolarAngle = 0;
+        // 控制器的基点 / 控制器的焦点，.object的轨道围绕它运行。 它可以在任何时候被手动更新，以更改控制器的焦点
+        controls.target = new THREE.Vector3(0, 0, 0);
 
         // 渲染
         render();

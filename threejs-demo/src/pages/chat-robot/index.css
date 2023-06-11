@@ -1,0 +1,53 @@
+  /*
+    * github-markdown-css 
+    start
+  */
+
+  .chat-robot .chat-robot-container .chat-robot-box .chat-box-wrap .chat-box-contents-inner-box-text {
+      display: flex !important;
+      flex-direction: column !important;
+  }
+
+  .markdown-body {
+      display: flex !important;
+      flex-direction: column !important;
+  }
+
+  .markdown-body p {
+      margin-bottom: 12px;
+      text-indent: 1em;
+      line-height: inherit !important;
+      font-size: 14px !important;
+  }
+
+  .markdown-body ol {
+      display: flex;
+      flex-direction: column;
+      list-style-type: decimal !important;
+  }
+
+  .markdown-body ul {
+      display: flex;
+      flex-direction: column;
+      list-style-type: '-' !important;
+  }
+
+  .markdown-body ol ul {
+      display: flex;
+      flex-direction: column;
+      list-style-type: disc !important;
+      margin-block-start: 0px;
+      margin-block-end: 0px;
+  }
+
+  .markdown-body li>p {
+      margin-top: 8px;
+  }
+
+  .markdown-body ol {
+      margin-bottom: 0;
+  }
+
+  /*
+      end
+    */

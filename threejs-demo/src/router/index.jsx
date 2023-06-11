@@ -61,7 +61,7 @@ const LazyLoad = (path) => {
     //传入在view 下的路径
     const LazyCom = React.lazy(() => import(`../pages/${path}`));
     return (
-        <React.Suspense fallback={<> 加载中...</>}>
+        <React.Suspense fallback={<> 加载中... </>}>
             <LazyCom />
         </React.Suspense>
     );
@@ -278,6 +278,12 @@ export const routerPaths = [
                 icon: <MyIcon type="icon-roujiamo" />,
                 elementPath: 'snow-demo',
                 key: 'snow-demo',
+            },
+            {
+                label: '大语言模型键入demo',
+                icon: <MyIcon type="icon-haixing" />,
+                elementPath: 'chat-robot',
+                key: 'chat-robot',
             },
             {
                 label: '银河系demo',

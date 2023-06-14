@@ -15,6 +15,7 @@
                 z-index: 999;
                 border-radius: 10px;
             }
+
             .popup button {
                 position: absolute;
                 top: 5px;
@@ -26,6 +27,7 @@
             }
         </style>
     </head>
+
     <body>
         <button onclick="showPopup()">显示弹窗</button>
         <div id="popup" class="popup">
@@ -33,13 +35,19 @@
             <p>可以通过拖动改变位置</p>
             <button onclick="hidePopup()">关闭</button>
         </div>
+
         <script>
             var popup = document.getElementById('popup');
             var isDragging = false;
-            var mouseOffset = { x: 0, y: 0 };
+            var mouseOffset = {
+                x: 0,
+                y: 0,
+            };
+
             function showPopup() {
                 popup.style.display = 'block';
             }
+
             function hidePopup() {
                 popup.style.display = 'none';
             }

@@ -1,14 +1,16 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
+
 // 导入轨道控制器 只能通过这种方法
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as dat from 'dat.gui';
-
+import vertexShader from './shader/vertexShader.glsl';
+console.log(vertexShader)
 export default function SmokeWaterCloud() {
     const container = useRef(null);
     const gui = new dat.GUI();
-
+    
     const init = () => {
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x000000);
@@ -23,7 +25,7 @@ export default function SmokeWaterCloud() {
         // 更新camera 宽高比;
         camera.aspect = window.innerWidth / window.innerHeight;
         // 设置相机位置 object3d具有position，属性是一个3维的向量。
-        camera.position.set(0, 0, 10);
+        camera.position.set(3, 5, 7);
         // 摄像机添加到场景中
         scene.add(camera);
 
@@ -49,14 +51,28 @@ export default function SmokeWaterCloud() {
         /*
          * ------------ start ----------
          */
-        // 生成平面
-        const planeGeo = new THREE.PlaneGeometry(5, 5, 512, 512);
-        const planeMaterial = new THREE.MeshBasicMaterial({
-            color: new THREE.Color('0xffffff'),
+
+        // 着色器材质
+        // 顶点着色器
+        // 片元着色器
+        const fragmentShader = `
+            precision highp float;
+
+            void main(){
+                gl_FragColor = vec4(0.0, 1.0, 1.0,1.0); // rgba 红黄蓝
+            }
+        `;
+
+        const shaderMaterial = new THREE.ShaderMaterial({
+            vertexShader,
+            fragmentShader,
             side: THREE.DoubleSide,
         });
-        const planeMesh = new THREE.Mesh(planeGeo, planeMaterial);
-        planeMesh.rotation.x = -Math.PI;
+        // 生成平面
+        const planeGeo = new THREE.PlaneGeometry(5, 5, 512, 512);
+        
+        const planeMesh = new THREE.Mesh(planeGeo, shaderMaterial);
+        planeMesh.rotation.x = -Math.PI/2;
         scene.add(planeMesh);
 
         /*
@@ -118,6 +134,10 @@ export default function SmokeWaterCloud() {
 
     return (
         <>
+            
+            <p>
+                11
+            </p>
             <div id="container" ref={container}></div>
         </>
     );

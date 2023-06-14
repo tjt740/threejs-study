@@ -39,7 +39,7 @@ code {
 .ant-layout-content {
     display: flex;
     flex-direction: column;
-    background: #fff;
+    background: rgb(255, 255, 255);
     height: 100%;
     padding-top: 0;
 }

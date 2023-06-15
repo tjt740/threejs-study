@@ -134,11 +134,7 @@ export default function SmokeWaterCloud() {
 
     return (
         <>
-            
-            <p>
-                11
-            </p>
-            <div id="container" ref={container}></div>
+          <div id="container" ref={container}></div>
         </>
     );
 }

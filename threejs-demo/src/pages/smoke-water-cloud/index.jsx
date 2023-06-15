@@ -5,7 +5,7 @@ import * as THREE from 'three';
 // 导入轨道控制器 只能通过这种方法
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as dat from 'dat.gui';
-import vertexShader from './shader/vertexShader.glsl';
+import vertexShader from './shader/vertexShader';
 console.log(vertexShader)
 export default function SmokeWaterCloud() {
     const container = useRef(null);
@@ -134,7 +134,7 @@ export default function SmokeWaterCloud() {
 
     return (
         <>
-          <div id="container" ref={container}></div>
+            <div id="container" ref={container}></div>
         </>
     );
 }

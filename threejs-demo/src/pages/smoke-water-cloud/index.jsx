@@ -1,16 +1,14 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
-
 // 导入轨道控制器 只能通过这种方法
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as dat from 'dat.gui';
-import vertexShader from '!raw-loader!./shader/vertexShader.glsl';
-console.log(vertexShader)
+
 export default function SmokeWaterCloud() {
     const container = useRef(null);
     const gui = new dat.GUI();
-    
+
     const init = () => {
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x000000);
@@ -54,25 +52,91 @@ export default function SmokeWaterCloud() {
 
         // 着色器材质
         // 顶点着色器
+        const vertexShader = `
+            precision highp float;
+
+            // 获取uniform 中的变量
+            uniform float uWaresFrequency;
+            uniform float uScale;
+
+            // 声明生成顶点着色器“高度”，越近越亮。
+            varying float vElevation;
+ 
+            void main(){ 
+                vec4  modelPosition  =  modelMatrix * vec4( position, 1.0 );
+                
+                // 设置波纹,uWaresFrequency、uScale 来自【uniforms】,改变波浪方向+大小;
+                // float elevation = sin(modelPosition.x * 3.0);
+                float elevation = sin(modelPosition.x * uWaresFrequency) * sin(modelPosition.z * uWaresFrequency) * uScale;
+                
+                modelPosition.y += elevation;
+
+                gl_Position = projectionMatrix * viewMatrix *  modelPosition;
+            }    
+        `;
         // 片元着色器
         const fragmentShader = `
             precision highp float;
+            
+            // 片元着色器 声明 vElevation,使用 “顶点着色器”声明的 vElevation; 
+            varying float vElevation;
 
             void main(){
-                gl_FragColor = vec4(0.0, 1.0, 1.0,1.0); // rgba 红黄蓝
+                
+                float a = (vElevation + 1.0) / 2.0;
+
+                gl_FragColor = vec4(0.0 * a , 1.0 , 1.0 , a); // rgba 红黄蓝,需要设置transparent:true;
             }
         `;
+
+        // params 参数
+        const params = {
+            uWaresFrequency: 4, // 波浪数
+            uScale: 0.3, // 波浪高度
+        };
 
         const shaderMaterial = new THREE.ShaderMaterial({
             vertexShader,
             fragmentShader,
             side: THREE.DoubleSide,
+
+            // 通过uniforms添加参数,在顶点着色器中获取
+            uniforms: {
+                uWaresFrequency: {
+                    value: params.uWaresFrequency,
+                },
+                uScale: {
+                    value: params.uScale,
+                },
+            },
+
+            // 允许透明
+            transparent: true,
         });
+
+        // 增加调试uWaresFrequency、uScale功能
+        gui.add(params, 'uWaresFrequency')
+            .min(1)
+            .max(10)
+            .step(1)
+            .onChange((value) => {
+                shaderMaterial.uniforms.uWaresFrequency.value = value;
+            })
+            .name('改变波浪条数');
+        gui.add(params, 'uScale')
+            .min(0.1)
+            .max(1)
+            .step(0.1)
+            .onChange((value) => {
+                shaderMaterial.uniforms.uScale.value = value;
+            })
+            .name('改变波浪大小');
+
         // 生成平面
         const planeGeo = new THREE.PlaneGeometry(5, 5, 512, 512);
-        
+
         const planeMesh = new THREE.Mesh(planeGeo, shaderMaterial);
-        planeMesh.rotation.x = -Math.PI/2;
+        planeMesh.rotation.x = -Math.PI / 2;
         scene.add(planeMesh);
 
         /*

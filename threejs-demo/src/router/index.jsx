@@ -1,4 +1,6 @@
 import PackagePreview3D from '../pages/装箱demo';
+import ComplexFormily from '../pages/complex-formily';
+
 // import PicMark from '../pages/pic-mark';
 // import TextMark from '../pages/text-mark';
 // import MarkdownCom from '../pages/markdown';
@@ -224,6 +226,12 @@ export const routerPaths = [
                 icon: <MyIcon type="icon-zhixiang_niupizhixiang-15" />,
                 elementPath: '装箱demo',
                 key: 'package-preview',
+            },
+            {
+                label: '复杂formily',
+                icon: <MyIcon type="icon-danta" />,
+                elementPath: 'complex-formily',
+                key: 'complex-formily',
             },
             {
                 label: '测试图片标注demo',

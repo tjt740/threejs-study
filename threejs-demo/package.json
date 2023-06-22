@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@ant-design/icons": "^5.0.1",
+    "@ant-design/pro-components": "^2.6.2",
     "@emoji-mart/data": "^1.1.2",
     "@emoji-mart/react": "^1.1.1",
     "@monaco-editor/react": "^4.5.1",
@@ -33,6 +34,7 @@
     "highlight.js": "^11.8.0",
     "increase-memory-limit": "^1.0.7",
     "less-loader": "^11.1.0",
+    "lodash": "^4.17.21",
     "marked": "^5.0.2",
     "marked-highlight": "^2.0.0",
     "moment": "^2.29.4",

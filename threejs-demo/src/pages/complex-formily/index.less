@@ -1,0 +1,80 @@
+.workspace-config-container {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+    height: calc(100vh - 88px);
+    padding: 8px;
+    box-sizing: border-box;
+  
+    // 上
+    .title {
+      height: auto !important;
+      padding: 10px 10px 0 10px;
+      position: sticky;
+      top: 0px;
+      z-index: 9999;
+      background-color: #fff;
+  
+      .underline {
+        display: flex;
+        height: 50px !important;
+        justify-content: space-between;
+        align-items: center;
+        text-decoration: none;
+        border-bottom: 1px solid #f5f5f5;
+  
+        h2 {
+          margin: 0;
+          padding: 0 10px;
+          box-sizing: border-box;
+          color: #666666;
+        }
+      }
+  
+      .cn-next-btn {
+        margin-right: 20px;
+      }
+  
+      .operation-btn {
+        position: sticky;
+        padding: 0 0 20px 0;
+      }
+    }
+  
+    // 下
+    .table-exhibition {
+      flex: 1;
+      padding: 12px;
+      overflow-y: auto;
+  
+      .form-container {
+        .ant-collapse-header {
+          display: flex !important;
+          align-items: center !important;
+        }
+  
+        .ant-pro-card {
+          display: flex;
+          flex-direction: row-reverse;
+  
+          .ant-pro-card-header {
+            padding-block: 0;
+            padding-inline: 12px;
+          }
+          .ant-pro-card-body {
+            flex: 1;
+            padding-inline: 0;
+  
+            .ant-collapse {
+              margin-bottom: 0 !important;
+            }
+          }
+  
+          .ant-collapse-extra {
+            height: 32px;
+          }
+        }
+      }
+    }
+  }
+  

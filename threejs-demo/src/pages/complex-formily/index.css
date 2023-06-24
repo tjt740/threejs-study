@@ -44,6 +44,12 @@
   display: flex !important;
   align-items: center !important;
 }
+.workspace-config-container .table-exhibition .form-container .radio-box {
+  margin-bottom: 0 !important;
+}
+.workspace-config-container .table-exhibition .form-container .radio-box .ant-form-item-control-input-content div:nth-child(1) {
+  width: fit-content !important;
+}
 .workspace-config-container .table-exhibition .form-container .ant-pro-card {
   display: flex;
   flex-direction: row-reverse;

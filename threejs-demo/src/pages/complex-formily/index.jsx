@@ -881,7 +881,10 @@ export default function ComplexFormily() {
                                                             ]);
                                                             return;
                                                         }
-
+                                                        tagContext.push({
+                                                            isOpen: false,
+                                                            text: '',
+                                                        });
                                                         tagContext.at(
                                                             index
                                                         ).isOpen = true;
@@ -890,11 +893,11 @@ export default function ComplexFormily() {
                                                         ]);
                                                     }}
                                                     style={{ marginBottom: 16 }}
-                                                    // collapsible={
-                                                    //     tagContext[index]?.text
-                                                    //         ? 'header'
-                                                    //         : 'disabled'
-                                                    // }
+                                                    collapsible={
+                                                        tagContext[index]?.text
+                                                            ? 'header'
+                                                            : 'disabled'
+                                                    }
                                                 >
                                                     <Panel
                                                         header={

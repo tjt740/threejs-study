@@ -247,7 +247,7 @@ export default function SmokeWaterCloud() {
             .name('改变噪音速度');
 
         // 生成平面
-        const planeGeo = new THREE.PlaneGeometry(5, 5, 512, 512);
+        const planeGeo = new THREE.PlaneGeometry(8, 8, 1024, 1024);
 
         const planeMesh = new THREE.Mesh(planeGeo, shaderMaterial);
         planeMesh.rotation.x = -Math.PI / 2;

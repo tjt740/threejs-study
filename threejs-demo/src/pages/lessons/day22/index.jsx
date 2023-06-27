@@ -317,14 +317,14 @@ export default function ThreeComponent() {
             `,
             side: THREE.DoubleSide,
             transparent: true,
-             // 材质里设置 uTime ，初始值为 0， 然后在render里设置value的值
-             uniforms: {
+            // 材质里设置 uTime ，初始值为 0， 然后在render里设置value的值
+            uniforms: {
                 // 变量
                 uTime: {
                     // 【固定】value
-                    value:0
-                },  
-            }
+                    value: 0,
+                },
+            },
         });
 
         // 构建平面几何体
@@ -361,7 +361,6 @@ export default function ThreeComponent() {
 
             // 改变rawMaterial里的uTime
             rawMaterial.uniforms.uTime.value = time;
-
 
             renderer.render(scene, camera);
             // 动画帧

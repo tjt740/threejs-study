@@ -341,6 +341,12 @@ export const routerPaths = [
                 elementPath: 'smoke-water-cloud',
                 key: 'smoke-water-cloud',
             },
+            {
+                label: '官方‘水’模型',
+                icon: <MyIcon type="icon-tilamisu" />,
+                elementPath: 'water-model',
+                key: 'water-model',
+            },
         ],
     },
 ];

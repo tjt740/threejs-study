@@ -128,7 +128,7 @@ export default function WaterModel() {
         controls.minPolarAngle = 0;
         // 控制器的基点 / 控制器的焦点，.object的轨道围绕它运行。 它可以在任何时候被手动更新，以更改控制器的焦点
         controls.target = new THREE.Vector3(0, 0, 0);
-
+        let arr = () => { return [] };
         // 渲染
         render();
 

@@ -1,6 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Button, Collapse, Divider, Input, Tag, Tooltip } from 'antd';
-import { TweenOneGroup } from 'rc-tween-one';
 import { EditOutlined, PlusOutlined } from '@ant-design/icons';
 import {
     BetaSchemaForm, // schema表单

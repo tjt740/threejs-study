@@ -20,7 +20,7 @@ const IconFont = createFromIconfontCN({
 function App() {
     const draggableRef = useRef(null);
     // 是否收缩侧边栏
-    const [collapsed, setCollapsed] = useState(false);
+    const [collapsed, setCollapsed] = useState(true);
     const [width, setWidth] = useState(240);
     const navigate = useNavigate();
     function init() {

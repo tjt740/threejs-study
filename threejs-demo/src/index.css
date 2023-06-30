@@ -28,6 +28,7 @@ code {
 }
 
 .ant-layout {
+    padding: 0;
     height: 100%;
 }
 
@@ -42,6 +43,7 @@ code {
     background: rgb(255, 255, 255);
     height: 100%;
     padding-top: 0;
+    padding: 0;
 }
 
 .container {
@@ -49,12 +51,12 @@ code {
     width: auto;
 }
 
-.ant-menu-item {}
-
-.ant-menu-sub.ant-menu-inline>.ant-menu-item {
-    padding-left: 30px !important;
+.ant-menu-item {
 }
 
+.ant-menu-sub.ant-menu-inline > .ant-menu-item {
+    padding-left: 30px !important;
+}
 
 .ant-menu-light {
     height: 100% !important;
@@ -74,14 +76,14 @@ code {
 }
 
 #preview {
-    display:none
+    display: none;
 }
 
-.ant-menu{
-    overflow-y:auto;
+.ant-menu {
+    overflow-y: auto;
     overflow-x: hidden;
 }
 
-.ant-menu::-webkit-scrollbar{
+.ant-menu::-webkit-scrollbar {
     display: none;
 }

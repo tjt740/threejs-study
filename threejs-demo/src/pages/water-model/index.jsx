@@ -55,34 +55,46 @@ export default function WaterModel() {
 
         // light
 
-        const ambientLight = new THREE.AmbientLight(0xe7e7e7, 1.2);
-        scene.add(ambientLight);
+        // const ambientLight = new THREE.AmbientLight(0xe7e7e7, 1.2);
+        // scene.add(ambientLight);
 
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
-        directionalLight.position.set(-1, 1, 1);
-        scene.add(directionalLight);
+        // const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
+        // directionalLight.position.set(-1, 1, 1);
+        // scene.add(directionalLight);
 
-        // 水
-        // params 参数
-        const params = {
-            color: '#ffffff', // 水颜色
-            scale: 4, // 水尺寸
-            flowX: 1, // 水流方向z
-            flowY: 1, // 水流方向y
-        };
+        // // 水
+        // // params 参数
+        // const params = {
+        //     color: '#ffffff', // 水颜色
+        //     scale: 4, // 水尺寸
+        //     flowX: 1, // 水流方向z
+        //     flowY: 1, // 水流方向y
+        // };
 
-        const waterGeometry = new THREE.PlaneGeometry(8, 8);
+        // const waterGeometry = new THREE.PlaneGeometry(8, 8);
 
-        const water = new Water(waterGeometry, {
-            color: params.color,
-            scale: params.scale,
-            flowDirection: new THREE.Vector2(params.flowX, params.flowY),
-            textureWidth: 1024,
+        // const water = new Water(waterGeometry, {
+        //     color: params.color,
+        //     scale: params.scale,
+        //     flowDirection: new THREE.Vector2(params.flowX, params.flowY),
+        //     textureWidth: 1024,
+        //     textureHeight: 1024,
+        // });
+
+        // water.position.y = 1;
+        // water.rotation.x = Math.PI * -0.5;
+        // scene.add(water);
+
+        const water = new Water(new THREE.PlaneBufferGeometry(8, 8), {
+            color: '#ffffff',
+            scale: 1,
+            flowDirection: new THREE.Vector2(1, 1),
             textureHeight: 1024,
+            textureWidth: 1024,
         });
 
+        water.rotation.x = -Math.PI / 2;
         water.position.y = 1;
-        water.rotation.x = Math.PI * -0.5;
         scene.add(water);
 
         // 地板
@@ -128,7 +140,9 @@ export default function WaterModel() {
         controls.minPolarAngle = 0;
         // 控制器的基点 / 控制器的焦点，.object的轨道围绕它运行。 它可以在任何时候被手动更新，以更改控制器的焦点
         controls.target = new THREE.Vector3(0, 0, 0);
-        let arr = () => { return [] };
+        let arr = () => {
+            return [];
+        };
         // 渲染
         render();
 

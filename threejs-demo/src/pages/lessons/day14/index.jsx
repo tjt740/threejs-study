@@ -41,6 +41,7 @@ export default function ThreeComponent() {
             console.log('加载hdr图片成功');
             // 纹理贴图映射模式 <https://threejs.org/docs/index.html#api/zh/constants/Textures>
             texture.mapping = THREE.EquirectangularReflectionMapping;
+
             //将加载的材质texture设置给背景和环境
             scene.background = texture;
             scene.environment = texture;

@@ -8,6 +8,12 @@ import * as dat from 'dat.gui';
 // 引入 ‘水模型’ 插件
 import { Water } from 'three/examples/jsm/objects/Water2';
 
+// 引入加载.hdr 文件组件
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
+
+// 引入 GLTFLoader 加载glb模型文件
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+
 export default function WaterModel() {
     const container = useRef(null);
     const gui = new dat.GUI();
@@ -40,6 +46,12 @@ export default function WaterModel() {
             antialias: true, // 消除锯齿
             alpha: true, // 背景透明
         });
+        // 设置渲染器编码格式  THREE.NoColorSpace = "" || THREE.SRGBColorSpace = "srgb" || THREE.LinearSRGBColorSpace = "srgb-linear"
+        renderer.outputColorSpace = 'srgb';
+        // 色调映射 THREE.NoToneMapping || THREE.LinearToneMapping || THREE.ReinhardToneMapping || THREE.CineonToneMapping || THREE.ACESFilmicToneMapping
+        renderer.toneMapping = THREE.ReinhardToneMapping;
+        // 色调映射的曝光级别。默认是1，屏幕是2.2，越低越暗
+        renderer.toneMappingExposure = 2.2;
         // 改变渲染器尺寸
         renderer.setSize(window.innerWidth, window.innerHeight);
         // 设置像素比 使图形锯齿 消失
@@ -49,67 +61,134 @@ export default function WaterModel() {
         // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能.
         renderer.physicallyCorrectLights = true;
 
+        gui.add(renderer, 'toneMappingExposure', 1, 5)
+            .step(0.1)
+            .onChange((e) => {
+                renderer.toneMappingExposure = e;
+            });
+
         /*
          * ------------ start ----------
          */
 
-        // light
+        // 光线
+        const light = new THREE.AmbientLight(0xffffff, 1); // soft white light
+        scene.add(light);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+        scene.add(directionalLight);
 
-        // const ambientLight = new THREE.AmbientLight(0xe7e7e7, 1.2);
-        // scene.add(ambientLight);
-
-        // const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
-        // directionalLight.position.set(-1, 1, 1);
-        // scene.add(directionalLight);
-
-        // // 水
-        // // params 参数
-        // const params = {
-        //     color: '#ffffff', // 水颜色
-        //     scale: 4, // 水尺寸
-        //     flowX: 1, // 水流方向z
-        //     flowY: 1, // 水流方向y
-        // };
-
-        // const waterGeometry = new THREE.PlaneGeometry(8, 8);
-
-        // const water = new Water(waterGeometry, {
-        //     color: params.color,
-        //     scale: params.scale,
-        //     flowDirection: new THREE.Vector2(params.flowX, params.flowY),
-        //     textureWidth: 1024,
-        //     textureHeight: 1024,
-        // });
-
-        // water.position.y = 1;
-        // water.rotation.x = Math.PI * -0.5;
-        // scene.add(water);
-
-        const water = new Water(new THREE.PlaneBufferGeometry(8, 8), {
-            color: '#ffffff',
-            scale: 1,
-            flowDirection: new THREE.Vector2(1, 1),
-            textureHeight: 1024,
-            textureWidth: 1024,
+        // 加载场景背景
+        const rgbeLoader = new RGBELoader();
+        rgbeLoader.loadAsync(require('./assets/050.hdr')).then((texture) => {
+            texture.mapping = THREE.EquirectangularReflectionMapping;
+            texture.colorSpace = THREE.LinearSRGBColorSpace;
+            scene.background = texture;
+            scene.environment = texture;
         });
 
-        water.rotation.x = -Math.PI / 2;
-        water.position.y = 1;
-        scene.add(water);
+        // 水
+        // 创建水面textureLoader
+        const waterTextureLoader = new THREE.TextureLoader();
+        // 水 options 参数
+        const options = {
+            color: '#ffffff', // 水面颜色
+            scale: 1, // 水尺寸(影响水流速度)
+            flowX: 1, // 水流方向z
+            flowY: 1, // 水流方向y
+            textureWidth: 1024, // 水体清晰度 W
+            textureHeight: 1024, // 水体清晰度 H
+            reflectivity: 0.01, // 水面反射率(越大越黑)
+            normalMap0: waterTextureLoader.load(
+                require('./textures/water/Water_1_M_Normal.jpg')
+            ), // 水材质0 ⭐️ 非常重要 官方文档自带
+            normalMap1: waterTextureLoader.load(
+                require('./textures/water/Water_2_M_Normal.jpg')
+            ), // 水材质1 ⭐️ 非常重要 官方文档自带
+        };
 
-        // 地板
-        const ground = new THREE.PlaneGeometry(8, 8, 512, 512);
-        const groundMesh = new THREE.Mesh(
-            ground,
-            new THREE.MeshBasicMaterial({
-                map: new THREE.TextureLoader().load(
-                    require('./textures/hardwood2_diffuse.jpg')
-                ),
-                side: THREE.DoubleSide,
-            })
-        );
-        groundMesh.rotation.x = Math.PI / 2;
-        scene.add(groundMesh);
+        const gltfLoader = new GLTFLoader();
+        gltfLoader.load(require('./assets/model/yugang.glb'), (gltf) => {
+            console.log(gltf);
+            // 池墙
+            const pond = gltf.scene.children[0];
+            // 双面展示
+            pond.material.side = THREE.DoubleSide;
+            pond.position.y = 0.5;
+
+            // 创建水体平面
+            const waterGeometry = gltf.scene.children[1].geometry;
+            // 水构造器加载 <平面+设置>
+            const water = new Water(waterGeometry, {
+                color: options.color,
+                scale: options.scale,
+                // 水流方向 new THREE.Vector2(x,y);
+                flowDirection: new THREE.Vector2(options.flowX, options.flowY),
+                textureWidth: options.textureWidth,
+                textureHeight: options.textureHeight,
+                normalMap0: options.normalMap0,
+                normalMap1: options.normalMap1,
+            });
+
+            water.position.y = 0.6;
+            // water.rotation.x = -Math.PI / 2;
+
+            scene.add(pond);
+            scene.add(water);
+
+            gui.width = 450;
+            // 水面颜色更改
+            gui.addColor(options, 'color')
+                .onFinishChange((value) => {
+                    water.material.uniforms.color.value = new THREE.Color(
+                        value
+                    );
+                })
+                .name('水面颜色更改');
+
+            // 水流方向更改
+            gui.add(options, 'flowX', -1, 1)
+                .step(0.01)
+                .onChange(function (value) {
+                    water.material.uniforms['flowDirection'].value.x = value;
+                    water.material.uniforms['flowDirection'].value.normalize();
+                });
+            gui.add(options, 'flowY', -1, 1)
+                .step(0.01)
+                .onChange(function (value) {
+                    water.material.uniforms['flowDirection'].value.y = value;
+                    water.material.uniforms['flowDirection'].value.normalize();
+                });
+
+            // 水流尺寸修改(影响水流速度)
+            gui.add(options, 'scale', 1, 10)
+                .step(1)
+                .onChange(function (value) {
+                    water.material.uniforms['config'].value.w = value;
+                })
+                .name('水流尺寸修改(影响水流速度)');
+
+            // 水面反射率(越大越黑)
+            gui.add(options, 'reflectivity', 0, 1)
+                .step(0.01)
+                .onChange(function (value) {
+                    water.material.uniforms['reflectivity'].value = value;
+                })
+                .name('水面反射率');
+
+            // 地板
+            const ground = new THREE.PlaneGeometry(8, 8, 512, 512);
+            const groundMesh = new THREE.Mesh(
+                ground,
+                new THREE.MeshBasicMaterial({
+                    map: new THREE.TextureLoader().load(
+                        require('./textures/ground.jpg')
+                    ),
+                    side: THREE.DoubleSide,
+                })
+            );
+            groundMesh.rotation.x = Math.PI / 2;
+            // scene.add(groundMesh);
+        });
 
         /*
          * ------------ end ----------
@@ -140,9 +219,7 @@ export default function WaterModel() {
         controls.minPolarAngle = 0;
         // 控制器的基点 / 控制器的焦点，.object的轨道围绕它运行。 它可以在任何时候被手动更新，以更改控制器的焦点
         controls.target = new THREE.Vector3(0, 0, 0);
-        let arr = () => {
-            return [];
-        };
+
         // 渲染
         render();
 

@@ -214,6 +214,12 @@ export const routerPaths = [
                 elementPath: 'lessons/day22',
                 key: 'lessons/day22',
             },
+            {
+                label: 'gltfloader使用',
+                icon: <MyIcon type="icon-kele" />,
+                elementPath: 'lessons/gltfloader',
+                key: 'lessons/gltfloader',
+            },
         ],
     },
     {

@@ -47,7 +47,7 @@ export default function WaterModel() {
             alpha: true, // 背景透明
         });
         // 设置渲染器编码格式  THREE.NoColorSpace = "" || THREE.SRGBColorSpace = "srgb" || THREE.LinearSRGBColorSpace = "srgb-linear"
-        renderer.outputColorSpace = 'srgb';
+        renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
         // 色调映射 THREE.NoToneMapping || THREE.LinearToneMapping || THREE.ReinhardToneMapping || THREE.CineonToneMapping || THREE.ACESFilmicToneMapping
         renderer.toneMapping = THREE.ReinhardToneMapping;
         // 色调映射的曝光级别。默认是1，屏幕是2.2，越低越暗

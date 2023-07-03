@@ -66,14 +66,16 @@ export default function ThreeComponent() {
 
     // 创建gui分区
     const gui2 = gui.addFolder('分区2');
-    // 添加颜色管理器
+    // 添加颜色管理器 (多种方法)
     const colorFormats = {
-        string: '#ffffff',
-        int: 0xffffff,
-        object: { r: 1, g: 1, b: 1 },
-        array: [1, 1, 1],
+        color1: '#AA00FF',
+        color2: '#a0f',
+        color3: 'rgb(170, 0, 255)',
+        color4: 0xaa00ff,
+        colorObject: { r: 0.667, g: 0, b: 1 },
+        colorArray: [0.667, 0, 1],
     };
-    gui2.addColor(colorFormats, 'string').name('颜色管理器');
+    gui2.addColor(colorFormats, 'color1').name('颜色管理器');
 
     // 收起gui
     gui.close();
@@ -83,7 +85,7 @@ export default function ThreeComponent() {
     gui.hide();
     // 展示gui
     gui.show();
-    // gui动画开启
+    // 点击title才可以进行其他配置操作
     gui.openAnimated(true);
     // 销毁gui
     // gui.destroy();
@@ -104,7 +106,7 @@ export default function ThreeComponent() {
         // 更新camera 宽高比;
         camera.aspect = window.innerWidth / window.innerHeight;
 
-        // camera.lookAt(scene.position);
+        camera.lookAt(scene.position);
 
         // 设置相机位置 object3d具有position，属性是一个3维的向量。
         camera.position.set(0, 0, 10);

@@ -2,10 +2,21 @@ import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 // 导入轨道控制器 只能通过这种方法
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import * as dat from 'dat.gui';
+// import * as dat from 'dat.gui';
+// const gui = new dat.GUI();
+
+// 引入加载.hdr 文件组件
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
+
+// 引入 GLTFLoader 加载glb模型文件
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+
+// 使用 lil-gui 调试 three.js 图形
+import GUI from 'lil-gui';
+const gui = new GUI();
+
 export default function ThreeComponent() {
     const container = useRef(null);
-    const gui = new dat.GUI();
     const init = () => {
         const scene = new THREE.Scene();
         // 场景颜色
@@ -17,15 +28,15 @@ export default function ThreeComponent() {
             0.1,
             1000
         );
-        //  更新camera 投影矩阵
+        // 更新camera 投影矩阵
         camera.updateProjectionMatrix();
         // 更新camera 宽高比;
         camera.aspect = window.innerWidth / window.innerHeight;
-
-        // camera.lookAt(scene.position);
-
         // 设置相机位置 object3d具有position，属性是一个3维的向量。
         camera.position.set(0, 0, 10);
+        // 更新camera 视角方向
+        // camera.lookAt(scene.position);
+
         // 摄像机添加到场景中
         scene.add(camera);
 
@@ -96,9 +107,6 @@ export default function ThreeComponent() {
                 }
             }
         }
-        /*
-         * ------------end ----------
-         */
 
         // 创建射线
         const raycaster = new THREE.Raycaster();
@@ -149,6 +157,9 @@ export default function ThreeComponent() {
 
         // 全局添加点击事件
         window.addEventListener('click', onClick);
+        /*
+         * ------------end ----------
+         */
 
         // 改变渲染器尺寸
         renderer.setSize(window.innerWidth, window.innerHeight);

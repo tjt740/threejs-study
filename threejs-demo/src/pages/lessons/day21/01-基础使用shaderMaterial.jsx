@@ -44,7 +44,6 @@ export default function ThreeComponent() {
          * ------------ start ----------
          */
 
-        
         // 创建平面几何体
         const planGeometry = new THREE.PlaneGeometry(20, 20, 64, 64);
         // 创建平面材质
@@ -60,13 +59,13 @@ export default function ThreeComponent() {
         1. gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
         2.gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4( position, 1.0 );
         */
-        const vertexShader = `
+        const vertexShader = /* glsl */ `
             void main(){
                 gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4( position, 1.0 ) ;
             }
         `;
         //2️⃣ 片元着色器，必须用GLSL代码格式才行
-        const fragmentShader = `
+        const fragmentShader = /* glsl */ `
             void main(){
                 gl_FragColor = vec4(0.0, 1.0, 1.0, 0.3); // rgba 红黄蓝
             }

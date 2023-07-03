@@ -220,6 +220,12 @@ export const routerPaths = [
                 elementPath: 'lessons/gltfloader',
                 key: 'lessons/gltfloader',
             },
+            {
+                label: '着色器设置点材质',
+                icon: <MyIcon type="icon-kele" />,
+                elementPath: 'lessons/point-material',
+                key: 'lessons/point-material',
+            },
         ],
     },
     {

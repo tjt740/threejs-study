@@ -12,7 +12,7 @@ export default function ThreeComponent() {
     // const gui = new dat.GUI();
 
     const gui = new GUI(
-        // 配置gui设置 方法（1）
+        // 配置gui设置
         {
             // gui宽度
             width: '600px',
@@ -85,17 +85,6 @@ export default function ThreeComponent() {
     gui.show();
     // gui动画开启
     gui.openAnimated(true);
-    // 配置gui设置 方法（2）
-    gui.options({
-        // gui宽度
-        width: '600px',
-        // 设置gui title
-        title: 'gui控制器',
-        // 收起分区，默认false
-        closeFolders: false,
-        // 自动生成在页面右上角，默认为true
-        autoPlace: true,
-    });
     // 销毁gui
     // gui.destroy();
 

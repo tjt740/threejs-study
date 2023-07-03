@@ -3,9 +3,102 @@ import * as THREE from 'three';
 // 导入轨道控制器 只能通过这种方法
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as dat from 'dat.gui';
+
+// 引用 lil-gui 组件
+import GUI from 'lil-gui';
+
 export default function ThreeComponent() {
     const container = useRef(null);
-    const gui = new dat.GUI();
+    // const gui = new dat.GUI();
+
+    const gui = new GUI(
+        // 配置gui设置 方法（1）
+        {
+            // gui宽度
+            width: '600px',
+            // 设置gui title
+            title: 'gui控制器',
+            // 收起分区，默认false
+            closeFolders: false,
+            // 自动生成在页面右上角，默认为true
+            autoPlace: true,
+        }
+    );
+
+    // 配置gui控制的设置项
+    const myObject = {
+        myBoolean: true,
+        myFunction: function (value) {
+            alert('触发函数', value);
+        },
+        myString: 'lil-gui',
+        myNumber: 1,
+        mySelectNumber: 1,
+    };
+
+    // 开关选项
+    gui.add(myObject, 'myBoolean');
+    // 文字
+    gui.add(myObject, 'myString');
+
+    // 数字设置
+    gui.add(myObject, 'myNumber').name('myNumber设置');
+
+    // 0：最小值, 1：最大值
+    gui.add(myObject, 'myNumber', 0, 1);
+    // 0：最小值 , 100：最大值 , 2：每次增加的值为2
+    gui.add(myObject, 'myNumber', 0, 100, 2);
+    // 0：最小值 , 100：最大值 , 0.1：每次增加的值为0.1
+    gui.add(myObject, 'myNumber').min(0).max(1).step(0.1);
+
+    // 下来选项数值
+    gui.add(myObject, 'mySelectNumber', [0, 1, 2]);
+    gui.add(myObject, 'mySelectNumber', {
+        下拉1: 0,
+        下拉2: 1,
+        下拉3: 2,
+    }).onChange((v) => {
+        console.log('值:', v);
+    });
+
+    // 触发myObject中myFunction
+    gui.add(myObject, 'myFunction').name('触发myFunction');
+
+    // 创建gui分区
+    const gui2 = gui.addFolder('分区2');
+    // 添加颜色管理器
+    const colorFormats = {
+        string: '#ffffff',
+        int: 0xffffff,
+        object: { r: 1, g: 1, b: 1 },
+        array: [1, 1, 1],
+    };
+    gui2.addColor(colorFormats, 'string').name('颜色管理器');
+
+    // 收起gui
+    gui.close();
+    // 打开gui
+    gui.open();
+    // 隐藏gui
+    gui.hide();
+    // 展示gui
+    gui.show();
+    // gui动画开启
+    gui.openAnimated(true);
+    // 配置gui设置 方法（2）
+    gui.options({
+        // gui宽度
+        width: '600px',
+        // 设置gui title
+        title: 'gui控制器',
+        // 收起分区，默认false
+        closeFolders: false,
+        // 自动生成在页面右上角，默认为true
+        autoPlace: true,
+    });
+    // 销毁gui
+    // gui.destroy();
+
     const init = () => {
         const scene = new THREE.Scene();
         // 场景颜色

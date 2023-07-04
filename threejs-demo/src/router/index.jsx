@@ -226,6 +226,12 @@ export const routerPaths = [
                 elementPath: 'lessons/point-material',
                 key: 'lessons/point-material',
             },
+            {
+                label: '线性雾、指数雾',
+                icon: <MyIcon type="icon-kele" />,
+                elementPath: 'lessons/fog',
+                key: 'lessons/fog',
+            },
         ],
     },
     {

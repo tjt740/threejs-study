@@ -76,87 +76,17 @@ export default function Fog() {
          * ------------ start ----------
          */
 
-        // 设置灯光和阴影
-        // 1. 设置自然光、<点光源>、<标准>网格材质（带PBR属性的都可以）  材质要满足能够对光照有反应
-        // 2. 设置渲染器开启阴影计算 renderer.shadowMap.enabled = true;
-        // 3. 设置光照能产生动态阴影  directionalLight.castShadow = true;
-        // 4. 设置投射阴影的物体投射阴影 sphereGeometry.castShadow = true;
-        // 5. 设置被投射的物体接收阴影  planGeometry.receiveShadow = true;
+        const boxGeometry = new THREE.BoxGeometry(100, 10, 10);
+        const boxMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
+        scene.add(boxMesh);
 
-        // 创建 n 个矩形
-        const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
-        // 基础材质
-        const material = new THREE.MeshBasicMaterial({
-            wireframe: true,
+        scene.fog = new THREE.Fog(0xcccccc, 10, 65);
+
+        gui.add(scene, 'fog', {
+            fog: new THREE.Fog(0xcccccc, 10, 65),
+            fogExp2: new THREE.FogExp2(0xcccccc, 0.1),
         });
-        // 被选中后的材质
-        const selectMaterial = new THREE.MeshBasicMaterial({
-            color: new THREE.Color(0xff0000),
-            opacity: 0.1,
-        });
-
-        // 存储数据的数据
-        const dataArr = [];
-        for (let i = -3; i < 3; i++) {
-            for (let j = -3; j < 3; j++) {
-                for (let k = -3; k < 3; k++) {
-                    const boxCube = new THREE.Mesh(boxGeometry, material);
-                    boxCube.position.set(i, j, k);
-                    scene.add(boxCube);
-                    dataArr.push(boxCube);
-                }
-            }
-        }
-
-        // 创建射线
-        const raycaster = new THREE.Raycaster();
-        // 射线捕捉的最远距离,超过该距离后就不会捕捉对应的物体,默认Infinity(无穷远)
-        // raycaster.far = 10;
-        // 射线捕捉的最近距离,小于该距离就无法捕捉对应的物体. 不能为空,要不far小
-        // raycaster.near = 3;
-        // 创建鼠标点
-        const mouse = new THREE.Vector2();
-        // 监听鼠标位置
-        function onClick(e) {
-            // 将鼠标位置归一化为设备坐标。x 和 y 方向的取值范围是 (-1 —— 1)
-            // mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-            // mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
-            // 修复点击事件精度
-            mouse.x =
-                ((e.clientX - renderer.domElement.offsetLeft) /
-                    renderer.domElement.clientWidth) *
-                    2 -
-                1;
-
-            mouse.y =
-                -(
-                    (e.clientY - renderer.domElement.offsetTop) /
-                    renderer.domElement.clientHeight
-                ) *
-                    2 +
-                1;
-            // 通过摄像机和鼠标位置更新射线 ,设置相机更新射线照射
-            raycaster.setFromCamera(mouse, camera);
-            // 检测照射结果
-            const intersects = raycaster.intersectObjects(dataArr);
-
-            // 计算物体和射线的焦点
-            if (intersects.length > 1) {
-                // 获取第一个选中结果。
-                const intersected = intersects[0].object;
-                const findItem = dataArr.find(
-                    (v) => v.uuid === intersected.uuid
-                );
-                console.log(findItem);
-                findItem.material = selectMaterial;
-
-                // 全部选中
-                intersects.forEach((i) => (i.object.material = selectMaterial));
-            }
-        }
-
-        // 全局添加点击事件
-        window.addEventListener('click', onClick);
         /*
          * ------------end ----------
          */

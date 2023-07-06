@@ -77,7 +77,7 @@ export default function Fog() {
          */
 
         const boxGeometry = new THREE.BoxGeometry(100, 10, 10);
-        const boxMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        const boxMaterial = new THREE.MeshBasicMaterial({ color: 0xff00ff });
         const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
         scene.add(boxMesh);
 
@@ -85,7 +85,7 @@ export default function Fog() {
 
         gui.add(scene, 'fog', {
             fog: new THREE.Fog(0xcccccc, 10, 65),
-            fogExp2: new THREE.FogExp2(0xcccccc, 0.1),
+            fogExp2: new THREE.FogExp2(0xcccccc, 0.05),
         });
         /*
          * ------------end ----------

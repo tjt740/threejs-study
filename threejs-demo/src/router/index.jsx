@@ -365,6 +365,18 @@ export const routerPaths = [
                 elementPath: 'water-model',
                 key: 'water-model',
             },
+            {
+                label: '复习标准网格材质',
+                icon: <MyIcon type="icon-tilamisu" />,
+                elementPath: '复习标准网格材质',
+                key: '复习标准网格材质',
+            },
+            {
+                label: '加载glb文件',
+                icon: <MyIcon type="icon-tilamisu" />,
+                elementPath: '加载glb文件',
+                key: '加载glb文件',
+            },
         ],
     },
 ];

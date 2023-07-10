@@ -20,8 +20,8 @@ export default function ThreeComponent() {
     const init = () => {
         const scene = new THREE.Scene();
         // 场景颜色
-        // scene.background = new THREE.Color(0x444444);
-        scene.background = new THREE.Color(0x000000);
+        scene.background = new THREE.Color(0x999999);
+        // scene.background = new THREE.Color(0x000000);
         const camera = new THREE.PerspectiveCamera(
             90,
             window.innerWidth / window.innerHeight,

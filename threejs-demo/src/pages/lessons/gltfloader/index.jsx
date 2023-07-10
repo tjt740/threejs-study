@@ -13,7 +13,7 @@ export default function GLTFLoaderComponent() {
     const init = () => {
         const scene = new THREE.Scene();
         // 场景颜色
-        scene.background = new THREE.Color(0x444444);
+        scene.background = new THREE.Color(0x999999);
         // scene.background = new THREE.Color(0x000000);
         const camera = new THREE.PerspectiveCamera(
             90,
@@ -62,6 +62,15 @@ export default function GLTFLoaderComponent() {
         /*
          * ------------ start ----------
          */
+
+        // 创建平行光
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        directionalLight.position.set(5, 7, 7);
+        scene.add(directionalLight);
+        // 创建自然光
+        const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+        ambientLight.position.set(5, 7, 7);
+        scene.add(ambientLight);
 
         // 初始化GLTFLoader加载器
         const gltfLoader = new GLTFLoader();

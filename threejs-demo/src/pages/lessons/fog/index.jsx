@@ -33,7 +33,7 @@ export default function Fog() {
         // 更新camera 宽高比;
         camera.aspect = window.innerWidth / window.innerHeight;
         // 设置相机位置 object3d具有position，属性是一个3维的向量。
-        camera.position.set(0, 0, 10);
+        camera.position.set(0, 0, 40);
         // 更新camera 视角方向
         // camera.lookAt(scene.position);
 

@@ -106,6 +106,10 @@ export default function ThreeComponent() {
         const dracoLoader = new DRACOLoader();
         // 设置draco路径
         dracoLoader.setDecoderPath('/draco/');
+        // dracoLoader.setDecoderPath('three/examples/js/libs/draco/gltf/');
+        // dracoLoader.setDecoderConfig({ type: 'js' }); //使用js方式解压
+        dracoLoader.preload(); //初始化_initDecoder 解码器
+
         // 设置gltf加载器draco解码器
         gltfLoader.setDRACOLoader(dracoLoader);
 

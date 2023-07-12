@@ -105,9 +105,10 @@ export default function ThreeComponent() {
         // 加载被压缩的.glb文件会报错，需要draco解码器
         const dracoLoader = new DRACOLoader();
         // 设置draco路径
-        dracoLoader.setDecoderPath('/draco/');
-        // dracoLoader.setDecoderPath('three/examples/js/libs/draco/gltf/');
-        // dracoLoader.setDecoderConfig({ type: 'js' }); //使用js方式解压
+        dracoLoader.setDecoderPath(
+            'https://www.gstatic.com/draco/versioned/decoders/1.5.6/'
+        );
+        dracoLoader.setDecoderConfig({ type: 'js' }); //使用js方式解压
         dracoLoader.preload(); //初始化_initDecoder 解码器
 
         // 设置gltf加载器draco解码器
@@ -117,6 +118,7 @@ export default function ThreeComponent() {
         // gltfLoader.loadAsync(require('./model/city.glb')).then((gltf) => {
         gltfLoader.loadAsync(require('./model/city.glb')).then((gltf) => {
             console.log(gltf);
+            scene.add(gltf.scene);
         });
 
         /*

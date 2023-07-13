@@ -120,7 +120,8 @@ export default function ThreeComponent() {
             scene.add(gltf.scene);
         });
 
-        scene.fog = new THREE.FogExp2(0xcccccc, 0.002);
+        // 添加值数雾
+        // scene.fog = new THREE.FogExp2(0xcccccc, 0.05);
         /*
          * ------------end ----------
          */

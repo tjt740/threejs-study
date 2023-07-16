@@ -10,7 +10,7 @@ import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 // 引入补间动画tween.js three.js 自带
-import * as TWEEN from 'three/examples/jsm/libs/tween.module.js';
+import { TWEEN } from 'three/examples/jsm/libs/tween.module.min.js';
 
 // import * as dat from 'dat.gui';
 // const gui = new dat.GUI();
@@ -18,7 +18,7 @@ import * as TWEEN from 'three/examples/jsm/libs/tween.module.js';
 import GUI from 'lil-gui';
 const gui = new GUI();
 
-export default function ThreeComponent() {
+export default function TweenJS() {
     const container = useRef(null);
     const init = () => {
         const scene = new THREE.Scene();
@@ -78,88 +78,88 @@ export default function ThreeComponent() {
         /*
          * ------------ start ----------
          */
+        // 创建平行光
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 4.6);
+        directionalLight.position.set(5, 7, 7);
+        scene.add(directionalLight);
+        // 创建自然光
+        const ambientLight = new THREE.AmbientLight(0xffffff, 3);
+        ambientLight.position.set(5, 7, 7);
+        scene.add(ambientLight);
 
-        // 设置灯光和阴影
-        // 1. 设置自然光、<点光源>、<标准>网格材质（带PBR属性的都可以）  材质要满足能够对光照有反应
-        // 2. 设置渲染器开启阴影计算 renderer.shadowMap.enabled = true;
-        // 3. 设置光照能产生动态阴影  directionalLight.castShadow = true;
-        // 4. 设置投射阴影的物体投射阴影 sphereGeometry.castShadow = true;
-        // 5. 设置被投射的物体接收阴影  planGeometry.receiveShadow = true;
+        const gltfLoader = new GLTFLoader();
+        gltfLoader.load(require('./Duck.glb'), (gltf) => {
+            const duckModal = gltf.scene;
 
-        // 创建 n 个矩形
-        const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
-        // 基础材质
-        const material = new THREE.MeshBasicMaterial({
-            wireframe: true,
+            // 为鸭子角度变化创建补间 链式写法
+            const tweenA = new TWEEN.Tween(duckModal.rotation)
+                // 告诉 tween 我们想要在3000毫秒内以动画的形式旋转到 y 的位置
+                .to({ y: Math.PI * 2 }, 3000)
+                // 重复次数
+                .repeat(Infinity)
+                // 启动补间动画
+                .start();
+
+            // 为鸭子位置变化创建补间
+            const tweenB = new TWEEN.Tween(duckModal.position);
+            tweenB.to({ x: [0, 10, -10] }, 3000);
+            tweenB.delay(1000);
+            tweenB.repeatDelay(2000);
+            tweenB.repeat(Infinity);
+            tweenB.yoyo(true);
+            tweenB.start();
+            tweenB.interpolation(TWEEN.Interpolation.Bezier);
+            // 每帧的x值变化
+            tweenB.onUpdate(function (object) {
+                // console.log(object.x); // 1~10
+            });
+
+            //
+            const tweenC = new TWEEN.Tween(duckModal.position).to(
+                { y: -10 },
+                3000
+            );
+            // .start();
+
+            tweenB.chain(tweenC);
+
+            const tweenGroupA = new TWEEN.Group();
+            const tweenGroupB = new TWEEN.Group();
+
+            // 第一种讲补间添加到补间组的方法
+            tweenGroupA.add(tweenA);
+            // 第二种讲补间添加到补间组的方法
+            const tweenD = new TWEEN.Tween(duckModal.scale, tweenGroupB)
+                .to({ scale: 1.5 }, 1500)
+                .start();
+
+            console.log(tweenGroupB);
+
+            tweenA.onStart(function () {
+                console.log('补间开始');
+            });
+
+            tweenA.onComplete(function () {
+                console.log('补间完成');
+            });
+
+            tweenA.onStop(function () {
+                console.log('补间结束');
+            });
+
+            // tweenA.onRepeat(function () {
+            //     console.log('补间重复时执行');
+            // });
+
+            gui.add(tweenA, 'stop').onChange(function (v) {
+                console.log('结束tweenA补间');
+
+                window.tweenA = tweenA;
+            });
+
+            scene.add(duckModal);
         });
-        // 被选中后的材质
-        const selectMaterial = new THREE.MeshBasicMaterial({
-            color: new THREE.Color(0xff0000),
-            opacity: 0.1,
-        });
 
-        // 存储数据的数据
-        const dataArr = [];
-        for (let i = -3; i < 3; i++) {
-            for (let j = -3; j < 3; j++) {
-                for (let k = -3; k < 3; k++) {
-                    const boxCube = new THREE.Mesh(boxGeometry, material);
-                    boxCube.position.set(i, j, k);
-                    scene.add(boxCube);
-                    dataArr.push(boxCube);
-                }
-            }
-        }
-
-        // 创建射线
-        const raycaster = new THREE.Raycaster();
-        // 射线捕捉的最远距离,超过该距离后就不会捕捉对应的物体,默认Infinity(无穷远)
-        // raycaster.far = 10;
-        // 射线捕捉的最近距离,小于该距离就无法捕捉对应的物体. 不能为空,要不far小
-        // raycaster.near = 3;
-        // 创建鼠标点
-        const mouse = new THREE.Vector2();
-        // 监听鼠标位置
-        function onClick(e) {
-            // 将鼠标位置归一化为设备坐标。x 和 y 方向的取值范围是 (-1 —— 1)
-            // mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-            // mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
-            // 修复点击事件精度
-            mouse.x =
-                ((e.clientX - renderer.domElement.offsetLeft) /
-                    renderer.domElement.clientWidth) *
-                    2 -
-                1;
-
-            mouse.y =
-                -(
-                    (e.clientY - renderer.domElement.offsetTop) /
-                    renderer.domElement.clientHeight
-                ) *
-                    2 +
-                1;
-            // 通过摄像机和鼠标位置更新射线 ,设置相机更新射线照射
-            raycaster.setFromCamera(mouse, camera);
-            // 检测照射结果
-            const intersects = raycaster.intersectObjects(dataArr);
-
-            // 计算物体和射线的焦点
-            if (intersects.length > 1) {
-                // 获取第一个选中结果。
-                const intersected = intersects[0].object;
-                const findItem = dataArr.find(
-                    (v) => v.uuid === intersected.uuid
-                );
-                console.log(findItem);
-                findItem.material = selectMaterial;
-
-                // 全部选中
-                intersects.forEach((i) => (i.object.material = selectMaterial));
-            }
-        }
-
-        // 全局添加点击事件
-        window.addEventListener('click', onClick);
         /*
          * ------------end ----------
          */
@@ -198,7 +198,7 @@ export default function ThreeComponent() {
             // raycaster.setFromCamera(mouse, camera);
 
             // 最后，想要成功的完成这种效果，你需要在主函数中调用 TWEEN.update()
-            // TWEEN.update();
+            TWEEN.update();
 
             renderer.render(scene, camera);
             // 动画帧

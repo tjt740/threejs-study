@@ -377,6 +377,12 @@ export const routerPaths = [
                 elementPath: '加载glb文件',
                 key: '加载glb文件',
             },
+            {
+                label: 'tween.js补间动画使用',
+                icon: <MyIcon type="icon-tilamisu" />,
+                elementPath: 'tween.js',
+                key: 'tween.js',
+            },
         ],
     },
 ];

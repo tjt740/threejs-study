@@ -177,6 +177,8 @@ export default function ThreeComponent() {
         const controls = new OrbitControls(camera, renderer.domElement);
         // 控制器阻尼
         controls.enableDamping = true;
+        // 阻尼系数，只有在.enableDamping = true时才生效，默认0.05
+        controls.dampingFactor = 0.05;
         // 自动旋转
         controls.autoRotate = false;
         controls.autoRotateSpeed = 2.0;

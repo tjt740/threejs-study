@@ -54,17 +54,17 @@ export default function ThreeComponent() {
             id: 'tjt740', // 运动动画id，可以通过 gsap.getById() 获得
             y: 7, // 运动长度
             delay: 1, // 运动在延迟多少秒后开始
-            duration: 3, // 运动方向
+            duration: 3, // 运动时间
             repeat: -1, // 是否重复  +number：重复次数  -1：无限重复  0：默认不重复
-            repeatDelay: 0.5,// 重复时间延迟多少秒后开始，默认0
-            yoyo:true, // 类似来回播放动画 悠悠球动作
-            ease: 'none', // 运动速度 https://greensock.com/docs/v3/Eases
+            repeatDelay: 0.5, // 重复时间延迟多少秒后开始，默认0
+            yoyo: true, // 类似来回播放动画 悠悠球动作
+            ease: 'Back.easeIn',
+            // ease: 'none', // 运动速度 https://greensock.com/docs/v3/Eases
             paused: false, // 是否初始暂停
             onComplete: () => {
                 console.log('动画完成时触发');
             },
             onStart: () => {
-              
                 console.log('动画开始时触发');
             },
             onUpdate: () => {
@@ -76,8 +76,10 @@ export default function ThreeComponent() {
                 console.log('每次动画重复时触发一次。');
             },
             onReverseComplete: () => {
-                console.log('动画反转后再次到达其起点时触发。一般是gsap.reverse()'); 
-            }, 
+                console.log(
+                    '动画反转后再次到达其起点时触发。一般是gsap.reverse()'
+                );
+            },
         });
         renderer.domElement.addEventListener('click', () => {
             if (!tween1.isActive()) {

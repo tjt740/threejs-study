@@ -12,6 +12,8 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 // 引入补间动画tween.js three.js 自带
 import { TWEEN } from 'three/examples/jsm/libs/tween.module.min.js';
 
+import gsap from 'gsap';
+
 // import * as dat from 'dat.gui';
 // const gui = new dat.GUI();
 // 使用 lil-gui 调试 three.js 图形
@@ -102,13 +104,14 @@ export default function TweenJS() {
 
             // 为鸭子位置变化创建补间
             const tweenB = new TWEEN.Tween(duckModal.position);
-            tweenB.to({ x: [0, 10, -10] }, 3000);
+            tweenB.to({ x: [0, 10] }, 3000);
             tweenB.delay(1000);
             tweenB.repeatDelay(2000);
             tweenB.repeat(Infinity);
             tweenB.yoyo(true);
             tweenB.start();
-            tweenB.interpolation(TWEEN.Interpolation.Bezier);
+            tweenB.easing(TWEEN.Easing.Back.In);
+            // tweenB.interpolation(TWEEN.Interpolation.Bezier);
             // 每帧的x值变化
             tweenB.onUpdate(function (object) {
                 // console.log(object.x); // 1~10
@@ -153,7 +156,6 @@ export default function TweenJS() {
 
             gui.add(tweenA, 'stop').onChange(function (v) {
                 console.log('结束tweenA补间');
-
                 window.tweenA = tweenA;
             });
 
@@ -177,6 +179,8 @@ export default function TweenJS() {
         const controls = new OrbitControls(camera, renderer.domElement);
         // 控制器阻尼
         controls.enableDamping = true;
+        // 阻尼系数，只有在.enableDamping = true时才生效
+        controls.dampingFactor = 0.01;
         // 自动旋转
         controls.autoRotate = false;
         controls.autoRotateSpeed = 2.0;

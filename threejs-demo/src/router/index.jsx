@@ -238,6 +238,12 @@ export const routerPaths = [
                 elementPath: 'lessons/tween',
                 key: 'lessons/tween',
             },
+            {
+                label: '理解uv',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: 'lessons/uv',
+                key: 'lessons/uv',
+            },
         ],
     },
     {

@@ -2,8 +2,6 @@ import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 // 导入轨道控制器 只能通过这种方法
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-// import * as dat from 'dat.gui';
-// const gui = new dat.GUI();
 
 // 引入加载.hdr 文件组件
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
@@ -11,14 +9,16 @@ import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
 // 引入 GLTFLoader 加载glb模型文件
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
+// 引入补间动画tween.js three.js 自带
+import { TWEEN } from 'three/examples/jsm/libs/tween.module.min.js';
+
+// import * as dat from 'dat.gui';
+// const gui = new dat.GUI();
 // 使用 lil-gui 调试 three.js 图形
 import GUI from 'lil-gui';
-
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
-
 const gui = new GUI();
 
-export default function ThreeComponent() {
+export default function UvComponent() {
     const container = useRef(null);
     const init = () => {
         const scene = new THREE.Scene();
@@ -36,7 +36,7 @@ export default function ThreeComponent() {
         // 更新camera 宽高比;
         camera.aspect = window.innerWidth / window.innerHeight;
         // 设置相机位置 object3d具有position，属性是一个3维的向量。
-        camera.position.set(0, 0, 10);
+        camera.position.set(0, 0, 20);
         // 更新camera 视角方向
         // camera.lookAt(scene.position);
 
@@ -54,9 +54,9 @@ export default function ThreeComponent() {
             alpha: true, // 背景透明
         });
         // 设置渲染器编码格式  THREE.NoColorSpace = "" || THREE.SRGBColorSpace = "srgb" || THREE.LinearSRGBColorSpace = "srgb-linear"
-        renderer.outputColorSpace = 'srgb';
+        // renderer.outputColorSpace = 'srgb';
         // 色调映射 THREE.NoToneMapping || THREE.LinearToneMapping || THREE.ReinhardToneMapping || THREE.CineonToneMapping || THREE.ACESFilmicToneMapping
-        renderer.toneMapping = THREE.ReinhardToneMapping;
+        // renderer.toneMapping = THREE.ReinhardToneMapping;
         // 色调映射的曝光级别。默认是1，屏幕是2.2，越低越暗
         renderer.toneMappingExposure = 2.2;
 
@@ -78,50 +78,51 @@ export default function ThreeComponent() {
         /*
          * ------------ start ----------
          */
-
-        // 创建平行光
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 4.6);
-        directionalLight.position.set(5, 7, 7);
-        scene.add(directionalLight);
-        // 创建自然光
-        const ambientLight = new THREE.AmbientLight(0xffffff, 3);
-        ambientLight.position.set(5, 7, 7);
-        scene.add(ambientLight);
-
-        gui.add(directionalLight, 'intensity', 0, 10);
-        gui.add(ambientLight, 'intensity', 0, 10);
-
-        // 创建gltfloader
-        const gltfLoader = new GLTFLoader();
-
-        // 正常添加.glb文件
-        // gltfLoader加载鸭子.glb模型
-        gltfLoader.loadAsync(require('./model/Duck.glb')).then((gltf) => {
-            // .glb文件加载完成后放出场景中
-            scene.add(gltf.scene);
+        // 创建平面几何
+        const planeGeometry = new THREE.PlaneGeometry(10, 10);
+        const planeMaterial = new THREE.MeshBasicMaterial({
+            map: new THREE.TextureLoader().load(require('./texture/uv.jpg')),
+            side: THREE.DoubleSide,
         });
+        const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+        plane.position.x = -6;
+        scene.add(plane);
 
-        // 加载被压缩的.glb文件会报错，需要draco解码器
-        const dracoLoader = new DRACOLoader();
-        // 设置dracoLoader路径
-        dracoLoader.setDecoderPath(
-            'https://www.gstatic.com/draco/versioned/decoders/1.5.6/'
+        const bufferGeometry = new THREE.BufferGeometry();
+        const vertices = new Float32Array([
+            0, 0, 0, 0, 10, 0, 10, 10, 0, 10, 0, 0,
+        ]);
+        // 根据一维坐标系，设置各点的位置 ,  itemSize = 3 因为每个顶点都是一个三元组。
+        bufferGeometry.setAttribute(
+            'position',
+            new THREE.BufferAttribute(vertices, 3)
         );
-        // 使用js方式解压
-        dracoLoader.setDecoderConfig({ type: 'js' });
-        // 初始化_initDecoder 解码器
-        dracoLoader.preload();
 
-        // 设置gltf加载器draco解码器
-        gltfLoader.setDRACOLoader(dracoLoader);
+        const uvs = new Float32Array([
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            0, // 正面
+        ]);
+        // 根据一维坐标系，设置各点的位置 , itemSize = 2 因为每个顶点都是一个2元组。
+        bufferGeometry.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
 
-        gltfLoader.loadAsync(require('./model/city.glb')).then((gltf) => {
-            console.log(gltf);
-            scene.add(gltf.scene);
+        const indices = new Uint16Array([0, 1, 2, 2, 3, 0]);
+
+        bufferGeometry.setIndex(new THREE.BufferAttribute(indices, 1));
+
+        const bufferMaterial = new THREE.MeshBasicMaterial({
+            map: new THREE.TextureLoader().load(require('./texture/uv.jpg')),
+            side: THREE.DoubleSide,
         });
 
-        // 添加值数雾
-        // scene.fog = new THREE.FogExp2(0xcccccc, 0.05);
+        const bufferMesh = new THREE.Mesh(bufferGeometry, bufferMaterial);
+        scene.add(bufferMesh);
+
         /*
          * ------------end ----------
          */
@@ -135,25 +136,12 @@ export default function ThreeComponent() {
         // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能.
         renderer.physicallyCorrectLights = true;
 
-        // 渲染函数
-        const clock = new THREE.Clock();
-        function render(t) {
-            controls.update();
-            // 获取秒数
-            const time = clock.getElapsedTime();
-
-            // 通过摄像机和鼠标位置更新射线
-            // raycaster.setFromCamera(mouse, camera);
-
-            renderer.render(scene, camera);
-            // 动画帧
-            requestAnimationFrame(render);
-        }
-
         // 轨道控制器
         const controls = new OrbitControls(camera, renderer.domElement);
         // 控制器阻尼
         controls.enableDamping = true;
+        // 阻尼系数，只有在.enableDamping = true时才生效，默认0.05
+        controls.dampingFactor = 0.05;
         // 自动旋转
         controls.autoRotate = false;
         controls.autoRotateSpeed = 2.0;
@@ -164,6 +152,23 @@ export default function ThreeComponent() {
         // 控制器的基点 / 控制器的焦点，.object的轨道围绕它运行。 它可以在任何时候被手动更新，以更改控制器的焦点
         controls.target = new THREE.Vector3(0, 0, 0);
 
+        // 渲染函数
+        const clock = new THREE.Clock();
+        function render(t) {
+            controls.update();
+            // 获取秒数
+            const time = clock.getElapsedTime();
+
+            // 通过摄像机和鼠标位置更新射线
+            // raycaster.setFromCamera(mouse, camera);
+
+            // 最后，想要成功的完成这种效果，你需要在主函数中调用 TWEEN.update()
+            // TWEEN.update();
+
+            renderer.render(scene, camera);
+            // 动画帧
+            requestAnimationFrame(render);
+        }
         // 渲染
         render();
 

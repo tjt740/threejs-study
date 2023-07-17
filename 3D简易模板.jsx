@@ -10,7 +10,7 @@ import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 // 引入补间动画tween.js three.js 自带
-import * as TWEEN from 'three/examples/jsm/libs/tween.module.js';
+import { TWEEN } from 'three/examples/jsm/libs/tween.module.min.js';
 
 // import * as dat from 'dat.gui';
 // const gui = new dat.GUI();
@@ -26,7 +26,7 @@ export default function ThreeComponent() {
         scene.background = new THREE.Color(0x999999);
         // scene.background = new THREE.Color(0x000000);
         const camera = new THREE.PerspectiveCamera(
-            90,
+            45, // 90
             window.innerWidth / window.innerHeight,
             0.1,
             1000

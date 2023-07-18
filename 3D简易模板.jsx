@@ -79,6 +79,26 @@ export default function ThreeComponent() {
          * ------------ start ----------
          */
 
+        // 创建平行光
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 4.6);
+        directionalLight.position.set(5, 7, 7);
+        scene.add(directionalLight);
+        // 创建自然光
+        const ambientLight = new THREE.AmbientLight(0xffffff, 3);
+        ambientLight.position.set(5, 7, 7);
+        scene.add(ambientLight);
+
+        gui.add(directionalLight, 'intensity', 0, 10);
+        gui.add(ambientLight, 'intensity', 0, 10);
+
+        // const rgbeLoader = new RGBELoader();
+        // rgbeLoader.loadAsync(require('./assets/050.hdr')).then((texture) => {
+        //     texture.mapping = THREE.EquirectangularReflectionMapping;
+        //     texture.colorSpace = THREE.LinearSRGBColorSpace;
+        //     scene.background = texture;
+        //     scene.environment = texture;
+        // });
+
         // 设置灯光和阴影
         // 1. 设置自然光、<点光源>、<标准>网格材质（带PBR属性的都可以）  材质要满足能够对光照有反应
         // 2. 设置渲染器开启阴影计算 renderer.shadowMap.enabled = true;
@@ -211,6 +231,22 @@ export default function ThreeComponent() {
 
         // DOM承载渲染器
         container.current.appendChild(renderer.domElement);
+
+        // 控制是否全屏
+        const eventObj = {
+            Fullscreen: function () {
+              // 全屏
+              document.body.requestFullscreen();
+              console.log("全屏");
+            },
+            ExitFullscreen: function () {
+              document.exitFullscreen();
+              console.log("退出全屏");
+            },
+          };
+
+        gui.add(eventObj, "Fullscreen").name("全屏");
+        gui.add(eventObj, "ExitFullscreen").name("退出全屏");
 
         // 更具页面大小变化，更新渲染
         window.addEventListener('resize', () => {

@@ -244,6 +244,12 @@ export const routerPaths = [
                 elementPath: 'lessons/uv',
                 key: 'lessons/uv',
             },
+            {
+                label: '理解法向、法线作用',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: 'lessons/normal-mapping',
+                key: 'lessons/normal-mapping',
+            },
         ],
     },
     {

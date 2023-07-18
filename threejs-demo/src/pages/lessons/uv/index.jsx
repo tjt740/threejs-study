@@ -88,6 +88,7 @@ export default function UvComponent() {
         plane.position.x = -6;
         scene.add(plane);
 
+        // 创建自定义几何体
         const bufferGeometry = new THREE.BufferGeometry();
         const vertices = new Float32Array([
             0, 0, 0, 0, 10, 0, 10, 10, 0, 10, 0, 0,
@@ -111,8 +112,9 @@ export default function UvComponent() {
         // 根据一维坐标系，设置各点的位置 , itemSize = 2 因为每个顶点都是一个2元组。
         bufferGeometry.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
 
+        // 创建索引
         const indices = new Uint16Array([0, 1, 2, 2, 3, 0]);
-
+        // 创建索引属性
         bufferGeometry.setIndex(new THREE.BufferAttribute(indices, 1));
 
         const bufferMaterial = new THREE.MeshBasicMaterial({

@@ -10,6 +10,12 @@
     .chat-box-contents-inner-box-text {
     display: flex !important;
     flex-direction: column !important;
+    text-indent: 6px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: inherit;
+    white-space: pre-line;
+    word-break: break-word;
 }
 
 .markdown-body {

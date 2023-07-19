@@ -256,6 +256,12 @@ export const routerPaths = [
                 elementPath: 'lessons/几何体顶点转换_顶点位移_旋转_缩放',
                 key: 'lessons/几何体顶点转换_顶点位移_旋转_缩放',
             },
+            {
+                label: '包围辅助线 框+圆',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: 'lessons/surround',
+                key: 'lessons/surround',
+            },
         ],
     },
     {

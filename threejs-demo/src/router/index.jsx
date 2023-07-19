@@ -250,6 +250,12 @@ export const routerPaths = [
                 elementPath: 'lessons/normal-mapping',
                 key: 'lessons/normal-mapping',
             },
+            {
+                label: '几何体顶点转换_顶点位移_旋转_缩放',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: 'lessons/几何体顶点转换_顶点位移_旋转_缩放',
+                key: 'lessons/几何体顶点转换_顶点位移_旋转_缩放',
+            },
         ],
     },
     {

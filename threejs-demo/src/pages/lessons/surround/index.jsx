@@ -111,34 +111,48 @@ export default function Surround() {
             const duckHelper = new THREE.Box3Helper(duckBox);
             scene.add(duckHelper);
 
-            // // 获取鸭子包围圆
-            // duckGeometry.computeBoundingSphere();
-            // const duckSphere = duckGeometry.boundingSphere;
-            // console.log('鸭子的包围圆:', duckSphere);
-            // const duckSphereHelper = new THREE.Box3Helper(duckSphere);
-            // scene.add(duckSphereHelper);
+            // 设置几何体居中
+            // duckGeometry.center();
+            const eventFn = {
+                center: () => {
+                    duckGeometry.center();
+                    // 更新包围盒
+                    duckBox.applyMatrix4(duckMesh.matrixWorld);
+                },
+            };
+            gui.add(eventFn, 'center').name('鸭子几何体居中');
 
-            // 获取包围盒中心点
-            let center = duckBox.getCenter(new THREE.Vector3());
-            console.log(center);
-            // 获取包围球
-            let duckSphere = duckGeometry.boundingSphere;
+            // 获取鸭子包围圆
+            duckGeometry.computeBoundingSphere();
+            // 获取鸭子圆的相关信息 半径，x,y,z
+            const duckSphere = duckGeometry.boundingSphere;
+            // 更新盒子世界矩阵，用给定矩阵转换几何体的顶点坐标
             duckSphere.applyMatrix4(duckMesh.matrixWorld);
-
-            console.log(duckSphere);
-            // 创建包围球辅助器
-            let sphereGeometry = new THREE.SphereGeometry(
+            console.log('鸭子的包围圆:', duckSphere);
+            // 创建包围缓冲球面体
+            const sphereGeometry = new THREE.SphereGeometry(
                 duckSphere.radius,
                 16,
                 16
             );
-            let sphereMaterial = new THREE.MeshBasicMaterial({
+            const sphereMaterial = new THREE.MeshBasicMaterial({
                 color: 0xff0000,
                 wireframe: true,
             });
-            let sphereMesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
-            sphereMesh.position.copy(duckSphere.center);
+            const sphereMesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
             scene.add(sphereMesh);
+
+            // 获取鸭子原点（模型中心点）位置
+            const duckCenter = duckGeometry.boundingBox.getCenter(
+                new THREE.Vector3()
+            );
+            console.log('duckCenter:', duckCenter);
+
+            // 设置线框球体位置
+            // 1.sphereMesh.position.set(duckCenter.x, duckCenter.y, duckCenter.z);
+            // 2.sphereMesh.position.copy(duckCenter);
+            sphereMesh.position.copy(duckCenter);
+
             scene.add(duck);
         });
 

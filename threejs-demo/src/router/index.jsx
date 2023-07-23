@@ -407,6 +407,12 @@ export const routerPaths = [
                 elementPath: '加载glb文件',
                 key: '加载glb文件',
             },
+            {
+                label: '多模型添加包围框',
+                icon: <MyIcon type="icon-zhangyuxiaowanzi" />,
+                elementPath: '多模型添加包围框',
+                key: '多模型添加包围框',
+            },
         ],
     },
 ];

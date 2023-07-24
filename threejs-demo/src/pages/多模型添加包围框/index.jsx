@@ -116,7 +116,7 @@ export default function ThreeComponent() {
         cylinderMesh.position.set(5, 0, 0);
         scene.add(cylinderMesh);
 
-        // 创建思路： -通过for循环将每个模型的外形范围【并集】放入box3中， 分别对每个模型信息进行包围。
+        // 创建思路： -通过for循环将每个模型的外形范围【并集】放入box3中，再对多个模型信息进行一起包围。
         const box3 = new THREE.Box3();
         // [鸭子模型，球体，圆柱体]
         const meshArray = [duckMesh, sphereMesh, cylinderMesh];
@@ -143,6 +143,7 @@ export default function ThreeComponent() {
             // 第一种写法
             if (meshArray[i].geometry.type !== 'BufferGeometry') {
                 const box = new THREE.Box3().setFromObject(meshArray[i]);
+                // 把基础几何体的包围框信息【并集】塞入box3对象中
                 box3.union(box);
             }
 

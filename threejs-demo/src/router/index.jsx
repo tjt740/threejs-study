@@ -413,6 +413,12 @@ export const routerPaths = [
                 elementPath: '多模型添加包围框',
                 key: '多模型添加包围框',
             },
+            {
+                label: '给.glb文件添加线框、wrieFrameGeometry、EdgesGeometry',
+                icon: <MyIcon type="icon-zhangyuxiaowanzi" />,
+                elementPath: 'model-line',
+                key: 'model-line',
+            },
         ],
     },
 ];

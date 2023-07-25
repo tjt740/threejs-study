@@ -25,8 +25,8 @@ export default function ThreeComponent() {
     const init = async () => {
         const scene = new THREE.Scene();
         // 场景颜色
-        scene.background = new THREE.Color(0x999999);
-        // scene.background = new THREE.Color(0x000000);
+        // scene.background = new THREE.Color(0x999999);
+        scene.background = new THREE.Color(0x000000);
         const camera = new THREE.PerspectiveCamera(
             45, // 90
             window.innerWidth / window.innerHeight,
@@ -113,19 +113,79 @@ export default function ThreeComponent() {
             const buildingMesh = gltf.scene.getObjectByName('Plane045');
             const buildingGeometry = buildingMesh.geometry;
             console.log(buildingMesh);
+            // 调整楼房位置、角度
+            buildingMesh.position.set(0, 0, 0);
+            buildingMesh.rotateY(-Math.PI);
+            scene.add(buildingMesh);
 
             // 创建网格几何体
             const wireframeGeometry = new THREE.WireframeGeometry(
                 buildingGeometry
             );
+            const line = new THREE.LineSegments(wireframeGeometry);
+            line.material.depthTest = false;
+            line.material.opacity = 1;
+            line.material.color = new THREE.Color(0x000000);
+            line.material.transparent = true;
+            line.position.set(20, 0, 0);
+            line.rotateY(-Math.PI / 2);
+            scene.add(line);
 
-            // 调整楼房位置、角度
-            buildingMesh.position.set(0, 0, 0);
-            buildingMesh.rotateY(-Math.PI);
+            // 创建边缘几何体
+            const edgesGeometry = new THREE.EdgesGeometry(buildingGeometry);
+            const edgesLine = new THREE.LineSegments(
+                edgesGeometry,
+                new THREE.LineBasicMaterial({ color: 0xffffff })
+            );
 
-            scene.add(buildingMesh);
+            // 更新建筑物世界转换矩阵 （保持跟楼房主体大小，位置，顶点位置一致）
+            buildingMesh.updateWorldMatrix(true, true);
+            edgesLine.matrix.copy(buildingMesh.matrixWorld);
+            edgesLine.matrix.decompose(
+                edgesLine.position,
+                edgesLine.quaternion,
+                edgesLine.scale
+            );
+            // edgesLine.position.set(-20, 0, 0);
+            // edgesLine.rotateY(-Math.PI / 2);
+            scene.add(edgesLine);
         });
-        // 加载 鸭子.glb
+
+        // 加载城市
+        gltfLoader.loadAsync(require('./model/city.glb')).then((gltf) => {
+            console.log(gltf);
+            // 使用Object3D中的traverse方法，获取到 gltf.scene 中所有的子级模型
+            gltf.scene.traverse((child) => {
+                // 是否是模型
+                if (child.isMesh) {
+                    // 类似for循环中 i ，child等于gltf.scene[i] 的模型Mesh。
+                    const childMesh = child;
+                    // 获取几何体
+                    const childGeometry = childMesh.geometry;
+
+                    // 创建边缘几何体 EdgesGeometry
+                    const edgesGeometry = new THREE.EdgesGeometry(
+                        childGeometry
+                    );
+                    // 创建几何体线段 LineSegments
+                    const edgesLine = new THREE.LineSegments(
+                        edgesGeometry,
+                        new THREE.LineBasicMaterial({ color: 0xffffff })
+                    );
+                    // 更新建筑物世界转换矩阵，（保持跟模型 主体大小，位置，顶点位置一致）
+                    childMesh.updateWorldMatrix(true, true);
+                    edgesLine.matrix.copy(childMesh.matrixWorld);
+                    edgesLine.matrix.decompose(
+                        edgesLine.position,
+                        edgesLine.quaternion,
+                        edgesLine.scale
+                    );
+
+                    // 场景中添加边缘几何体
+                    scene.add(edgesLine);
+                }
+            });
+        });
 
         /*
          * ------------end ----------

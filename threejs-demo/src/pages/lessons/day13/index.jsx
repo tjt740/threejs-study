@@ -2,8 +2,8 @@ import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 // 导入轨道控制器 只能通过这种方法
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import * as dat from 'dat.gui';
-// const gui = new dat.GUI();
+import GUI from 'lil-gui';
+const gui = new GUI();
 export default function ThreeComponent() {
     const container = useRef(null);
 
@@ -20,18 +20,25 @@ export default function ThreeComponent() {
         camera.position.set(0, 0, 50);
         scene.add(camera);
 
-
-
         //------------ start ----------
         // 导入纹理
         const textureLoader = new THREE.TextureLoader();
         const doorTexture = textureLoader.load(require('./texture/door.jpg'));
         doorTexture.magFilter = THREE.NearestFilter;
         doorTexture.minFilter = THREE.NearestFilter;
+        doorTexture.colorSpace = THREE.LinearSRGBColorSpace;
         const alphaTexture = textureLoader.load(require('./texture/alpha.jpg'));
         const aoMapTexture = textureLoader.load(
             require('./texture/ambientOcclusion.jpg')
         );
+
+        gui.add(doorTexture, 'colorSpace', {
+            linearSRGBColorSpace: THREE.LinearSRGBColorSpace,
+            noColorSpace: THREE.NoColorSpace,
+            sRGBColorSpace: THREE.SRGBColorSpace,
+        }).onChange(() => {
+            doorTexture.needsUpdate = true;
+        });
 
         // // 添加几何体
         // const boxGeometry = new THREE.BoxGeometry(30, 30, 30);
@@ -63,7 +70,7 @@ export default function ThreeComponent() {
             // aoMap 在纹理较深的地方添加贴图
             aoMap: aoMapTexture,
             // 设置aoMap 纹理遮挡效果透明度
-            aoMapIntensity: 0.5
+            aoMapIntensity: 0.5,
         });
 
         // 💡设置第二组uv,固定写法. 2:(x,y)两个点.
@@ -74,8 +81,6 @@ export default function ThreeComponent() {
 
         const planeCube = new THREE.Mesh(planeGeometry, planeMaterial);
         scene.add(planeCube);
-
-
 
         // --------end-------------
 
@@ -100,7 +105,7 @@ export default function ThreeComponent() {
                 )
                 .height.split('px')[0]
         );
-        renderer.setSize(WIDTH, HEIGHT);
+        renderer.setSize(window.innerWidth, window.innerHeight);
         // 渲染函数
         function render(t) {
             controls.update();

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>可移动弹窗</title>
+        <style>
+            .popup {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background-color: #fff;
+                padding: 20px;
+                border: 1px solid #ccc;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+                z-index: 999;
+                border-radius: 10px;
+            }
+
+            .popup button {
+                position: absolute;
+                top: 5px;
+                right: 5px;
+                background-color: transparent;
+                border: none;
+                font-size: 20px;
+                cursor: pointer;
+            }
+        </style>
+    </head>
+
+    <body>
+        <button onclick="showPopup()">显示弹窗</button>
+        <div id="popup" class="popup">
+            <h2>这是一个弹窗</h2>
+            <p>可以通过拖动改变位置</p>
+            <button onclick="hidePopup()">关闭</button>
+        </div>
+
+        <script>
+            var popup = document.getElementById('popup');
+            var isDragging = false;
+            var mouseOffset = {
+                x: 0,
+                y: 0,
+            };
+
+            function showPopup() {
+                popup.style.display = 'block';
+            }
+
+            function hidePopup() {
+                popup.style.display = 'none';
+            }
+            popup.addEventListener('mousedown', function (e) {
+                isDragging = true;
+                mouseOffset.x = e.clientX - popup.offsetLeft;
+                mouseOffset.y = e.clientY - popup.offsetTop;
+            });
+            document.addEventListener('mousemove', function (e) {
+                if (isDragging) {
+                    popup.style.left = e.clientX - mouseOffset.x + 'px';
+                    popup.style.top = e.clientY - mouseOffset.y + 'px';
+                }
+            });
+            document.addEventListener('mouseup', function (e) {
+                isDragging = false;
+            });
+        </script>
+    </body>
+</html>

@@ -39,7 +39,7 @@ export default function ThreeComponent() {
                 )
                 .height.split('px')[0]
         );
-        renderer.setSize(WIDTH, HEIGHT);
+        renderer.setSize(window.innerWidth, window.innerHeight);
 
         // Step1 获取Clock 跟踪时间，解决 Date now() 不准的问题；
         const clock = new THREE.Clock(); // 获取关于时钟的信息： <autoStart> <elapsedTime> <oldTime> <running> <startTime>

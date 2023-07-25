@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable no-loop-func */
 
-// todo:  切换颜色
 export const LabelText = (function () {
     let _self;
     let _el;

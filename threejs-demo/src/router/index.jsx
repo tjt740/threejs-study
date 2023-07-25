@@ -1,6 +1,9 @@
 import PackagePreview3D from '../pages/装箱demo';
-import PicMark from '../pages/pic-mark';
-import TextMark from '../pages/text-mark';
+import ComplexFormily from '../pages/complex-formily';
+
+// import PicMark from '../pages/pic-mark';
+// import TextMark from '../pages/text-mark';
+// import MarkdownCom from '../pages/markdown';
 // import Day1Com from '../pages/lessons/day1';
 // import Day2Com from '../pages/lessons/day2';
 // import Day3Com from '../pages/lessons/day3';
@@ -60,7 +63,7 @@ const LazyLoad = (path) => {
     //传入在view 下的路径
     const LazyCom = React.lazy(() => import(`../pages/${path}`));
     return (
-        <React.Suspense fallback={<> 加载中...</>}>
+        <React.Suspense fallback={<> 加载中... </>}>
             <LazyCom />
         </React.Suspense>
     );
@@ -160,6 +163,105 @@ export const routerPaths = [
                 elementPath: 'lessons/day14',
                 key: 'lessons/day14',
             },
+
+            {
+                label: '清除物体',
+                icon: <MyIcon type="icon-hebaodan" />,
+                elementPath: 'lessons/day15',
+                key: 'lessons/day15',
+            },
+            {
+                label: '灯光与阴影',
+                icon: <MyIcon type="icon-bangbangtang" />,
+                elementPath: 'lessons/day16',
+                key: 'lessons/day16',
+            },
+            {
+                label: '粒子/点特效',
+                icon: <MyIcon type="icon-fengmi" />,
+                elementPath: 'lessons/day17',
+                key: 'lessons/day17',
+            },
+            {
+                label: '射线',
+                icon: <MyIcon type="icon-shupian" />,
+                elementPath: 'lessons/day18',
+                key: 'lessons/day18',
+            },
+            {
+                label: 'cannon-es 物理引擎',
+                icon: <MyIcon type="icon-haixing" />,
+                elementPath: 'lessons/day19',
+                key: 'lessons/day19',
+            },
+            {
+                label: '原生Webgl创建物体',
+                icon: (
+                    <MyIcon type="icon-box-parcel-package-delivery-pack-office-facd" />
+                ),
+                elementPath: 'lessons/day20',
+                key: 'lessons/day20',
+            },
+            {
+                label: '认识着色器',
+                icon: <MyIcon type="icon-kele" />,
+                elementPath: 'lessons/day21',
+                key: 'lessons/day21',
+            },
+            {
+                label: '学习GLSL内置函数',
+                icon: <MyIcon type="icon-danta" />,
+                elementPath: 'lessons/day22',
+                key: 'lessons/day22',
+            },
+            {
+                label: 'gltfloader使用',
+                icon: <MyIcon type="icon-kouxiangtang" />,
+                elementPath: 'lessons/gltfloader',
+                key: 'lessons/gltfloader',
+            },
+            {
+                label: '着色器设置点材质',
+                icon: <MyIcon type="icon-meishikafei" />,
+                elementPath: 'lessons/point-material',
+                key: 'lessons/point-material',
+            },
+            {
+                label: '线性雾、指数雾',
+                icon: <MyIcon type="icon-banji" />,
+                elementPath: 'lessons/fog',
+                key: 'lessons/fog',
+            },
+            {
+                label: 'tween.js补间动画使用',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: 'lessons/tween',
+                key: 'lessons/tween',
+            },
+            {
+                label: '理解uv',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: 'lessons/uv',
+                key: 'lessons/uv',
+            },
+            {
+                label: '理解法向、法线作用',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: 'lessons/normal-mapping',
+                key: 'lessons/normal-mapping',
+            },
+            {
+                label: '几何体顶点转换_顶点位移_旋转_缩放',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: 'lessons/几何体顶点转换_顶点位移_旋转_缩放',
+                key: 'lessons/几何体顶点转换_顶点位移_旋转_缩放',
+            },
+            {
+                label: '包围辅助线 框+圆',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: 'lessons/surround',
+                key: 'lessons/surround',
+            },
         ],
     },
     {
@@ -174,6 +276,12 @@ export const routerPaths = [
                 key: 'package-preview',
             },
             {
+                label: '复杂formily',
+                icon: <MyIcon type="icon-danta" />,
+                elementPath: 'complex-formily',
+                key: 'complex-formily',
+            },
+            {
                 label: '测试图片标注demo',
                 icon: <MyIcon type="icon-feiyuguantou" />,
                 elementPath: 'pic-mark',
@@ -185,19 +293,134 @@ export const routerPaths = [
                 elementPath: 'text-mark',
                 key: 'text-mark',
             },
-
             {
                 label: '测试纹理demo',
                 icon: <MyIcon type="icon-yuzijiang" />,
                 elementPath: 'texture-demo',
                 key: 'texture-demo',
             },
-
-            
+            {
+                label: 'Markdown组件',
+                icon: <MyIcon type="icon-kesong" />,
+                elementPath: 'markdown',
+                key: 'markdown',
+            },
+            {
+                label: '自定义几何体展示',
+                icon: <MyIcon type="icon-chengzhi" />,
+                elementPath: 'custom-geometry',
+                key: 'custom-geometry',
+            },
+            {
+                label: 'emoji表情',
+                icon: <MyIcon type="icon-kele" />,
+                elementPath: 'emoji',
+                key: 'emoji',
+            },
+            {
+                label: 'svg标注',
+                icon: <MyIcon type="icon-bingkuai" />,
+                elementPath: 'svg-mark',
+                key: 'svg-mark',
+            },
+            {
+                label: '繁星粒子demo',
+                icon: <MyIcon type="icon-008-mushroom" />,
+                elementPath: 'stellar-particle-demo',
+                key: 'stellar-particle-demo',
+            },
+            {
+                label: '下雪demo',
+                icon: <MyIcon type="icon-roujiamo" />,
+                elementPath: 'snow-demo',
+                key: 'snow-demo',
+            },
+            {
+                label: '大语言模型键入demo',
+                icon: <MyIcon type="icon-haixing" />,
+                elementPath: 'chat-robot',
+                key: 'chat-robot',
+            },
+            {
+                label: '银河系demo',
+                icon: <MyIcon type="icon-xiezishousi" />,
+                elementPath: 'galaxy-demo',
+                key: 'galaxy-demo',
+            },
+            {
+                label: '3d滚动页面',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: '3d-scroll-demo',
+                key: '3d-scroll-demo',
+            },
+            {
+                label: '点击屏幕创建立方体撞击地面',
+                icon: <MyIcon type="icon-050-forest" />,
+                elementPath: '点击屏幕创建立方体撞击地面',
+                key: '点击屏幕创建立方体撞击地面',
+            },
+            {
+                label: '标准网格材质泥路',
+                icon: <MyIcon type="icon-050-forest" />,
+                elementPath: '标准网格材质泥路',
+                key: '标准网格材质泥路',
+            },
+            {
+                label: '原始着色器RawshaderMaterial纹理贴图Texture',
+                icon: <MyIcon type="icon-zhangyuxiaowanzi" />,
+                elementPath: '原始着色器RawshaderMaterial纹理贴图Texture',
+                key: '原始着色器RawshaderMaterial纹理贴图Texture',
+            },
+            {
+                label: '原始着色器材质生成旋转星星',
+                icon: <MyIcon type="icon-xiezishousi" />,
+                elementPath: '原始着色器材质生成旋转星星',
+                key: '原始着色器材质生成旋转星星',
+            },
+            {
+                label: '孔明灯-原始着色器',
+                icon: <MyIcon type="icon-paofu" />,
+                elementPath: 'fly-light',
+                key: 'fly-light',
+            },
+            {
+                label: '烟雾水云',
+                icon: <MyIcon type="icon-tilamisu" />,
+                elementPath: 'smoke-water-cloud',
+                key: 'smoke-water-cloud',
+            },
+            {
+                label: '官方‘水’模型',
+                icon: <MyIcon type="icon-zhutongfan" />,
+                elementPath: 'water-model',
+                key: 'water-model',
+            },
+            {
+                label: '复习标准网格材质',
+                icon: <MyIcon type="icon-nuomici" />,
+                elementPath: '复习标准网格材质',
+                key: '复习标准网格材质',
+            },
+            {
+                label: '加载glb文件',
+                icon: <MyIcon type="icon-zhangyuxiaowanzi" />,
+                elementPath: '加载glb文件',
+                key: '加载glb文件',
+            },
+            {
+                label: '多模型添加包围框',
+                icon: <MyIcon type="icon-zhangyuxiaowanzi" />,
+                elementPath: '多模型添加包围框',
+                key: '多模型添加包围框',
+            },
+            {
+                label: '给.glb文件添加线框、wrieFrameGeometry、EdgesGeometry',
+                icon: <MyIcon type="icon-zhangyuxiaowanzi" />,
+                elementPath: 'model-line',
+                key: 'model-line',
+            },
         ],
     },
- 
-  
 ];
 
 export function RouterCom2() {
@@ -224,7 +447,7 @@ export function RouterCom2() {
         (prev, v) =>
             prev.concat(
                 v.children.map((i) => {
-                    return { path: i.key, element: LazyLoad(i.elementPath) };
+                    return { path: i?.key, element: LazyLoad(i?.elementPath) };
                 })
             ),
         []

@@ -52,7 +52,7 @@ export default function Demo1Component() {
 
         console.log(cube)
         // Step8 修改渲染器大小
-        renderer.setSize(WIDTH, HEIGHT);
+        renderer.setSize(window.innerWidth, window.innerHeight);
 
         // Step9 渲染器渲染 场景+相机
         renderer.render(scene, camera);

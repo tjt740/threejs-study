@@ -1,0 +1,43 @@
+.container {
+    width: 100%;
+    height: 100%;
+    background-color: rgb(36, 58, 66);
+    overflow-y: scroll;
+}
+
+#container {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 16px;
+    
+    
+}
+
+.page {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.page1 {
+    width: 100%;
+    height: 100vh;
+}
+
+
+h1 {
+    font-size: 2em;
+    margin-top: 40px;
+}
+h1,
+h2 {
+    color: #ffffff !important;
+}
+::-webkit-scrollbar {
+    /* display: none; */
+  }
+  

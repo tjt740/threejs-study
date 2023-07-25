@@ -3,14 +3,67 @@ import * as THREE from 'three';
 // 导入轨道控制器 只能通过这种方法
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
+//1️⃣ 导入rgbe/hdr二进制格式文件加载器
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
+
 export default function ThreeComponent() {
     const container = useRef(null);
 
     const init = () => {
         // 创建场景
         const scene = new THREE.Scene();
-        // 更改场景背景
-        scene.background = new THREE.Color('#999999');
+
+        //* start
+        const loadManager = new THREE.LoadingManager(
+            // onLoad
+            () => {
+                console.log('纹理加载结束！');
+            },
+            // onProgress
+            (url, progress, total) => {
+                console.log('纹理url:', url);
+                console.log(
+                    '纹理加载进度:',
+                    progress,
+                    Number((progress / total) * 100).toFixed(2) + '%'
+                );
+                console.log('纹理需要加载总数:', total);
+            },
+            // onError
+            () => {
+                console.log('纹理加载失败');
+            }
+        );
+        //2️⃣ 导入hdr图像加载器
+        const rgbeLoader = new RGBELoader(loadManager);
+        //3️⃣ 资源较大，使用异步加载 <异步加载?
+        rgbeLoader.loadAsync(require('./hdr/004.hdr')).then((texture) => {
+            console.log('加载hdr图片成功');
+            // 纹理贴图映射模式 <https://threejs.org/docs/index.html#api/zh/constants/Textures>
+            texture.mapping = THREE.EquirectangularReflectionMapping;
+
+            //将加载的材质texture设置给背景和环境
+            scene.background = texture;
+            scene.environment = texture;
+        });
+
+        // 立方几何体
+        const boxGeometry = new THREE.BoxGeometry(20, 20, 20);
+        //5️⃣ 默认不给立方体添加材质，通过scene.environment
+        const boxMaterial = new THREE.MeshStandardMaterial({
+            // 金属度
+            metalness: 1,
+            // 粗糙度
+            roughness: 0.1,
+            // 不设置环境纹理贴图
+            // envMap: envMapTexture,
+        });
+        // 立方体
+        const cube = new THREE.Mesh(boxGeometry, boxMaterial);
+        cube.position.set(50, 0, 0);
+        scene.add(cube);
+
+        //* end
 
         // 创建摄像机
         const camera = new THREE.PerspectiveCamera(
@@ -20,7 +73,7 @@ export default function ThreeComponent() {
             1000
         );
         // 设置摄像机位置
-        camera.position.set(0, 0, 30);
+        camera.position.set(0, 0, 80);
         // 将摄像机添加进场景中
         scene.add(camera);
 
@@ -29,104 +82,44 @@ export default function ThreeComponent() {
         //  坐标辅助线添加到场景中
         scene.add(axesHelper);
 
-        //* start
-        // 创建平面几何体 (置换贴图使用 10,10)
-        const planeGeometry = new THREE.PlaneGeometry(30, 30, 10, 10);
-
         // 创建环境光 + 强度
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 1);
         scene.add(ambientLight);
 
         // 创建平行光 + 强度
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.75);
-        directionalLight.position.set(20, 20, 20); // 平行光位置（类似太阳所在位置）
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        // 平行光位置（类似太阳所在位置）
+        directionalLight.position.set(20, 20, 20);
         scene.add(directionalLight);
 
-        // 创建纹理
-        const textureLoader = new THREE.TextureLoader();
-        // 创建基础纹理
+        // 初始化cubeTextureLoader 立方体纹理加载器
+        const loader = new THREE.CubeTextureLoader();
 
-        // * 加载纹理钩子
-        const mapTexture = textureLoader.load(
-            require('./2k/vlzraabfw_2K_Albedo.jpg'),
-            // onLoad
-            () => {
-                console.log('纹理图片加载结束!');
-            },
-            // onProgress
-            () => { 
-                console.log('纹理图片加载中');
-            }
-            // onError
-            // Tjt: 11
-        );
-    
+        // 加载CubeTexture的一个类。 内部使用ImageLoader来加载文件。
+        const envMapTexture = loader.load([
+            require('./environmentMaps/0/px.jpg'),
+            require('./environmentMaps/0/nx.jpg'),
+            require('./environmentMaps/0/py.jpg'),
+            require('./environmentMaps/0/ny.jpg'),
+            require('./environmentMaps/0/pz.jpg'),
+            require('./environmentMaps/0/nz.jpg'),
+        ]);
 
+        // 创建球形几何体
+        const geometry = new THREE.SphereGeometry(15, 32, 16);
 
-        // 设置基础纹理图片算法
-        // mapTexture.magFilter = THREE.NearestFilter;
-        // mapTexture.minFilter = THREE.NearestFilter;
-        // 导入环境遮挡贴图（渲染条纹）,必须有 第二组
-        const aoMapTexture = textureLoader.load(
-            require('./2k/vlzraabfw_2K_AO.jpg')
-        );
-        // 💡设置第二组uv,固定写法. 2:(x,y)两个点.
-        planeGeometry.setAttribute(
-            'uv2',
-            new THREE.BufferAttribute(planeGeometry.attributes.uv.array, 2)
-        );
-        // 导入置换贴图（白色越高，黑色越低，形成山地形状的贴图）
-        const displacementTexture = textureLoader.load(
-            require('./2k/vlzraabfw_2K_Displacement.jpg')
-        );
-        // 导入凹凸贴图的纹理
-        const bumpTexture = textureLoader.load(
-            require('./2k/vlzraabfw_2K_Bump.jpg')
-        );
-        // 导入粗糙度纹理贴图
-        const roughnessTexture = textureLoader.load(
-            require('./2k/vlzraabfw_2K_Roughness.jpg')
-        );
-        // 导入法线纹理贴图
-        const normalTexture = textureLoader.load(
-            require('./2k/vlzraabfw_2K_Normal.jpg')
-        );
-        // 创建<标准网格材质> 🌟 必须要有灯光
+        // 使用标准网格材质渲染 环境贴图
         const material = new THREE.MeshStandardMaterial({
-            // 纹理图片
-            map: mapTexture,
-            aoMap: aoMapTexture,
-            // 设置aoMap 纹理遮挡效果透明度
-            aoMapIntensity: 1,
-            // 纹理图片双面显示
-            side: THREE.DoubleSide,
-            // 位移（置换）贴图会影响网格顶点的位置。换句话说就是它可以移动顶点来创建浮雕。（白色越高，黑色越低，形成山地形状的贴图）
-            displacementMap: displacementTexture,
-            // 位移（置换）贴图对网格的影响程度（黑色是无位移，白色是最大位移）。如果没有设置位移贴图，则不会应用此值。默认值为1——xxx。
-            displacementScale: 1,
-            // 相当于 XYZ 位移。 没有位移（置换）贴图时，默认为0
-            displacementBias: 3,
-            // 凹凸纹理材质
-            bumpMap: bumpTexture,
-            bumpScale: 1,
-            // 粗糙度纹理贴图 颜色越白越突出
-            roughnessMap: roughnessTexture,
-            // 材质的粗糙程度。0.0表示平滑的镜面反射，1.0表示完全漫反射。默认值为1.0。如果还提供roughnessMap，则两个值相乘。
-            roughness: 0,
-            // 法线纹理贴图，RGB值会影响每个像素片段的曲面法线，并更改颜色照亮的方式。法线贴图不会改变曲面的实际形状，只会改变光照。
-            normalMap: normalTexture,
-            // 设置法线贴图对材质的深浅程度影响程度。典型范围是0-1。默认值是Vector2设置为（1,1）。
-            normalScale: new THREE.Vector2(1, 1),
-            // x - 向量的x值，默认为0。
-            // y - 向量的y值，默认为0。
+            // 金属度
+            metalness: 1,
+            // 粗糙度
+            roughness: 0.1,
+            // 环境纹理贴图
+            envMap: envMapTexture,
         });
-
-        // 通过网格生成图形 （几何体+材质）
-        const plane = new THREE.Mesh(planeGeometry, material);
-        // 将图形放入场景中
-        scene.add(plane);
-
-        //* end
+        // 生成圆形几何体
+        const sphere = new THREE.Mesh(geometry, material);
+        scene.add(sphere);
 
         // 模拟平行光（太阳）所在位置
         const sunCube = new THREE.Mesh(
@@ -152,7 +145,7 @@ export default function ThreeComponent() {
                 )
                 .height.split('px')[0]
         );
-        renderer.setSize(WIDTH, HEIGHT);
+        renderer.setSize(window.innerWidth, window.innerHeight);
         // 轨道控制器
         const controls = new OrbitControls(camera, renderer.domElement);
         // 控制器阻尼

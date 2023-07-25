@@ -28,6 +28,7 @@ code {
 }
 
 .ant-layout {
+    padding: 0;
     height: 100%;
 }
 
@@ -39,22 +40,50 @@ code {
 .ant-layout-content {
     display: flex;
     flex-direction: column;
-    background: #fff;
+    background: rgb(255, 255, 255);
     height: 100%;
     padding-top: 0;
+    padding: 0;
 }
 
 .container {
     height: auto;
     width: auto;
 }
+
 .ant-menu-item {
 }
+
 .ant-menu-sub.ant-menu-inline > .ant-menu-item {
     padding-left: 30px !important;
 }
 
-
-.ant-menu-light{
+.ant-menu-light {
     height: 100% !important;
+}
+
+#dynamic-side {
+    position: relative;
+}
+
+.drag-icon {
+    position: absolute;
+    cursor: grab;
+    font-size: 32px;
+    bottom: 50%;
+    right: -16px;
+    transform: translateY(-50%);
+}
+
+#preview {
+    display: none;
+}
+
+.ant-menu {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.ant-menu::-webkit-scrollbar {
+    display: none;
 }

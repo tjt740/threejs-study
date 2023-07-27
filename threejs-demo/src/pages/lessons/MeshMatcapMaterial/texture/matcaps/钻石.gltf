@@ -1,0 +1,420 @@
+{
+   "accessors" : [
+      {
+         "bufferView" : 2,
+         "byteOffset" : 0,
+         "componentType" : 5126,
+         "count" : 544,
+         "max" : [ 1, 1, 0.3737480342388153 ],
+         "min" : [ -1, -1, -0.8619999885559082 ],
+         "type" : "VEC3"
+      },
+      {
+         "bufferView" : 2,
+         "byteOffset" : 6528,
+         "componentType" : 5126,
+         "count" : 544,
+         "max" : [ 0.9987955093383789, 0.9987955093383789, 1 ],
+         "min" : [ -0.9987955093383789, -0.9987954497337341, -0.7574358582496643 ],
+         "type" : "VEC3"
+      },
+      {
+         "bufferView" : 3,
+         "byteOffset" : 0,
+         "componentType" : 5126,
+         "count" : 544,
+         "max" : [ 0.8417534232139587, 0.8129085898399353, 0.5369970202445984, 1 ],
+         "min" : [ -0.7589848637580872, -0.9891766309738159, -1, 1 ],
+         "type" : "VEC4"
+      },
+      {
+         "bufferView" : 1,
+         "byteOffset" : 0,
+         "componentType" : 5126,
+         "count" : 544,
+         "max" : [ 1, 0.8099327087402344 ],
+         "min" : [ 0, 0 ],
+         "type" : "VEC2"
+      },
+      {
+         "bufferView" : 0,
+         "byteOffset" : 0,
+         "componentType" : 5125,
+         "count" : 906,
+         "type" : "SCALAR"
+      }
+   ],
+   "asset" : {
+      "extras" : {
+         "author" : "Johnny.Korat (https://sketchfab.com/Johnny.Korat)",
+         "license" : "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+         "source" : "https://sketchfab.com/3d-models/diamond-test-7f9e4bb2cb1d4f18a1847ef2da6056c1",
+         "title" : "Diamond_Test"
+      },
+      "generator" : "Sketchfab-15.19.0",
+      "version" : "2.0"
+   },
+   "bufferViews" : [
+      {
+         "buffer" : 0,
+         "byteLength" : 3624,
+         "byteOffset" : 0,
+         "name" : "floatBufferViews",
+         "target" : 34963
+      },
+      {
+         "buffer" : 0,
+         "byteLength" : 4352,
+         "byteOffset" : 3624,
+         "byteStride" : 8,
+         "name" : "floatBufferViews",
+         "target" : 34962
+      },
+      {
+         "buffer" : 0,
+         "byteLength" : 13056,
+         "byteOffset" : 7976,
+         "byteStride" : 12,
+         "name" : "floatBufferViews",
+         "target" : 34962
+      },
+      {
+         "buffer" : 0,
+         "byteLength" : 8704,
+         "byteOffset" : 21032,
+         "byteStride" : 16,
+         "name" : "floatBufferViews",
+         "target" : 34962
+      }
+   ],
+   "buffers" : [
+      {
+         "byteLength" : 29736,
+         "uri" : "M0000000000100174KV74_data.bin"
+      }
+   ],
+   "extensionsUsed" : [ "KHR_materials_specular", "KHR_texture_transform" ],
+   "images" : [
+      {
+         "byteLength" : 2413363,
+         "name" : "Material.004_baseColor",
+         "uri" : "image/MKV74_0.png"
+      },
+      {
+         "byteLength" : 403582,
+         "name" : "Material.004_normal",
+         "uri" : "image/MKV74_1.png"
+      }
+   ],
+   "materials" : [
+      {
+         "alphaMode" : "BLEND",
+         "clearcoat" : 0,
+         "clearcoatRoughness" : 0,
+         "doubleSided" : true,
+         "emissiveFactor" : [ 0, 0, 0 ],
+         "emissiveIntensity" : 1,
+         "extensions" : {
+            "diamond" : {
+               "enable" : true,
+               "params" : {
+                  "absorptionFactor" : 0.90,
+                  "bounds" : 4,
+                  "color" : [ 1, 0.6172065624120635, 0.6172065624120635 ],
+                  "dispersion" : 0.0170,
+                  "envMapIntensity" : 2.20,
+                  "envMapRotation" : 59,
+                  "reflectivity" : 0.30,
+                  "refractiveIndex" : 2.10
+               }
+            },
+            "glass" : {
+               "enable" : false,
+               "params" : {}
+            },
+            "index" : 1
+         },
+         "name" : "Material.004",
+         "normalTexture" : {
+            "index" : 1,
+            "scale" : 1,
+            "texCoord" : 0
+         },
+         "occlusionTexture" : {
+            "strength" : 1
+         },
+         "pbrMetallicRoughness" : {
+            "baseColorFactor" : [ 1, 1, 1, 0.70 ],
+            "baseColorTexture" : {
+               "index" : 0,
+               "texCoord" : 0
+            },
+            "metallicFactor" : 1,
+            "roughnessFactor" : 0
+         },
+         "reflectivity" : 0.4999999999999998,
+         "transmission" : 0
+      }
+   ],
+   "meshes" : [
+      {
+         "id" : "ba80d63e-5031-4d6a-888c-8b101c936df4",
+         "name" : "dobj.002_Material.004_0",
+         "pos" : [ 0, 0, 0 ],
+         "primitives" : [
+            {
+               "attributes" : {
+                  "NORMAL" : 1,
+                  "POSITION" : 0,
+                  "TANGENT" : 2,
+                  "TEXCOORD_0" : 3
+               },
+               "indices" : 4,
+               "material" : 0,
+               "mode" : 4
+            }
+         ]
+      }
+   ],
+   "nodes" : [
+      {
+         "children" : [ 1 ],
+         "matrix" : [
+            1,
+            0,
+            0,
+            0,
+            0,
+            2.220446049250313e-016,
+            -1,
+            0,
+            0,
+            1,
+            2.220446049250313e-016,
+            0,
+            0,
+            0,
+            0,
+            1
+         ],
+         "name" : "Sketchfab_model"
+      },
+      {
+         "children" : [ 2 ],
+         "matrix" : [
+            0.009999999776482582,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.009999999776482582,
+            0,
+            0,
+            -0.009999999776482582,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+         ],
+         "name" : "ff19f956435142a3be4e464f965c6ade.fbx"
+      },
+      {
+         "children" : [ 3 ],
+         "name" : "RootNode"
+      },
+      {
+         "children" : [ 4 ],
+         "matrix" : [
+            100,
+            0,
+            0,
+            0,
+            0,
+            -1.629206793918314e-005,
+            -99.99999999999868,
+            0,
+            0,
+            99.99999999999868,
+            -1.629206793918314e-005,
+            0,
+            -230.5632324218750,
+            0,
+            0,
+            1
+         ],
+         "name" : "dobj.002"
+      },
+      {
+         "mesh" : 0,
+         "name" : "dobj.002_Material.004_0"
+      }
+   ],
+   "samplers" : [
+      {
+         "magFilter" : 9729,
+         "minFilter" : 9987,
+         "wrapS" : 10497,
+         "wrapT" : 10497
+      }
+   ],
+   "scene" : 0,
+   "scenes" : [
+      {
+         "extras" : {
+            "background" : {
+               "color" : [ "#0b0b0b", "#030303" ],
+               "img" : "https://obs.51jianmo.com/jmyd/user/20230320194855/8de4ba2e-6c26-4b1a-acdd-8db304b7725f.jpg",
+               "pano" : {
+                  "format" : ".jpg",
+                  "path" : "https://obs.51jianmo.com/jmyd/modelCenterUpload/lrdone/02845861-7f94-4c20-955a-11520ca083c3/"
+               },
+               "type" : 2
+            },
+            "base" : {
+               "autoRotate" : true,
+               "blow" : {
+                  "enable" : false,
+                  "meshs" : [
+                     {
+                        "distance" : 1,
+                        "id" : "ba80d63e-5031-4d6a-888c-8b101c936df4",
+                        "mark" : true,
+                        "name" : "dobj.002_Material.004_0",
+                        "pos" : [ 0, 0, 0 ]
+                     }
+                  ],
+                  "time" : 1,
+                  "type" : "0"
+               },
+               "camera" : {
+                  "default" : {
+                     "x" : -5.305589750792089,
+                     "y" : 0.5307500787535153,
+                     "z" : -1.733694992592934
+                  }
+               },
+               "isShowHot" : true,
+               "lineColor" : "",
+               "maxAngle" : 180,
+               "maxScale" : 400,
+               "minAngle" : 0,
+               "minScale" : 20,
+               "part" : {
+                  "enable" : false,
+                  "isDefault" : true,
+                  "list" : []
+               },
+               "size" : "2 * 2 * 1",
+               "wireframe" : false
+            },
+            "defaultImgs" : [
+               {
+                  "name" : "Material.004_baseColor",
+                  "url" : "image/MKV74_0.png"
+               },
+               {
+                  "name" : "Material.004_normal",
+                  "url" : "image/MKV74_1.png"
+               }
+            ],
+            "hots" : [],
+            "lights" : {
+               "env" : {
+                  "boom" : {
+                     "enabled" : false,
+                     "list" : [],
+                     "mark" : false,
+                     "radius" : 0.250,
+                     "strength" : 0.250,
+                     "time" : 1.50
+                  },
+                  "color" : 0,
+                  "enableHDR" : true,
+                  "exposure" : 1,
+                  "hdr" : {
+                     "key" : "影棚柔光",
+                     "name" : "影棚柔光",
+                     "negx" : "https://obs.51jianmo.com/jmyd/modelCenterUpload/lrd/dcbef0a5-693e-4980-b17c-fd1bd453271a/negx.rgbm?time=1642498125902",
+                     "negy" : "https://obs.51jianmo.com/jmyd/modelCenterUpload/lrd/dcbef0a5-693e-4980-b17c-fd1bd453271a/negy.rgbm?time=1642498125902",
+                     "negz" : "https://obs.51jianmo.com/jmyd/modelCenterUpload/lrd/dcbef0a5-693e-4980-b17c-fd1bd453271a/negz.rgbm?time=1642498125902",
+                     "posx" : "https://obs.51jianmo.com/jmyd/modelCenterUpload/lrd/dcbef0a5-693e-4980-b17c-fd1bd453271a/posx.rgbm?time=1642498125902",
+                     "posy" : "https://obs.51jianmo.com/jmyd/modelCenterUpload/lrd/dcbef0a5-693e-4980-b17c-fd1bd453271a/posy.rgbm?time=1642498125902",
+                     "posz" : "https://obs.51jianmo.com/jmyd/modelCenterUpload/lrd/dcbef0a5-693e-4980-b17c-fd1bd453271a/posz.rgbm?time=1642498125902",
+                     "thumbnail" : "https://obs.51jianmo.com/jmyd/modelCenterUpload/lrd/2a8a1e6e-88f3-4b4f-a5fd-2a918cb4c263/8f13b4b7-e287-85cc-b036-a083a04effa6.jpg",
+                     "type" : 1
+                  },
+                  "hdrAngle" : 0,
+                  "hdrIntensity" : 1.80,
+                  "intensity" : 0.30,
+                  "lut" : {
+                     "intensity" : 0,
+                     "type" : ""
+                  },
+                  "sao" : {
+                     "enabled" : false,
+                     "saoBias" : 0.0010,
+                     "saoIntensity" : 1,
+                     "saoKernelRadius" : 0.10,
+                     "saoScale" : 3
+                  },
+                  "vig" : {
+                     "blur" : 0.70,
+                     "enabled" : false,
+                     "intensity" : 0.320
+                  }
+               },
+               "point" : {
+                  "enabled" : true,
+                  "list" : [
+                     {
+                        "color" : "#ffffff",
+                        "enabled" : true,
+                        "intensity" : 0.50,
+                        "phi" : 52,
+                        "radius" : 1.50,
+                        "theta" : 57
+                     },
+                     {
+                        "color" : "#ffffff",
+                        "enabled" : false,
+                        "intensity" : 0.50,
+                        "phi" : 120,
+                        "radius" : 1.50,
+                        "theta" : 55
+                     },
+                     {
+                        "color" : "#ffffff",
+                        "enabled" : false,
+                        "intensity" : 0.50,
+                        "phi" : 265,
+                        "radius" : 1,
+                        "theta" : 93
+                     }
+                  ]
+               }
+            },
+            "partners" : [],
+            "shadow" : {
+               "enabled" : false,
+               "height" : 0,
+               "intensity" : 0.20
+            }
+         },
+         "name" : "Sketchfab_Scene",
+         "nodes" : [ 0 ]
+      }
+   ],
+   "textures" : [
+      {
+         "sampler" : 0,
+         "source" : 0
+      },
+      {
+         "sampler" : 0,
+         "source" : 1
+      }
+   ]
+}

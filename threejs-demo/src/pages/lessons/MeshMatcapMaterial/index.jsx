@@ -23,7 +23,7 @@ export default function ThreeComponent() {
     const init = () => {
         const scene = new THREE.Scene();
         // 场景颜色
-        scene.background = new THREE.Color(0xaaaaaa);
+        scene.background = new THREE.Color(0x999999);
         // scene.background = new THREE.Color(0x000000);
         const camera = new THREE.PerspectiveCamera(
             45, // 90
@@ -36,7 +36,7 @@ export default function ThreeComponent() {
         // 更新camera 宽高比;
         camera.aspect = window.innerWidth / window.innerHeight;
         // 设置相机位置 object3d具有position，属性是一个3维的向量。
-        camera.position.set(0, 0, 10);
+        camera.position.set(0, 0, 20);
         // 更新camera 视角方向
         // camera.lookAt(scene.position);
 
@@ -54,9 +54,9 @@ export default function ThreeComponent() {
             alpha: true, // 背景透明
         });
         // 设置渲染器编码格式  THREE.NoColorSpace = "" || THREE.SRGBColorSpace = "srgb" || THREE.LinearSRGBColorSpace = "srgb-linear"
-        // renderer.outputColorSpace = 'srgb';
+        renderer.outputColorSpace = 'srgb';
         // 色调映射 THREE.NoToneMapping || THREE.LinearToneMapping || THREE.ReinhardToneMapping || THREE.CineonToneMapping || THREE.ACESFilmicToneMapping
-        // renderer.toneMapping = THREE.ReinhardToneMapping;
+        renderer.toneMapping = THREE.ReinhardToneMapping;
         // 色调映射的曝光级别。默认是1，屏幕是2.2，越低越暗
         renderer.toneMappingExposure = 2.2;
 
@@ -78,66 +78,45 @@ export default function ThreeComponent() {
         /*
          * ------------ start ----------
          */
+        // 学习 MeshMatcapMaterial 材质
 
-        // 创建自然光
-        const ambientLight = new THREE.AmbientLight(0xffffff, 1);
-        scene.add(ambientLight);
-        // 创建点光源用于漫反射
-        const pointLight = new THREE.PointLight(0xffffff, 15, 0, 2);
-        pointLight.position.set(0, 0.6, 1.9);
-        gui.add(pointLight.position, 'z').min(-5).max(5).step(0.1);
-        gui.add(pointLight.position, 'y').min(-5).max(5).step(0.1);
-        gui.add(pointLight.position, 'x').min(-5).max(5).step(0.1);
-        scene.add(pointLight);
+        // 创建小鸭子模型
+        const gltfLoader = new GLTFLoader();
+        gltfLoader.loadAsync(require('./model/Duck.glb')).then((gltf) => {
+            // 场景添加鸭子模型
+            // scene.add(gltf.scene);
 
-        // 创建平面几何
-        const planeGeometry = new THREE.PlaneGeometry(5, 5, 512, 512);
-        // 创建平面几何材质
-        // MeshLamertMaterial网格材质适用用漫反射材质（树木，井盖）
-        const planeMaterial = new THREE.MeshLambertMaterial({
-            color: new THREE.Color(0xffffff),
-            side: THREE.DoubleSide,
-            transparent: true,
-            // // 自发光
-            // emissiveMap: new THREE.TextureLoader().load(
-            //     require('./texture/watercover/高光贴图_GLOSS_1K.jpg')
-            // ),
-            // emissiveIntensity: 1.0,
-            // 纹理贴图
-            map: new THREE.TextureLoader().load(
-                require('./texture/watercover/贴图COL_VAR1_1K.png')
-            ),
-            // 环境遮挡贴图
-            aoMap: new THREE.TextureLoader().load(
-                require('./texture/watercover/环境光贴图_AO_1K.jpg')
-            ),
-            // 凹凸贴图
-            bumpMap: new THREE.TextureLoader().load(
-                require('./texture/watercover/凹凸贴图_DISP_1K.jpg')
-            ),
-            // 位移(置换)贴图
-            displacementMap: new THREE.TextureLoader().load(
-                require('./texture/watercover/凹凸贴图_DISP_1K.jpg')
-            ),
-            displacementScale: 0.1,
-            // 法线贴图
-            normalMap: new THREE.TextureLoader().load(
-                require('./texture/watercover/法线贴图_NRM_1K.jpg')
-            ),
+            // 获取鸭子mesh
+            const duckMesh = gltf.scene.getObjectByName('LOD3spShape');
+            // 创建matcap材质
+            const matcapMaterial = new THREE.TextureLoader().load(
+                require('./texture/matcaps/54584E_B1BAC5_818B91_A7ACA3-512px.png')
+            );
+            // 拿到鸭子本身的map材质
+            const preMaterial = duckMesh.material;
+            duckMesh.material = new THREE.MeshMatcapMaterial({
+                // 设置matcap贴图，默认为null。
+                matcap: matcapMaterial,
+                // 设置鸭子贴图 （必须）
+                map: preMaterial.map,
+            });
         });
 
-        const rgbeLoader = new RGBELoader();
-        rgbeLoader
-            .loadAsync(require('./texture/Alex_Hart-Nature_Lab_Bones_2k.hdr'))
-            .then((envMap) => {
-                // 设置球形贴图
-                envMap.mapping = THREE.EquirectangularReflectionMapping;
-                // 设置环境贴图
-                // planeMaterial.envMap = envMap;
-            });
-        // 平面物体
-        const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
-        scene.add(planeMesh);
+        // 给普通geometry设置 metcapMaterial
+        const sphereGeometry = new THREE.SphereGeometry(2, 32, 32);
+        const sphereMaterial = new THREE.MeshMatcapMaterial({
+            // 设置matcap贴图，默认为null
+            matcap: new THREE.TextureLoader().load(
+                require('./texture/matcaps/3.png')
+            ),
+            // 设置基础贴图 （必须）
+            map: new THREE.TextureLoader().load(
+                require('./texture/matcaps/54584E_B1BAC5_818B91_A7ACA3-512px.png')
+            ),
+        });
+        const sphereMesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
+        sphereMesh.position.set(5, 0, 0);
+        scene.add(sphereMesh);
 
         /*
          * ------------end ----------

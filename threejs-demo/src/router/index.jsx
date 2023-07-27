@@ -149,14 +149,18 @@ export const routerPaths = [
                 elementPath: 'lessons/day12',
                 key: 'lessons/day12',
             },
-
             {
                 label: '基础网格材质',
                 icon: <MyIcon type="icon-paobing" />,
                 elementPath: 'lessons/day13',
                 key: 'lessons/day13',
             },
-
+            {
+                label: 'MeshMatcapMaterial材质（无需灯光）',
+                icon: <MyIcon type="icon-mantou" />,
+                elementPath: 'lessons/MeshMatcapMaterial',
+                key: 'lessons/MeshMatcapMaterial',
+            },
             {
                 label: 'lamert(朗伯特)网格材质（漫反射）',
                 icon: <MyIcon type="icon-paobing" />,

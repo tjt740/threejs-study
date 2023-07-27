@@ -158,6 +158,13 @@ export const routerPaths = [
             },
 
             {
+                label: 'lamert(朗伯特)网格材质（漫反射）',
+                icon: <MyIcon type="icon-paobing" />,
+                elementPath: 'lessons/MeshLamertMaterial',
+                key: 'lessons/MeshLamertMaterial',
+            },
+
+            {
                 label: '标准网格材质',
                 icon: <MyIcon type="icon-mantou" />,
                 elementPath: 'lessons/day14',

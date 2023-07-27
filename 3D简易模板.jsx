@@ -23,7 +23,7 @@ export default function ThreeComponent() {
     const init = () => {
         const scene = new THREE.Scene();
         // 场景颜色
-        scene.background = new THREE.Color(0x999999);
+        scene.background = new THREE.Color('rgb(170, 170, 170)');
         // scene.background = new THREE.Color(0x000000);
         const camera = new THREE.PerspectiveCamera(
             45, // 90
@@ -56,7 +56,7 @@ export default function ThreeComponent() {
         // 设置渲染器编码格式  THREE.NoColorSpace = "" || THREE.SRGBColorSpace = "srgb" || THREE.LinearSRGBColorSpace = "srgb-linear"
         renderer.outputColorSpace = 'srgb';
         // 色调映射 THREE.NoToneMapping || THREE.LinearToneMapping || THREE.ReinhardToneMapping || THREE.CineonToneMapping || THREE.ACESFilmicToneMapping
-        renderer.toneMapping = THREE.ReinhardToneMapping;
+        // renderer.toneMapping = THREE.ReinhardToneMapping;
         // 色调映射的曝光级别。默认是1，屏幕是2.2，越低越暗
         renderer.toneMappingExposure = 2.2;
 

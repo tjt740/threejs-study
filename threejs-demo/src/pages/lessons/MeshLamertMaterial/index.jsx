@@ -38,7 +38,7 @@ export default function ThreeComponent() {
         // 设置相机位置 object3d具有position，属性是一个3维的向量。
         camera.position.set(0, 0, 10);
         // 更新camera 视角方向
-        // camera.lookAt(scene.position);
+        camera.lookAt(scene.position);
 
         // 摄像机添加到场景中
         scene.add(camera);
@@ -58,7 +58,7 @@ export default function ThreeComponent() {
         // 色调映射 THREE.NoToneMapping || THREE.LinearToneMapping || THREE.ReinhardToneMapping || THREE.CineonToneMapping || THREE.ACESFilmicToneMapping
         // renderer.toneMapping = THREE.ReinhardToneMapping;
         // 色调映射的曝光级别。默认是1，屏幕是2.2，越低越暗
-        renderer.toneMappingExposure = 2.2;
+        // renderer.toneMappingExposure = 2.2;
 
         const WIDTH = Number(
             window
@@ -84,7 +84,7 @@ export default function ThreeComponent() {
         scene.add(ambientLight);
         // 创建点光源用于漫反射
         const pointLight = new THREE.PointLight(0xffffff, 15, 0, 2);
-        pointLight.position.set(0, 0.6, 1.9);
+        pointLight.position.set(0, 0, 2);
         gui.add(pointLight.position, 'z').min(-5).max(5).step(0.1);
         gui.add(pointLight.position, 'y').min(-5).max(5).step(0.1);
         gui.add(pointLight.position, 'x').min(-5).max(5).step(0.1);
@@ -96,13 +96,8 @@ export default function ThreeComponent() {
         // MeshLamertMaterial网格材质适用用漫反射材质（树木，井盖）
         const planeMaterial = new THREE.MeshLambertMaterial({
             color: new THREE.Color(0xffffff),
-            side: THREE.DoubleSide,
             transparent: true,
-            // // 自发光
-            // emissiveMap: new THREE.TextureLoader().load(
-            //     require('./texture/watercover/高光贴图_GLOSS_1K.jpg')
-            // ),
-            // emissiveIntensity: 1.0,
+
             // 纹理贴图
             map: new THREE.TextureLoader().load(
                 require('./texture/watercover/贴图COL_VAR1_1K.png')
@@ -124,6 +119,7 @@ export default function ThreeComponent() {
             normalMap: new THREE.TextureLoader().load(
                 require('./texture/watercover/法线贴图_NRM_1K.jpg')
             ),
+            normalScale: new THREE.Vector2(1, 1.2),
         });
 
         const rgbeLoader = new RGBELoader();
@@ -133,7 +129,7 @@ export default function ThreeComponent() {
                 // 设置球形贴图
                 envMap.mapping = THREE.EquirectangularReflectionMapping;
                 // 设置环境贴图
-                // planeMaterial.envMap = envMap;
+                planeMaterial.envMap = envMap;
             });
         // 平面物体
         const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);

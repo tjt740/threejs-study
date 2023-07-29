@@ -430,6 +430,12 @@ export const routerPaths = [
                 elementPath: 'model-line',
                 key: 'model-line',
             },
+            {
+                label: '测试',
+                icon: <MyIcon type="icon-zhangyuxiaowanzi" />,
+                elementPath: 'test-demo',
+                key: 'test-demo',
+            },
         ],
     },
 ];

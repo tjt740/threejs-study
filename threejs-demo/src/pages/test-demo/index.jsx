@@ -6,6 +6,12 @@ import * as _ from 'lodash';
 import './index.less';
 import CanvasHighlighter from 'canvas-highlighter';
 
+/**
+ *  github:  https://github.com/DLillard0/canvas-highlighter
+ *  https://dlillard0.github.io/canvas-highlighter/yuque.html | https://github.com/DLillard0/canvas-highlighter/blob/main/docs/yuque.html#L150
+ *  https://dlillard0.github.io/canvas-highlighter/ | https://github.com/DLillard0/canvas-highlighter/blob/main/docs/index.html
+ * http://192.241.202.210/api/Konva.Rect.html
+ **/
 const html = `燕子去了，有再来的时候杨柳枯了，有再青的时候桃花谢了，有再开的时候。但是聪明的你告诉我，我们的日子为什么一去不复返呢？是有人偷了他 们罢：那是谁？又藏在何处呢？是他们自己逃走了罢如今又到了哪里呢？
 
 我不知道他们给了我多少日子，但我的手确乎是渐渐空虚了。在默默里算着，八千多日子已经从我手中溜去，像针尖上一滴水滴在大海里，我的日子滴在时间的流里，没有声音，也没有影子。我不禁头涔涔而泪潸潸了。去的尽管去了，来的尽管来着，去来的中间，又怎样地匆匆呢？

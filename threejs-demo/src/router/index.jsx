@@ -167,14 +167,24 @@ export const routerPaths = [
                 elementPath: 'lessons/MeshLamertMaterial',
                 key: 'lessons/MeshLamertMaterial',
             },
-
+            {
+                label: 'MeshPhongMaterial镜面材质',
+                icon: <MyIcon type="icon-paobing" />,
+                elementPath: 'lessons/MeshPhongMaterial',
+                key: 'lessons/MeshPhongMaterial',
+            },
+            {
+                label: '精讲标准网格材质',
+                icon: <MyIcon type="icon-mantou" />,
+                elementPath: 'lessons/MeshStandardMaterial',
+                key: 'lessons/MeshStandardMaterial',
+            },
             {
                 label: '标准网格材质',
                 icon: <MyIcon type="icon-mantou" />,
                 elementPath: 'lessons/day14',
                 key: 'lessons/day14',
             },
-
             {
                 label: '清除物体',
                 icon: <MyIcon type="icon-hebaodan" />,
@@ -369,6 +379,12 @@ export const routerPaths = [
                 icon: <MyIcon type="icon-050-forest" />,
                 elementPath: '点击屏幕创建立方体撞击地面',
                 key: '点击屏幕创建立方体撞击地面',
+            },
+            {
+                label: 'MeshPhongMaterialdemo',
+                icon: <MyIcon type="icon-050-forest" />,
+                elementPath: 'MeshPhongMaterialdemo',
+                key: 'MeshPhongMaterialdemo',
             },
             {
                 label: '标准网格材质泥路',

@@ -114,12 +114,12 @@ export default function ThreeComponent() {
             displacementMap: new THREE.TextureLoader().load(
                 require('./texture/watercover/凹凸贴图_DISP_1K.jpg')
             ),
+            // 置换贴图尺寸 越高越突出
             displacementScale: 0.1,
             // 法线贴图
             normalMap: new THREE.TextureLoader().load(
                 require('./texture/watercover/法线贴图_NRM_1K.jpg')
             ),
-            normalScale: new THREE.Vector2(1, 1.2),
         });
 
         const rgbeLoader = new RGBELoader();

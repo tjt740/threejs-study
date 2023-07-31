@@ -119,6 +119,10 @@ export default function ThreeComponent() {
                         require('./texture/plank_flooring_disp_1k.jpg')
                     ),
                     displacementScale: 0.02,
+                    //  // 折射比率
+                    //  refractionRatio: 0.7,
+                    //  // 反射率
+                    //  reflectivity: 0.99,
                     // 粗糙度贴图
                     // 镜面网格材质没有粗糙度 roughnessMap 纹理贴图
                     // 材质的高光

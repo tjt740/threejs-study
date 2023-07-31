@@ -36,7 +36,7 @@ export default function ThreeComponent() {
         // 更新camera 宽高比;
         camera.aspect = window.innerWidth / window.innerHeight;
         // 设置相机位置 object3d具有position，属性是一个3维的向量。
-        camera.position.set(0, 0, 20);
+        camera.position.set(30, 50, 40);
         // 更新camera 视角方向
         // camera.lookAt(scene.position);
 
@@ -56,10 +56,10 @@ export default function ThreeComponent() {
         // 设置渲染器编码格式  THREE.NoColorSpace = "" || THREE.SRGBColorSpace = "srgb" || THREE.LinearSRGBColorSpace = "srgb-linear"
         renderer.outputColorSpace = 'srgb';
         // 色调映射 THREE.NoToneMapping || THREE.LinearToneMapping || THREE.ReinhardToneMapping || THREE.CineonToneMapping || THREE.ACESFilmicToneMapping
-        renderer.toneMapping = THREE.NoToneMapping;
+        // renderer.toneMapping = THREE.ACESFilmicToneMapping;
         // 色调映射的曝光级别。默认是1，屏幕是2.2，越低越暗
         renderer.toneMappingExposure = 2.2;
-
+        gui.add(renderer, 'toneMappingExposure', 0, 10, 0.1);
         const WIDTH = Number(
             window
                 .getComputedStyle(
@@ -90,6 +90,103 @@ export default function ThreeComponent() {
 
         gui.add(directionalLight, 'intensity', 0, 10);
         gui.add(ambientLight, 'intensity', 0, 10);
+
+        // 加载.hdr文件
+        const rgbeLoader = new RGBELoader();
+        rgbeLoader.load(
+            require('./texture/christmas_photo_studio_04_2k.hdr'),
+            (envMap) => {
+                envMap.mapping = THREE.EquirectangularReflectionMapping;
+                scene.background = envMap;
+                scene.environment = envMap;
+
+                // (1) 加载.glb文件
+                // const gltfLoader = new GLTFLoader();
+                // gltfLoader
+                //     .loadAsync(require('./texture/sword/sword.glb'))
+                //     .then((gltf) => {
+                //         scene.add(gltf.scene);
+                //         const swordMesh =
+                //             gltf.scene.getObjectByName('Garde_Plane002');
+                //         // 获取mesh材质
+                //         const swordMaterial = swordMesh.material;
+
+                //         // 改变gltf.scene中一个mesh的材质，其他mesh材质都会被修改。
+                //         swordMaterial.map = new THREE.TextureLoader().load(
+                //             require('./texture/sword/Sting_Base_Color.png')
+                //         );
+                //         swordMaterial.aoMap = new THREE.TextureLoader().load(
+                //             require('./texture/sword/Sting_Mixed_AO.png')
+                //         );
+                //         swordMaterial.normalMap =
+                //             new THREE.TextureLoader().load(
+                //                 require('./texture/sword/Sting_Normal_DirectX.png')
+                //             );
+                //         swordMaterial.normalScale = new THREE.Vector2(1, -1.45);
+                //         swordMaterial.displacementMap =
+                //             new THREE.TextureLoader().load(
+                //                 require('./texture/sword/Sting_Height.png')
+                //             );
+                //         swordMaterial.displacementScale = 0.1;
+                //         // 粗糙度
+                //         swordMaterial.roughnessMap =
+                //             new THREE.TextureLoader().load(
+                //                 require('./texture/sword/Sting_Roughness.png')
+                //             );
+                //         swordMaterial.roughness = 0.5;
+
+                //         // 金属度
+                //         swordMaterial.metalnessMap =
+                //             new THREE.TextureLoader().load(
+                //                 require('./texture/sword/Sting_Metallic.png')
+                //             );
+                //         swordMaterial.metalness = 1;
+                //     });
+
+                // (2) 加载.gltf 文件
+                const gltfLoader = new GLTFLoader();
+                gltfLoader
+                    .loadAsync(require('./texture/sword/sword.gltf'))
+                    .then((gltf) => {
+                        scene.add(gltf.scene);
+                        const swordMesh =
+                            gltf.scene.getObjectByName('Garde_Plane002');
+                        // 获取mesh材质
+                        const swordMaterial = swordMesh.material;
+                        // 折射比率
+                        swordMaterial.refractionRatio = 0.7;
+                        // 反射率
+                        swordMaterial.reflectivity = 0.99;
+                        console.log(swordMaterial);
+                        // 给宝剑上贴上其他的环境贴图
+                        rgbeLoader
+                            .loadAsync(
+                                require('./texture/sword/HDRI_Hen-Hikers_Ce_4k.hdr')
+                            )
+                            .then((envMap) => {
+                                const params = {
+                                    envMapSwitch: true,
+                                };
+                                envMap.mapping =
+                                    THREE.EquirectangularRefractionMapping;
+                                swordMaterial.envMap = envMap;
+
+                                gui.add(params, 'envMapSwitch').onChange(
+                                    (value) => {
+                                        console.log(value);
+                                        if (value) {
+                                            swordMaterial.envMap = envMap;
+                                        } else {
+                                            swordMaterial.envMap = null;
+                                        }
+                                        // 材质重新编译
+                                        swordMaterial.needsUpdate = true;
+                                    }
+                                );
+                            });
+                    });
+            }
+        );
 
         /*
          * ------------end ----------

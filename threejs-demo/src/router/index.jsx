@@ -180,6 +180,12 @@ export const routerPaths = [
                 key: 'lessons/MeshStandardMaterial',
             },
             {
+                label: '物理网格材质MeshPhysicalMaterial',
+                icon: <MyIcon type="icon-mantou" />,
+                elementPath: 'lessons/MeshPhysicalMaterial',
+                key: 'lessons/MeshPhysicalMaterial',
+            },
+            {
                 label: '标准网格材质',
                 icon: <MyIcon type="icon-mantou" />,
                 elementPath: 'lessons/day14',

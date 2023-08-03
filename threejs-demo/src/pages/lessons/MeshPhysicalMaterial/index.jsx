@@ -82,11 +82,11 @@ export default function ThreeComponent() {
          */
 
         // 创建平行光
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 4.6);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
         directionalLight.position.set(5, 7, 7);
         scene.add(directionalLight);
         // 创建自然光
-        const ambientLight = new THREE.AmbientLight(0xffffff, 3);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 1);
         ambientLight.position.set(5, 7, 7);
         scene.add(ambientLight);
 
@@ -103,37 +103,19 @@ export default function ThreeComponent() {
 
         // 加载.glb文件
         // const gltfLoader = new GLTFLoader();
-        // gltfLoader
-        //     .loadAsync(require('./model/水晶天鹅耳环.glb'))
-        //     .then((glb) => {
-        //         console.log(glb.scene);
-        //     });
+        // gltfLoader.loadAsync(require('./model/sword/sword.glb')).then((glb) => {
+        //     scene.add(glb.scene);
+        // });
 
-        // 创建盒子几何体
-        const boxGeometry = new THREE.BoxGeometry(5, 5, 5);
-        // 创建盒子材质（物理网格材质）
-        const boxMeshPhysicalMaterial = new THREE.MeshPhysicalMaterial({
+        // 创建平面几何体
+        const planeGeometry = new THREE.PlaneGeometry(10, 10, 512, 512);
+        // 创建平面几何体材质
+        const planeMaterial = new THREE.MeshPhysicalMaterial({
             transparent: true,
-            // 表面下方体积的厚度。该值在网格的坐标空间中给出。如果该值为 0，则材料为薄壁。否则，材料是体积边界。默认值为 0。
-            // 材质表面厚度，默认值为0，范围0~1，
-            transmission: 1,
-            // 材质表面粗糙度，如果配合transparent:true,和transmission:0，为0就会成为透明
-            roughness: 1,
-            // 厚度贴图
-            roughnessMap: new THREE.TextureLoader().load(
-                require('./texture/Image_1.jpg')
-            ),
-
-            // attenuationColor: new THREE.Color(0.9, 0.9, 0),
-            // attenuationDistance: 1,
+            // 创建贴图
         });
-
-        gui.add(boxMeshPhysicalMaterial, 'transmission', 0, 1, 0.1).name(
-            '材质表面积厚度'
-        );
-        // 创建盒子模型
-        const boxMesh = new THREE.Mesh(boxGeometry, boxMeshPhysicalMaterial);
-        scene.add(boxMesh);
+        // 创建墙面
+        const plane = new THREE.Mesh(planeGeometry, planeMaterial);
 
         /*
          * ------------end ----------

@@ -14,6 +14,7 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 // 引入补间动画tween.js three.js 自带
 import * as TWEEN from 'three/examples/jsm/libs/tween.module.js';
 
+import loaderUtils from 'loader-utils';
 // import * as dat from 'dat.gui';
 // const gui = new dat.GUI();
 // 使用 lil-gui 调试 three.js 图形
@@ -114,16 +115,22 @@ export default function ThreeComponent() {
             scene.environment = envMap;
         });
 
-        // 加载.glb文件
-        const gltfLoader = new GLTFLoader();
-        gltfLoader.loadAsync(require('./modal/逼真的戒指.glb')).then((glb) => {
-            scene.add(glb.scene);
-            // 发现加载的.glb文件中，宝石没有增加.flatShading 平面着色效果，解决办法↓
-            const diamond = glb.scene.getObjectByName('blast1_diamond_0');
-            // 设置平面着色
-            console.log(diamond);
-            diamond.material.flatShading = true;
-        });
+        //1. 加载.glb文件
+        // const gltfLoader = new GLTFLoader();
+        // gltfLoader.loadAsync(require('./model/逼真的戒指.glb')).then((glb) => {
+        //     scene.add(glb.scene);
+        //     // 发现加载的.glb文件中，宝石没有增加.flatShading 平面着色效果，解决办法↓
+        //     const diamond = glb.scene.getObjectByName('blast1_diamond_0');
+        //     // 设置平面着色
+        //     console.log(diamond);
+        //     diamond.material.flatShading = true;
+        // });
+
+        //2. 使用ObjectLoader
+        // const objectLoader = new THREE.ObjectLoader();
+        // objectLoader.load(require('./model/scene.json'), (object) => {
+        //     console.log(object);
+        // });
 
         /*
          * ------------end ----------

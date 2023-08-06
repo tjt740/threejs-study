@@ -399,6 +399,12 @@ export const routerPaths = [
                 key: '标准网格材质泥路',
             },
             {
+                label: '加载three.js editor 编辑后的物理网格材质模型',
+                icon: <MyIcon type="icon-050-forest" />,
+                elementPath: 'MeshPhysicalMaterial-demo',
+                key: 'MeshPhysicalMaterial-demo',
+            },
+            {
                 label: '原始着色器RawshaderMaterial纹理贴图Texture',
                 icon: <MyIcon type="icon-zhangyuxiaowanzi" />,
                 elementPath: '原始着色器RawshaderMaterial纹理贴图Texture',

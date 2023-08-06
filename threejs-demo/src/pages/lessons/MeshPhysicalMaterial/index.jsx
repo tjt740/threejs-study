@@ -107,16 +107,70 @@ export default function ThreeComponent() {
         //     scene.add(glb.scene);
         // });
 
-        // 创建平面几何体
-        const planeGeometry = new THREE.PlaneGeometry(10, 10, 512, 512);
-        // 创建平面几何体材质
-        const planeMaterial = new THREE.MeshPhysicalMaterial({
+        // 创建圆球几何体
+        const sphereGeometry = new THREE.SphereGeometry(3, 512, 512);
+        // 创建几何体物理材质
+        const spherePhysicalMaterial = new THREE.MeshPhysicalMaterial({
+            // 透明
             transparent: true,
-            // 创建贴图
+            // 透光率
+            transmission: 1,
+            // 粗糙度
+            roughness: 0,
+            // 虹彩效应强度 (跟反射率[.reflectivity]和折射率[.ior]和虹彩效应折射率[.iridescenceIOR] 息息相关) 0~1
+            iridescence: 1,
+            // 反射率
+            // reflectivity: 0.5,
+            // 折射率
+            // ior: 1.5,
+            // 虹彩效应折射率 0~3，默认是1
+            iridescenceIOR: 1,
+            // 虹彩效应厚度，默认 [100,400]
+            iridescenceThicknessRange: [100, 400],
+            // 虹彩效应厚度贴图
+            iridescenceThicknessMap: new THREE.TextureLoader().load(
+                require('./texture/brick-墙壁/brick_roughness.jpg')
+            ),
         });
-        // 创建墙面
-        const plane = new THREE.Mesh(planeGeometry, planeMaterial);
 
+        gui.add(spherePhysicalMaterial, 'iridescence', 0, 1, 0.1).name(
+            '虹彩效应强度'
+        );
+        gui.add(spherePhysicalMaterial, 'iridescenceIOR', 0, 3, 0.1).name(
+            '虹彩效应折射率'
+        );
+        gui.add(spherePhysicalMaterial, 'iridescenceThicknessRange', {
+            '100~400': [100, 400],
+            '100~500': [100, 500],
+            '100~600': [100, 600],
+            '100~700': [100, 700],
+            '100~800': [100, 800],
+        }).name('虹彩效应层厚度');
+        let iridescenceThickness = {
+            min: 100,
+            max: 400,
+        };
+        gui.add(iridescenceThickness, 'min', 0, 1000)
+            .name('彩虹色最小厚度')
+            .onChange(() => {
+                spherePhysicalMaterial.iridescenceThicknessRange[0] =
+                    iridescenceThickness.min;
+            });
+        gui.add(iridescenceThickness, 'max', 0, 1000)
+            .name('彩虹色最大厚度')
+            .onChange(() => {
+                spherePhysicalMaterial.iridescenceThicknessRange[1] =
+                    iridescenceThickness.max;
+            });
+
+        gui.add(spherePhysicalMaterial, 'reflectivity', 0, 1, 0.1).name(
+            '反射率'
+        );
+        gui.add(spherePhysicalMaterial, 'ior', 1, 2.333, 0.1).name('折射率');
+
+        // 创建圆球模型
+        const sphere = new THREE.Mesh(sphereGeometry, spherePhysicalMaterial);
+        scene.add(sphere);
         /*
          * ------------end ----------
          */

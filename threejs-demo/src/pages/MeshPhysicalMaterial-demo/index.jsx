@@ -14,7 +14,6 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 // 引入补间动画tween.js three.js 自带
 import * as TWEEN from 'three/examples/jsm/libs/tween.module.js';
 
-import loaderUtils from 'loader-utils';
 // import * as dat from 'dat.gui';
 // const gui = new dat.GUI();
 // 使用 lil-gui 调试 three.js 图形
@@ -127,10 +126,10 @@ export default function ThreeComponent() {
         // });
 
         //2. 使用ObjectLoader
-        // const objectLoader = new THREE.ObjectLoader();
-        // objectLoader.load(require('./model/scene.json'), (object) => {
-        //     console.log(object);
-        // });
+        const objectLoader = new THREE.ObjectLoader();
+        objectLoader.load(require('./model/scene.json'), (object) => {
+            console.log(object);
+        });
 
         /*
          * ------------end ----------

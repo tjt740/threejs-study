@@ -12,7 +12,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 
 // 引入补间动画tween.js three.js 自带
-import { TWEEN } from 'three/examples/jsm/libs/tween.module.min.js';
+import * as TWEEN from 'three/examples/jsm/libs/tween.module.js';
 
 // import * as dat from 'dat.gui';
 // const gui = new dat.GUI();
@@ -25,7 +25,7 @@ export default function ThreeComponent() {
     const init = () => {
         const scene = new THREE.Scene();
         // 场景颜色
-        scene.background = new THREE.Color('rgb(170, 170, 170)');
+        scene.background = new THREE.Color(0xd2d0d0);
         // scene.background = new THREE.Color(0x000000);
         const camera = new THREE.PerspectiveCamera(
             45, // 90
@@ -82,9 +82,27 @@ export default function ThreeComponent() {
          */
 
         // 创建平行光
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 4.6);
-        directionalLight.position.set(5, 7, 7);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        directionalLight.position.set(2.4, 5.3, 2);
         scene.add(directionalLight);
+
+        const box = new THREE.Mesh(
+            new THREE.BoxGeometry(1, 1, 1),
+            new THREE.MeshBasicMaterial({})
+        );
+        box.position.copy(directionalLight.position);
+        scene.add(box);
+
+        gui.add(directionalLight.position, 'x', 0, 10, 0.1)
+            .onChange((v) => (box.position.x = v))
+            .name('平行光x位置');
+        gui.add(directionalLight.position, 'y', 0, 10, 0.1)
+            .onChange((v) => (box.position.y = v))
+            .name('平行光y位置');
+        gui.add(directionalLight.position, 'z', 0, 10, 0.1)
+            .onChange((v) => (box.position.z = v))
+            .name('平行光z位置');
+
         // 创建自然光
         const ambientLight = new THREE.AmbientLight(0xffffff, 3);
         ambientLight.position.set(5, 7, 7);

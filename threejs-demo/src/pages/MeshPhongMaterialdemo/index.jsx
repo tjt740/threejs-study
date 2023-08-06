@@ -10,7 +10,7 @@ import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 // 引入补间动画tween.js three.js 自带
-import { TWEEN } from 'three/examples/jsm/libs/tween.module.min.js';
+import * as TWEEN from 'three/examples/jsm/libs/tween.module.js';
 
 // import * as dat from 'dat.gui';
 // const gui = new dat.GUI();
@@ -78,7 +78,6 @@ export default function ThreeComponent() {
          * ------------ start ----------
          */
 
-    
         // 创建自然光
         const ambientLight = new THREE.AmbientLight(0xffffff, 1);
         scene.add(ambientLight);
@@ -122,8 +121,8 @@ export default function ThreeComponent() {
                             // 反射率
                             reflectivity: 0.99,
                         });
-                         // 加载.hdr文件时赋值给duckMaterial中的环境贴图envMap
-                         duckMesh.material.envMap = envMap;
+                        // 加载.hdr文件时赋值给duckMaterial中的环境贴图envMap
+                        duckMesh.material.envMap = envMap;
                         // 将改过材质的鸭子添加入场景中
                         scene.add(duck);
                     });

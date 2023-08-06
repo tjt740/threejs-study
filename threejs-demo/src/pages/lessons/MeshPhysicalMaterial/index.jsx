@@ -12,7 +12,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 
 // 引入补间动画tween.js three.js 自带
-import { TWEEN } from 'three/examples/jsm/libs/tween.module.min.js';
+import * as TWEEN from 'three/examples/jsm/libs/tween.module.js';
 
 // import * as dat from 'dat.gui';
 // const gui = new dat.GUI();

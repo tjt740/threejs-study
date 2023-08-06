@@ -12,7 +12,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 
 // 引入补间动画tween.js three.js 自带
-import { TWEEN } from 'three/examples/jsm/libs/tween.module.min.js';
+import * as TWEEN from 'three/examples/jsm/libs/tween.module.js';
 
 // import * as dat from 'dat.gui';
 // const gui = new dat.GUI();
@@ -25,7 +25,7 @@ export default function ThreeComponent() {
     const init = () => {
         const scene = new THREE.Scene();
         // 场景颜色
-        scene.background = new THREE.Color('rgb(170, 170, 170)');
+        scene.background = new THREE.Color(0xd2d0d0);
         // scene.background = new THREE.Color(0x000000);
         const camera = new THREE.PerspectiveCamera(
             45, // 90
@@ -80,24 +80,49 @@ export default function ThreeComponent() {
         /*
          * ------------ start ----------
          */
-
         // 创建平行光
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 4.6);
-        directionalLight.position.set(5, 7, 7);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        directionalLight.position.set(2.4, 5.3, 2);
         scene.add(directionalLight);
+
+        const box = new THREE.Mesh(
+            new THREE.BoxGeometry(1, 1, 1),
+            new THREE.MeshBasicMaterial({})
+        );
+        box.position.copy(directionalLight.position);
+        scene.add(box);
+
+        gui.add(directionalLight.position, 'x', 0, 10, 0.1)
+            .onChange((v) => (box.position.x = v))
+            .name('平行光x位置');
+        gui.add(directionalLight.position, 'y', 0, 10, 0.1)
+            .onChange((v) => (box.position.y = v))
+            .name('平行光y位置');
+        gui.add(directionalLight.position, 'z', 0, 10, 0.1)
+            .onChange((v) => (box.position.z = v))
+            .name('平行光z位置');
+
         // 创建自然光
-        const ambientLight = new THREE.AmbientLight(0xffffff, 3);
-        ambientLight.position.set(5, 7, 7);
+        const ambientLight = new THREE.AmbientLight(0xffffff);
         scene.add(ambientLight);
 
-        gui.add(directionalLight, 'intensity', 0, 10);
-        gui.add(ambientLight, 'intensity', 0, 10);
-
-        // 加载环境纹理映射.hdr文件
+        // 加载.hdr文件
         const rgbeloader = new RGBELoader();
         rgbeloader.load(require('./texture/environment.hdr'), (envMap) => {
             envMap.mapping = THREE.EquirectangularRefractionMapping;
+            // 加载环境纹理映射
             scene.environment = envMap;
+        });
+
+        // 加载.glb文件
+        const gltfLoader = new GLTFLoader();
+        gltfLoader.loadAsync(require('./modal/逼真的戒指.glb')).then((glb) => {
+            scene.add(glb.scene);
+            // 发现加载的.glb文件中，宝石没有增加.flatShading 平面着色效果，解决办法↓
+            const diamond = glb.scene.getObjectByName('blast1_diamond_0');
+            // 设置平面着色
+            console.log(diamond);
+            diamond.material.flatShading = true;
         });
 
         /*
@@ -190,9 +215,5 @@ export default function ThreeComponent() {
         init();
     }, []);
 
-    return (
-        <>
-            <div id="container" ref={container}></div>
-        </>
-    );
+    return <div ref={container}></div>;
 }

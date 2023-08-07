@@ -127,9 +127,11 @@ export default function ThreeComponent() {
 
         //2. 使用ObjectLoader
         const objectLoader = new THREE.ObjectLoader();
-        objectLoader.load(require('./model/scene.json'), (object) => {
-            console.log(object);
-        });
+        // const sceneJSON = objectLoader.parse(require('./model/scene.json'));
+        // scene.add(sceneJSON);
+
+        const dragonJSON = objectLoader.parse(require('./model/scene1.json'));
+        scene.add(dragonJSON);
 
         /*
          * ------------end ----------

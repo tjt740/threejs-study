@@ -39,8 +39,12 @@ export default function ThreeComponent() {
         camera.aspect = window.innerWidth / window.innerHeight;
         // 设置相机位置 object3d具有position，属性是一个3维的向量。
         camera.position.set(0, 0, 20);
-        // 更新camera 视角方向
-        // camera.lookAt(scene.position);
+        // 更新camera 视角方向, 摄像机看的方向，配合OrbitControls.target = new THREE.Vector3(
+        //     scene.position.x,
+        //     scene.position.y,
+        //     scene.position.z
+        // ); 使用
+        camera.lookAt(scene.position);
 
         // 摄像机添加到场景中
         scene.add(camera);
@@ -296,7 +300,11 @@ export default function ThreeComponent() {
         // 控制器最小俯视角
         controls.minPolarAngle = 0;
         // 控制器的基点 / 控制器的焦点，.object的轨道围绕它运行。 它可以在任何时候被手动更新，以更改控制器的焦点
-        controls.target = new THREE.Vector3(0, 0, 0);
+        controls.target = new THREE.Vector3(
+            scene.position.x,
+            scene.position.y,
+            scene.position.z
+        );
 
         // 渲染函数
         const clock = new THREE.Clock();

@@ -1,0 +1,11 @@
+Model Information:
+* title:	huawei Mate40pro
+* source:	https://sketchfab.com/3d-models/huawei-mate40pro-beff7564c5b149eba067cbb37f325fbc
+* author:	DailyArt (https://sketchfab.com/D.art)
+
+Model License:
+* license type:	CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)
+* requirements:	Author must be credited. No commercial use.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "huawei Mate40pro" (https://sketchfab.com/3d-models/huawei-mate40pro-beff7564c5b149eba067cbb37f325fbc) by DailyArt (https://sketchfab.com/D.art) licensed under CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)

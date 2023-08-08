@@ -185,6 +185,7 @@ export const routerPaths = [
                 elementPath: 'lessons/MeshPhysicalMaterial',
                 key: 'lessons/MeshPhysicalMaterial',
             },
+
             {
                 label: '标准网格材质',
                 icon: <MyIcon type="icon-mantou" />,
@@ -403,6 +404,18 @@ export const routerPaths = [
                 icon: <MyIcon type="icon-050-forest" />,
                 elementPath: 'MeshPhysicalMaterial-demo',
                 key: 'MeshPhysicalMaterial-demo',
+            },
+            {
+                label: '物理网格材质中自发光贴图（iphone手机模型）',
+                icon: <MyIcon type="icon-050-forest" />,
+                elementPath: 'MeshPhysicalMaterial-moblie',
+                key: 'MeshPhysicalMaterial-moblie',
+            },
+            {
+                label: '使用物理材质加载室内家具',
+                icon: <MyIcon type="icon-050-forest" />,
+                elementPath: 'MeshPhysicalMaterial-home',
+                key: 'MeshPhysicalMaterial-home',
             },
             {
                 label: '原始着色器RawshaderMaterial纹理贴图Texture',

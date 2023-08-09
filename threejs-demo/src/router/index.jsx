@@ -193,6 +193,13 @@ export const routerPaths = [
                 key: 'lessons/day14',
             },
             {
+                label: 'texture学习',
+                icon: <MyIcon type="icon-mantou" />,
+                elementPath: 'lessons/texture',
+                key: 'lessons/texture',
+            },
+
+            {
                 label: '清除物体',
                 icon: <MyIcon type="icon-hebaodan" />,
                 elementPath: 'lessons/day15',

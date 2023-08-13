@@ -25,8 +25,8 @@ export default function ThreeComponent() {
     const init = () => {
         const scene = new THREE.Scene();
         // 场景颜色
-        // scene.background = new THREE.Color(0xd2d0d0);
-        scene.background = new THREE.Color(0x000000);
+        scene.background = new THREE.Color(0xd2d0d0);
+        // scene.background = new THREE.Color(0x000000);
         const camera = new THREE.PerspectiveCamera(
             45, // 90
             window.innerWidth / window.innerHeight,
@@ -90,17 +90,44 @@ export default function ThreeComponent() {
 
         // 创建平面texture
         const texture = new THREE.TextureLoader().load(
-            require('./texture/brick_diffuse.jpg')
+            require('./texture/uv_grid_opengl.jpg')
         );
-        // 使用mipmap 控制”缩小滤镜方式“
-        texture.minFilter = THREE.LinearMipmapNearestFilter;
-        //
+        texture.flipY = false;
 
-        // 查询GPU中各向异性的最大有效值
-        const maxAnisotropy = renderer.capabilities.getMaxAnisotropy();
-        texture.anisotropy = 16;
-        console.log('GPU中各向异性的最大有效值:', maxAnisotropy); // macbook pro 16
+        // 创建平面texture
+        const texture2 = new THREE.TextureLoader().load(
+            require('./texture/rain.png')
+        );
+        // 纹理边缘润滑  如果设置为true并且alpha通道存在的话，上传到GPU时alpha的数值将会与颜色通道的数值相乘。默认为false。
+        // texture2.premultiplyAlpha = true;
 
+        // 设置旋转中心点
+        // texture.center.set(0, 0);
+        // 旋转180度
+        // texture.rotation = Math.PI / 5;
+
+        // 设置旋转中心的u位置
+        gui.add(texture.center, 'x', 0, 5, 0.1)
+            .onChange(() => {
+                texture.needsUpdate = true;
+            })
+            .name('设置旋转中心的u位置');
+        // 设置旋转中心的v位置
+        gui.add(texture.center, 'y', 0, 5, 0.1)
+            .onChange(() => {
+                texture.needsUpdate = true;
+            })
+            .name('设置旋转中心的v位置');
+
+        // 设置旋转角度
+        gui.add(texture, 'rotation', 0, Math.PI * 2, 0.1).onChange(() => {
+            texture.needsUpdate = true;
+        });
+
+        // 设置纹理中
+        // texture.repeat.set(4, 1);
+        // texture.wrapS = THREE.RepeatWrapping;
+        // texture.wrapT = THREE.RepeatWrapping;
         // 创建平面材质
         const planeMaterial = new THREE.MeshBasicMaterial({
             // side: THREE.DoubleSide,

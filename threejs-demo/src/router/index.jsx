@@ -198,7 +198,12 @@ export const routerPaths = [
                 elementPath: 'lessons/texture',
                 key: 'lessons/texture',
             },
-
+            {
+                label: '加载不同文件类型的纹理',
+                icon: <MyIcon type="icon-mantou" />,
+                elementPath: 'lessons/other-texture',
+                key: 'lessons/other-texture',
+            },
             {
                 label: '清除物体',
                 icon: <MyIcon type="icon-hebaodan" />,

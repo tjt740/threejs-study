@@ -205,6 +205,12 @@ export const routerPaths = [
                 key: 'lessons/other-texture',
             },
             {
+                label: '材质的深度相关内容学习depthText',
+                icon: <MyIcon type="icon-mantou" />,
+                elementPath: 'lessons/material_depth',
+                key: 'lessons/material_depth',
+            },
+            {
                 label: '清除物体',
                 icon: <MyIcon type="icon-hebaodan" />,
                 elementPath: 'lessons/day15',

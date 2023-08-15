@@ -5,8 +5,19 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 // 引入加载.hdr 文件组件
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
-// ktx2格式加载器
+// ktx2格式文件加载器
 import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader.js';
+// 导入dds格式文件加载器
+import { DDSLoader } from 'three/examples/jsm/loaders/DDSLoader.js';
+// 导入tga格式文件加载器
+import { TGALoader } from 'three/addons/loaders/TGALoader.js';
+
+// 导入exr格式文件加载器
+import { EXRLoader } from 'three/addons/loaders/EXRLoader.js';
+// 导入tif格式文件加载器
+import { LogLuvLoader } from 'three/addons/loaders/LogLuvLoader.js';
+// 导入rgbmloader加载器
+import { RGBMLoader } from 'three/addons/loaders/RGBMLoader.js';
 
 // 引入 GLTFLoader 加载glb模型文件
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
@@ -87,40 +98,48 @@ export default function ThreeComponent() {
          * ------------ start ----------
          */
 
-        // 加载.jpg 、 .png 格式文件作为纹理
-        const textureLoader = new THREE.TextureLoader();
-        const texture = textureLoader.load(
-            require('./texture/Alex_Hart-Nature_Lab_Bones_2k.png')
-        );
-
-        // 加载.ktx2 格式文件作为纹理
-
-        let ktx2Loader = new KTX2Loader();
-        ktx2Loader.setTranscoderPath('/public/basis/');
-        ktx2Loader.detectSupport(renderer);
-
-        let ktx2Texture = ktx2Loader.load(
-            require('./texture/sample_uastc_zstd.ktx2'),
-            (texture) => {
-                //         //         // console.log("ktx2", texture);
-                //         //         // texture.mapping = THREE.EquirectangularReflectionMapping;
-                //         //         // // texture.magFilter = THREE.LinearFilter;
-                //         //         // // texture.minFilter = THREE.LinearMipMapLinearFilter;
-                //         //         // texture.anisotropy = 16;
-                //         //         // // 不起效果texture.flipY = true;
-                //         //         // texture.needsUpdate = true;
-                //         //         // scene.background = texture;
-                //         //         // scene.environment = texture;
-                //         //         // plane.material.map = texture;
-            }
-        );
-
         const planeGeometry = new THREE.PlaneGeometry(8, 8, 32, 32);
         const planeMaterial = new THREE.MeshBasicMaterial({
             // map: texture,
         });
-
         const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
+
+        // 加载.exr 格式文件作为纹理图片
+        // const exrLoader = new EXRLoader();
+        // const exrTexture = exrLoader.load(
+        //     require('./texture/Alex_Hart-Nature_Lab_Bones_2k_bc7.exr'),
+        //     (texture) => {
+        //         console.log('exr', texture);
+        //         texture.mapping = THREE.EquirectangularRefractionMapping;
+        //         scene.background = texture;
+        //         scene.environment = texture;
+        //     }
+        // );
+        // planeMaterial.map = exrTexture;
+
+        // 加载.tif 格式文件作为纹理图片
+        // const logLuvLoader = new LogLuvLoader();
+        // const logLuvTexture = logLuvLoader.load(
+        //     require('./texture/Alex_Hart-Nature_Lab_Bones_2k_bc7_nomipmap.tiff'),
+        //     (texture) => {
+        //         console.log('logLuv', texture);
+
+        //         scene.background = texture;
+        //         scene.environment = texture;
+        //     }
+        // );
+        // planeMaterial.map = logLuvTexture;
+
+        // 加载.png 格式文件作为纹理图片
+        const rgbmLoader = new RGBMLoader();
+        const rgbmTextrue = rgbmLoader.load(
+            require('./texture/Alex_Hart-Nature_Lab_Bones_2k.png'),
+            (texture) => {
+                scene.background = texture;
+                scene.environment = texture;
+            }
+        );
+        planeMaterial.map = rgbmTextrue;
         scene.add(planeMesh);
 
         /*

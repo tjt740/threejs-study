@@ -205,10 +205,16 @@ export const routerPaths = [
                 key: 'lessons/other-texture',
             },
             {
-                label: '材质的深度相关内容学习depthText',
+                label: '材质的深度相关内容学习depth',
                 icon: <MyIcon type="icon-mantou" />,
                 elementPath: 'lessons/material_depth',
                 key: 'lessons/material_depth',
+            },
+            {
+                label: '材质混合模式详解',
+                icon: <MyIcon type="icon-mantou" />,
+                elementPath: 'lessons/material_blend',
+                key: 'lessons/material_blend',
             },
             {
                 label: '清除物体',

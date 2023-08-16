@@ -25,8 +25,8 @@ export default function ThreeComponent() {
     const init = () => {
         const scene = new THREE.Scene();
         // 场景颜色
-        scene.background = new THREE.Color(0xd2d0d0);
-        // scene.background = new THREE.Color(0x000000);
+        // scene.background = new THREE.Color(0xd2d0d0);
+        scene.background = new THREE.Color(0x000000);
         const camera = new THREE.PerspectiveCamera(
             45, // 90
             window.innerWidth / window.innerHeight,
@@ -84,19 +84,20 @@ export default function ThreeComponent() {
         /*
          * ------------ start ----------
          */
-        const rgbeLoader = new RGBELoader();
-        rgbeLoader.load(
-            require('./texture/Alex_Hart-Nature_Lab_Bones_2k.hdr'),
-            (texture) => {
-                texture.mapping = THREE.EquirectangularRefractionMapping;
-                scene.background = texture;
-                scene.environment = texture;
-            }
-        );
+        // const rgbeLoader = new RGBELoader();
+        // rgbeLoader.load(
+        //     require('./texture/Alex_Hart-Nature_Lab_Bones_2k.hdr'),
+        //     (texture) => {
+        //         texture.mapping = THREE.EquirectangularRefractionMapping;
+        //         scene.background = texture;
+        //         scene.environment = texture;
+        //     }
+        // );
 
         const planeGeometry1 = new THREE.PlaneGeometry(7, 7, 32, 32);
         const planeMaterial1 = new THREE.MeshBasicMaterial({
             transparent: true,
+            side: THREE.DoubleSide,
             map: new THREE.TextureLoader().load(
                 require('./texture/sprite0.png')
             ),
@@ -107,6 +108,7 @@ export default function ThreeComponent() {
         const planeGeometry2 = new THREE.PlaneGeometry(7, 7, 32, 32);
         const planeMaterial2 = new THREE.MeshBasicMaterial({
             transparent: true,
+            side: THREE.DoubleSide,
             map: new THREE.TextureLoader().load(
                 require('./texture/lensflare0_alpha.png')
             ),
@@ -114,6 +116,55 @@ export default function ThreeComponent() {
         const planeMesh2 = new THREE.Mesh(planeGeometry2, planeMaterial2);
         planeMesh2.position.z = 3;
         scene.add(planeMesh2);
+
+        const gui1 = gui.addFolder('分区1（红色面）');
+        // 设置红色面深度模式
+        gui1.add(planeMaterial1, 'depthFunc', {
+            NeverDepth: THREE.NeverDepth,
+            AlwaysDepth: THREE.AlwaysDepth,
+            LessDepth: THREE.LessDepth,
+            LessEqualDepth: THREE.LessEqualDepth,
+            GreaterEqualDepth: THREE.GreaterEqualDepth,
+            GreaterDepth: THREE.GreaterDepth,
+            NotEqualDepth: THREE.NotEqualDepth,
+        }).name('深度模式');
+        gui1.add(planeMaterial1, 'depthWrite')
+            .name('深度写入')
+            .onChange(() => {
+                planeMaterial1.needsUpdate = true;
+            });
+        gui1.add(planeMaterial1, 'depthTest')
+            .name('深度测试')
+            .onChange(() => {
+                planeMaterial1.needsUpdate = true;
+            });
+
+        gui1.add(planeMesh1, 'renderOrder', 0, 10).step(1).name('渲染顺序');
+
+        const gui2 = gui.addFolder('分区2（闪光点面）');
+        // 设置分（闪光点面）深度模式
+        gui2.add(planeMaterial2, 'depthFunc', {
+            // 材质使用这些深度函数来比较输入像素和缓冲器中Z-depth的值。 如果比较的结果为true，则将绘制像素。
+            NeverDepth: THREE.NeverDepth,
+            AlwaysDepth: THREE.AlwaysDepth,
+            LessDepth: THREE.LessDepth,
+            LessEqualDepth: THREE.LessEqualDepth,
+            GreaterEqualDepth: THREE.GreaterEqualDepth,
+            GreaterDepth: THREE.GreaterDepth,
+            NotEqualDepth: THREE.NotEqualDepth,
+        }).name('深度模式');
+        gui2.add(planeMaterial2, 'depthWrite')
+            .name('深度写入')
+            .onChange(() => {
+                planeMaterial2.needsUpdate = true;
+            });
+        gui2.add(planeMaterial2, 'depthTest')
+            .name('深度测试')
+            .onChange(() => {
+                planeMaterial2.needsUpdate = true;
+            });
+
+        gui2.add(planeMesh2, 'renderOrder', 0, 10).step(1).name('渲染顺序');
 
         /*
          * ------------end ----------

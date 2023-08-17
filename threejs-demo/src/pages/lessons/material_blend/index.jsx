@@ -113,6 +113,89 @@ export default function ThreeComponent() {
         // 红色面 = 红色 * 1（源因子：颜色透明度1） + 白色光点  * 0（目标因子：1 - 源因子颜色透明度1 = 0 ）
         // 黑色光圈 = 黑色 * (1 * 0.8)（源因子：颜色透明度0.8） + 白色光点  * 0.2（目标因子：1 - 源因子颜色透明度0.8 = 0.2 ）
 
+        gui.width = '400px';
+        const gui1 = gui.addFolder('红色面');
+        gui1.add(planeMaterial1, 'blending', {
+            NoBlending: THREE.NoBlending,
+            NormalBlending: THREE.NormalBlending,
+            AdditiveBlending: THREE.AdditiveBlending,
+            SubtractiveBlending: THREE.SubtractiveBlending,
+            MultiplyBlending: THREE.MultiplyBlending,
+            CustomBlending: THREE.CustomBlending,
+        }).name('材质混合模式');
+
+        gui1.add(planeMaterial1, 'blendSrc', {
+            ZeroFactor: THREE.ZeroFactor,
+            OneFactor: THREE.OneFactor,
+            SrcColorFactor: THREE.SrcColorFactor,
+            OneMinusSrcColorFactor: THREE.OneMinusSrcColorFactor,
+            SrcAlphaFactor: THREE.SrcAlphaFactor,
+            OneMinusSrcAlphaFactor: THREE.OneMinusSrcAlphaFactor,
+            DstAlphaFactor: THREE.DstAlphaFactor,
+            OneMinusDstAlphaFactor: THREE.OneMinusDstAlphaFactor,
+            DstColorFactor: THREE.DstColorFactor,
+            OneMinusDstColorFactor: THREE.OneMinusDstColorFactor,
+            SrcAlphaSaturateFactor: THREE.SrcAlphaSaturateFactor,
+        }).name('.blendSrc混合源因子');
+
+        gui1.add(planeMaterial1, 'blendSrcAlpha', {
+            ZeroFactor: THREE.ZeroFactor,
+            OneFactor: THREE.OneFactor,
+            SrcColorFactor: THREE.SrcColorFactor,
+            OneMinusSrcColorFactor: THREE.OneMinusSrcColorFactor,
+            SrcAlphaFactor: THREE.SrcAlphaFactor,
+            OneMinusSrcAlphaFactor: THREE.OneMinusSrcAlphaFactor,
+            DstAlphaFactor: THREE.DstAlphaFactor,
+            OneMinusDstAlphaFactor: THREE.OneMinusDstAlphaFactor,
+            DstColorFactor: THREE.DstColorFactor,
+            OneMinusDstColorFactor: THREE.OneMinusDstColorFactor,
+            SrcAlphaSaturateFactor: THREE.SrcAlphaSaturateFactor,
+        }).name('.blendSrcAlpha混合操作透明度');
+
+        gui1.add(planeMaterial1, 'blendDst', {
+            ZeroFactor: THREE.ZeroFactor,
+            OneFactor: THREE.OneFactor,
+            SrcColorFactor: THREE.SrcColorFactor,
+            OneMinusSrcColorFactor: THREE.OneMinusSrcColorFactor,
+            SrcAlphaFactor: THREE.SrcAlphaFactor,
+            OneMinusSrcAlphaFactor: THREE.OneMinusSrcAlphaFactor,
+            DstAlphaFactor: THREE.DstAlphaFactor,
+            OneMinusDstAlphaFactor: THREE.OneMinusDstAlphaFactor,
+            DstColorFactor: THREE.DstColorFactor,
+            OneMinusDstColorFactor: THREE.OneMinusDstColorFactor,
+            // SrcAlphaSaturateFactor: THREE.SrcAlphaSaturateFactor,
+        }).name('.blendDst混合目标因子');
+
+        gui1.add(planeMaterial1, 'blendDstAlpha', {
+            ZeroFactor: THREE.ZeroFactor,
+            OneFactor: THREE.OneFactor,
+            SrcColorFactor: THREE.SrcColorFactor,
+            OneMinusSrcColorFactor: THREE.OneMinusSrcColorFactor,
+            SrcAlphaFactor: THREE.SrcAlphaFactor,
+            OneMinusSrcAlphaFactor: THREE.OneMinusSrcAlphaFactor,
+            DstAlphaFactor: THREE.DstAlphaFactor,
+            OneMinusDstAlphaFactor: THREE.OneMinusDstAlphaFactor,
+            DstColorFactor: THREE.DstColorFactor,
+            OneMinusDstColorFactor: THREE.OneMinusDstColorFactor,
+            // SrcAlphaSaturateFactor: THREE.SrcAlphaSaturateFactor,
+        });
+
+        gui1.add(planeMaterial1, 'blendEquation', {
+            AddEquation: THREE.AddEquation,
+            SubtractEquation: THREE.SubtractEquation,
+            ReverseSubtractEquation: THREE.ReverseSubtractEquation,
+            MinEquation: THREE.MinEquation,
+            MaxEquation: THREE.MaxEquation,
+        }).name('.blendEquation混合方程式');
+
+        gui1.add(planeMaterial1, 'blendEquationAlpha', {
+            AddEquation: THREE.AddEquation,
+            SubtractEquation: THREE.SubtractEquation,
+            ReverseSubtractEquation: THREE.ReverseSubtractEquation,
+            MinEquation: THREE.MinEquation,
+            MaxEquation: THREE.MaxEquation,
+        }).name('.blendEquationAlpha混合方程式透明度');
+
         /*
          * ------------end ----------
          */

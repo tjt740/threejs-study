@@ -185,7 +185,6 @@ export const routerPaths = [
                 elementPath: 'lessons/MeshPhysicalMaterial',
                 key: 'lessons/MeshPhysicalMaterial',
             },
-
             {
                 label: '标准网格材质',
                 icon: <MyIcon type="icon-mantou" />,
@@ -215,6 +214,18 @@ export const routerPaths = [
                 icon: <MyIcon type="icon-mantou" />,
                 elementPath: 'lessons/material_blend',
                 key: 'lessons/material_blend',
+            },
+            {
+                label: ' 对平面/物体/场景裁剪',
+                icon: <MyIcon type="icon-mantou" />,
+                elementPath: 'lessons/裁剪平面、对物体裁剪',
+                key: 'lessons/裁剪平面、对物体裁剪',
+            },
+            {
+                label: '模板渲染',
+                icon: <MyIcon type="icon-mantou" />,
+                elementPath: 'lessons/template-render',
+                key: 'lessons/template-render',
             },
             {
                 label: '清除物体',
@@ -441,6 +452,19 @@ export const routerPaths = [
                 elementPath: 'MeshPhysicalMaterial-home',
                 key: 'MeshPhysicalMaterial-home',
             },
+            {
+                label: '材质混合实现水杯+果汁+🧊',
+                icon: <MyIcon type="icon-050-forest" />,
+                elementPath: 'water-cup',
+                key: 'water-cup',
+            },
+            {
+                label: '实现金属剖面（运用材质裁剪+模板缓冲）',
+                icon: <MyIcon type="icon-050-forest" />,
+                elementPath: 'metal-anatomy',
+                key: 'metal-anatomy',
+            },
+
             {
                 label: '原始着色器RawshaderMaterial纹理贴图Texture',
                 icon: <MyIcon type="icon-zhangyuxiaowanzi" />,

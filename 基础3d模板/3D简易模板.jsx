@@ -54,33 +54,6 @@ export default function ThreeComponent() {
         //  坐标辅助线添加到场景中
         scene.add(axesHelper);
 
-        // 初始化<渲染器>
-        const renderer = new THREE.WebGLRenderer({
-            antialias: true, // 消除锯齿
-            alpha: true, // 背景透明
-        });
-        // 设置渲染器编码格式  THREE.NoColorSpace = "" || THREE.SRGBColorSpace = "srgb" || THREE.LinearSRGBColorSpace = "srgb-linear"
-        renderer.outputColorSpace = 'srgb';
-        // 色调映射 THREE.NoToneMapping || THREE.LinearToneMapping || THREE.ReinhardToneMapping || THREE.CineonToneMapping || THREE.ACESFilmicToneMapping
-        renderer.toneMapping = THREE.NoToneMapping;
-        // 色调映射的曝光级别。默认是1，屏幕是2.2，越低越暗
-        renderer.toneMappingExposure = 2.2;
-
-        const WIDTH = Number(
-            window
-                .getComputedStyle(
-                    document.getElementsByClassName('ant-layout-content')[0]
-                )
-                .width.split('px')[0]
-        );
-        const HEIGHT = Number(
-            window
-                .getComputedStyle(
-                    document.getElementsByClassName('ant-layout-content')[0]
-                )
-                .height.split('px')[0]
-        );
-
         /*
          * ------------ start ----------
          */
@@ -276,6 +249,33 @@ export default function ThreeComponent() {
         /*
          * ------------end ----------
          */
+
+        // 初始化<渲染器>
+        const renderer = new THREE.WebGLRenderer({
+            antialias: true, // 消除锯齿
+            alpha: true, // 背景透明
+        });
+        // 设置渲染器编码格式  THREE.NoColorSpace = "" || THREE.SRGBColorSpace = "srgb" || THREE.LinearSRGBColorSpace = "srgb-linear"
+        renderer.outputColorSpace = 'srgb';
+        // 色调映射 THREE.NoToneMapping || THREE.LinearToneMapping || THREE.ReinhardToneMapping || THREE.CineonToneMapping || THREE.ACESFilmicToneMapping
+        renderer.toneMapping = THREE.NoToneMapping;
+        // 色调映射的曝光级别。默认是1，屏幕是2.2，越低越暗
+        renderer.toneMappingExposure = 2.2;
+
+        const WIDTH = Number(
+            window
+                .getComputedStyle(
+                    document.getElementsByClassName('ant-layout-content')[0]
+                )
+                .width.split('px')[0]
+        );
+        const HEIGHT = Number(
+            window
+                .getComputedStyle(
+                    document.getElementsByClassName('ant-layout-content')[0]
+                )
+                .height.split('px')[0]
+        );
 
         // 改变渲染器尺寸
         renderer.setSize(window.innerWidth, window.innerHeight);

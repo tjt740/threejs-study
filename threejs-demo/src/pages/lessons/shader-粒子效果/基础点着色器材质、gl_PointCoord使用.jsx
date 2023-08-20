@@ -66,6 +66,13 @@ export default function ThreeComponent() {
             new THREE.BufferAttribute(bufferPosition, 3)
         );
 
+        // 创建点材质
+        // const pointMaterial = new THREE.PointsMaterial({
+        //     color: 0xff0000,
+        //     size: 10,
+        //     sizeAttenuation: true,
+        // });
+
         const pointMaterial = new THREE.ShaderMaterial({
             // 顶点着色器
             vertexShader: /*glsl*/ `
@@ -75,35 +82,31 @@ export default function ThreeComponent() {
                     gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4( position, 1.0 ) ;
 
                     //⭐️ 设置点大小才能显示
-                    gl_PointSize = 500.0;
+                    gl_PointSize = 50.0;
 
-                      }
+                }
             `,
             // 片元着色器
             fragmentShader: /*glsl*/ `
-            
-                // 获取声明的uTexture。
-                uniform sampler2D uTexture;
-
+            varying vec2 vUv;
                 void main(){
-                    // 声明textureColor
-                    vec4 textureColor;
-                    textureColor = texture2D(uTexture,gl_PointCoord);
+                    
+                   
+                    // gl_FragColor =  vec4(gl_PointCoord, 0, 1.0);
 
-                    gl_FragColor = textureColor;
+                    // 设置渐变圆
+                    float strength = distance(gl_PointCoord,vec2(0.5));
+                    strength*=2.0;
+                    strength = 1.0-strength;
+                    gl_FragColor = vec4(vec3(strength),1.0);
+
+                    // 画圆
+                    // float strength = 1.0-distance(gl_PointCoord,vec2(0.5));
+                    // strength = step(0.5,strength);
+                    // gl_FragColor = vec4(vec3(strength), 1.0);
+                 
                 }
             `,
-
-            // 设置uniforms
-            uniforms: {
-                // 设置 uTexture变量
-                uTexture: {
-                    // 【固定写法value】
-                    value: new THREE.TextureLoader().load(
-                        require('./textures/particles/9.png')
-                    ),
-                },
-            },
         });
 
         // 创建点

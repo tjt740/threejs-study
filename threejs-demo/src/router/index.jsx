@@ -283,12 +283,7 @@ export const routerPaths = [
                 elementPath: 'lessons/gltfloader',
                 key: 'lessons/gltfloader',
             },
-            {
-                label: '着色器设置点材质',
-                icon: <MyIcon type="icon-meishikafei" />,
-                elementPath: 'lessons/point-material',
-                key: 'lessons/point-material',
-            },
+
             {
                 label: '线性雾、指数雾',
                 icon: <MyIcon type="icon-banji" />,
@@ -324,6 +319,18 @@ export const routerPaths = [
                 icon: <MyIcon type="icon-futejia" />,
                 elementPath: 'lessons/surround',
                 key: 'lessons/surround',
+            },
+            {
+                label: '着色器设置点材质',
+                icon: <MyIcon type="icon-meishikafei" />,
+                elementPath: 'lessons/point-material',
+                key: 'lessons/point-material',
+            },
+            {
+                label: 'shader-粒子效果',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: 'lessons/shader-粒子效果',
+                key: 'lessons/shader-粒子效果',
             },
         ],
     },

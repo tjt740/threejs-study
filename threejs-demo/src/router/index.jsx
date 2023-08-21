@@ -527,6 +527,12 @@ export const routerPaths = [
                 key: 'model-line',
             },
             {
+                label: '烟花🎆（着色器材质+点粒子）',
+                icon: <MyIcon type="icon-zhangyuxiaowanzi" />,
+                elementPath: 'fireworks',
+                key: 'fireworks',
+            },
+            {
                 label: '测试',
                 icon: <MyIcon type="icon-zhangyuxiaowanzi" />,
                 elementPath: 'test-demo',

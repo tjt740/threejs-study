@@ -418,6 +418,12 @@ export const routerPaths = [
                 key: 'galaxy-demo',
             },
             {
+                label: '银河系demo（粒子实现）',
+                icon: <MyIcon type="icon-zhangyuxiaowanzi" />,
+                elementPath: 'galaxy-demo-points',
+                key: 'galaxy-demo-points',
+            },
+            {
                 label: '3d滚动页面',
                 icon: <MyIcon type="icon-futejia" />,
                 elementPath: '3d-scroll-demo',

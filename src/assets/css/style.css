@@ -1,0 +1,27 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #1e1a20;
+}
+::-webkit-scrollbar {
+  display: none;
+}
+
+.page {
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+  padding: 0 10%;
+  color: #fff;
+  flex-direction: column;
+}
+.page h1 {
+  margin: 60px 0;
+  font-size: 40px;
+}
+.page h3 {
+  font-size: 30px;
+}

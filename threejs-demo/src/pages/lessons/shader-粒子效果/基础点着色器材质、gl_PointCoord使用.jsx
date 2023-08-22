@@ -91,7 +91,8 @@ export default function ThreeComponent() {
             varying vec2 vUv;
                 void main(){
                     
-                   
+                    // gl_FragColor =  vec4(vUv, 1.0, 1.0);
+
                     // gl_FragColor =  vec4(gl_PointCoord, 0, 1.0);
 
                     // 设置渐变圆

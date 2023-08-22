@@ -22,6 +22,10 @@ import gsap from 'gsap';
 // const gui = new dat.GUI();
 // 使用 lil-gui 调试 three.js 图形
 import GUI from 'lil-gui';
+
+// 导入自定义类函数
+import FireWork from './func/fireworks';
+
 const gui = new GUI();
 
 export default function ThreeComponent() {
@@ -85,7 +89,7 @@ export default function ThreeComponent() {
                     createFlylight();
                 });
         };
-        createModel();
+        // createModel();
 
         // 加载水模型
         const createWater = () => {
@@ -311,6 +315,29 @@ export default function ThreeComponent() {
             // 设置渲染器像素比:
             renderer.setPixelRatio(window.devicePixelRatio);
         });
+
+        // 创建烟花函数
+        const fireWorkManage = [];
+        const createFirework = () => {
+            // 随机颜色
+            const color = `hsl(${Math.floor(Math.random() * 360)},100%,80%)`;
+            // 随机位置
+            const position = {
+                x: (Math.random() - 0.5) * 40,
+                z: -(Math.random() - 0.5) * 40,
+                y: 3 + Math.random() * 15,
+            };
+
+            // 将随机创建烟花颜色+烟花终点位置，放入类组件中
+            const fireWork = new FireWork({ color, position, scene });
+
+            // 烟花创建成功后添加到场景中
+            fireWork.addScene(scene, camera);
+            // 把每次创建的烟花放到数组里进行管理
+            fireWorkManage.push(fireWork);
+        };
+
+        window.addEventListener('click', createFirework);
     };
 
     useEffect(() => {

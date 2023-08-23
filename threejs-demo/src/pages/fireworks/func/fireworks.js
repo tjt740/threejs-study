@@ -3,6 +3,10 @@ import * as THREE from 'three';
 import startFireworkVertexshader from '../shader/start-firework/start-firework-vertexshader';
 import startFireworkFragmentshader from '../shader/start-firework/start-firework-fragmentshader';
 
+// 烟火着色器材质
+import fireworksVertexshader from '../shader/fireworks/fireworks-vertexshader';
+import fireworksFragmentshader from '../shader/fireworks/fireworks-fragmentshader';
+
 // 创建类组件
 export default class FireWork {
     // from: 烟花初始发射位置 position:烟花终点位置
@@ -42,7 +46,7 @@ export default class FireWork {
                 },
                 // 尺寸
                 uSize: {
-                    value: 15.0,
+                    value: 0,
                 },
             },
         });
@@ -76,7 +80,8 @@ export default class FireWork {
         // 创建爆炸💥烟花
         this.fireworkBoomGeometry = new THREE.BufferGeometry();
         // 烟花爆炸数量
-        this.maxFireworkCount = 180 + Math.floor(Math.random() * 180);
+        this.maxFireworkCount = 9;
+        // 180 + Math.floor(Math.random() * 180);
         // 爆炸烟花顶点位置
         this.fireworkBoomPositionList = [];
         // 烟花大小
@@ -90,23 +95,23 @@ export default class FireWork {
             this.fireworkBoomPositionList[i * 3 + 1] = position.y;
             this.fireworkBoomPositionList[i * 3 + 2] = position.z;
 
-            // // 负责每一个烟花的大小
-            // this.fireworkBoomScaleList[i] = Math.random();
+            // 负责每一个烟花的大小
+            this.fireworkBoomScaleList[i] = Math.random() * 20;
 
-            // // 每一个烟花向4周发射的角度
-            // // 发射上下为圆
-            // const theta = Math.random() * 2 * Math.PI;
-            // // 发射左右为圆
-            // const beta = Math.random() * 2 * Math.PI;
-            // // 发射半径
-            // const r = Math.random();
+            // 每一个烟花向4周发射的角度
+            // 发射上下为圆
+            const theta = Math.random() * 2 * Math.PI;
+            // 发射左右为圆
+            const beta = Math.random() * 2 * Math.PI;
+            // 发射半径
+            const r = Math.random();
 
-            // this.fireworkBoomDirectionList[i * 3 + 0] =
-            //     r * Math.sin(theta) + r * Math.sin(beta);
-            // this.fireworkBoomDirectionList[i * 3 + 1] =
-            //     r * Math.cos(theta) + r * Math.cos(beta);
-            // this.fireworkBoomDirectionList[i * 3 + 2] =
-            //     r * Math.sin(theta) + r * Math.cos(beta);
+            this.fireworkBoomDirectionList[i * 3 + 0] =
+                r * Math.sin(theta) + r * Math.sin(beta);
+            this.fireworkBoomDirectionList[i * 3 + 1] =
+                r * Math.cos(theta) + r * Math.cos(beta);
+            this.fireworkBoomDirectionList[i * 3 + 2] =
+                r * Math.sin(theta) + r * Math.cos(beta);
         }
 
         // 设置爆炸💥烟花顶点位置
@@ -133,47 +138,15 @@ export default class FireWork {
                 3
             )
         );
+        console.log(this.fireworkBoomGeometry);
 
         // 设置爆炸💥烟花材质
         this.fireworkBoomMaterial = new THREE.ShaderMaterial({
             // 顶点着色器
-            vertexShader: /*glsl*/ `
-            // attribute vec3 step;
-            // 时间
-            // uniform float uTime;
-            // 小球尺寸
-            // uniform float uSize;
-
-            void main(){
-            
-                vec4 modelPosition =  modelMatrix * vec4( position, 1.0 );
-                // 位置 = 时间*距离
-                // modelPosition.xyz += ( step * uTime);
-            
-                gl_Position = projectionMatrix * viewMatrix * modelPosition;
-
-                //⭐️ 设置点大小才能显示
-                // 随时间逐渐变大
-                gl_PointSize = 20.0;
-                // gl_PointSize = uSize * uTime;
-
-            }
-                    `,
+            vertexShader: fireworksVertexshader,
             // 片元着色器
-            fragmentShader: /*glsl*/ `
-                void main(){
-               
-                    float strength = distance(gl_PointCoord,vec2(0.5));
-                    strength*=2.0;
-                    strength = 1.0-strength;
-                    gl_FragColor = vec4(strength);
+            fragmentShader: fireworksFragmentshader,
 
-                }
-            `,
-            transparent: true,
-            vertexColors: true,
-            depthWrite: false,
-            blending: THREE.AdditiveBlending,
             // 设置uniforms 把变量带给顶点着色器、片元着色器
             uniforms: {
                 // 设置uTime,通过updateTime更新
@@ -182,9 +155,16 @@ export default class FireWork {
                 },
                 // 尺寸
                 uSize: {
-                    value: 15.0,
+                    value: 0,
                 },
+                // 随机圆球颜色
+                uColor: { value: this.Color },
             },
+
+            transparent: true,
+            vertexColors: true,
+            depthWrite: false,
+            blending: THREE.AdditiveBlending,
         });
         // 爆炸💥烟花
         this.fireworkBoomMesh = new THREE.Points(
@@ -207,7 +187,8 @@ export default class FireWork {
         if (getElapsedTime < 1) {
             this.startFireworkBailMaterial.uniforms.uTime.value =
                 getElapsedTime;
-            this.startFireworkBailMaterial.uniforms.uSize.value = 18;
+            // 小球飞行中慢慢变大
+            this.startFireworkBailMaterial.uniforms.uSize.value = 20.0;
             // 小球飞出去后炸开（需要清除原先飞出去的小球）
         } else {
             // 清除物体
@@ -216,6 +197,25 @@ export default class FireWork {
             this.startFireworkBailGeometry.dispose();
             // 重置小球的uSize
             this.startFireworkBailMaterial.uniforms.uSize.value = 0;
+
+            // 如果大于等于1秒就触发烟火
+            if (getElapsedTime >= 1) {
+                // 烟火时间变化
+                this.fireworkBoomMaterial.uniforms.uTime.value =
+                    getElapsedTime - 1;
+
+                // 烟火大小
+                this.fireworkBoomMaterial.uniforms.uSize.value = 20;
+            }
+
+            // 如果烟花持续时间大于3秒就销毁烟火
+            if (getElapsedTime >= 3) {
+                this.startFireworkBailMaterial.uniforms.uTime.value = 0;
+                this.fireworkBoomMaterial.uniforms.uSize.value = 0;
+                this.scene.remove(this.fireworkBoomMesh);
+                this.fireworkBoomGeometry.dispose();
+                this.fireworkBoomMaterial.dispose();
+            }
         }
         // console.log('运行时间:', getElapsedTime);
     }

@@ -138,30 +138,29 @@ export default class FireWork {
         this.fireworkBoomMaterial = new THREE.ShaderMaterial({
             // 顶点着色器
             vertexShader: /*glsl*/ `
-            attribute vec3 step;
+            // attribute vec3 step;
             // 时间
-            uniform float uTime;
+            // uniform float uTime;
             // 小球尺寸
-            uniform float uSize;
+            // uniform float uSize;
 
             void main(){
             
                 vec4 modelPosition =  modelMatrix * vec4( position, 1.0 );
                 // 位置 = 时间*距离
-                modelPosition.xyz += ( step * uTime);
+                // modelPosition.xyz += ( step * uTime);
             
                 gl_Position = projectionMatrix * viewMatrix * modelPosition;
 
                 //⭐️ 设置点大小才能显示
                 // 随时间逐渐变大
-                gl_PointSize = uSize * uTime;
+                gl_PointSize = 20.0;
+                // gl_PointSize = uSize * uTime;
 
             }
                     `,
             // 片元着色器
             fragmentShader: /*glsl*/ `
-                varying vec2 vUv;
-                uniform vec3 uColor;
                 void main(){
                
                     float strength = distance(gl_PointCoord,vec2(0.5));

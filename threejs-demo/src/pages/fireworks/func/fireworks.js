@@ -195,7 +195,7 @@ export default class FireWork {
 
     // 调用场景添加
     addScene() {
-        // this.scene.add(this.startFireworkBail);
+        this.scene.add(this.startFireworkBail);
         this.scene.add(this.fireworkBoomMesh);
     }
 

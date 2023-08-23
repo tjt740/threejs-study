@@ -62,6 +62,47 @@ export default function ThreeComponent() {
         //  坐标辅助线添加到场景中
         scene.add(axesHelper);
 
+        // 初始化<渲染器>
+        const renderer = new THREE.WebGLRenderer({
+            antialias: true, // 消除锯齿
+            alpha: true, // 背景透明
+        });
+        // 设置渲染器编码格式  THREE.NoColorSpace = "" || THREE.SRGBColorSpace = "srgb" || THREE.LinearSRGBColorSpace = "srgb-linear"
+        renderer.outputColorSpace = 'srgb';
+        // 色调映射 THREE.NoToneMapping || THREE.LinearToneMapping || THREE.ReinhardToneMapping || THREE.CineonToneMapping || THREE.ACESFilmicToneMapping
+        renderer.toneMapping = THREE.NoToneMapping;
+        // 色调映射的曝光级别。默认是1，屏幕是2.2，越低越暗
+        renderer.toneMappingExposure = 2.2;
+
+        // 改变渲染器尺寸
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        // 设置像素比 使图形锯齿 消失
+        renderer.setPixelRatio(window.devicePixelRatio);
+        // 设置渲染器开启阴影计算
+        renderer.shadowMap.enabled = true;
+        // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能.
+        // renderer.physicallyCorrectLights = true;
+        // renderer.useLegacyLightsback = true;
+        // 轨道控制器
+        const controls = new OrbitControls(camera, renderer.domElement);
+        // 控制器阻尼
+        controls.enableDamping = true;
+        // 阻尼系数，只有在.enableDamping = true时才生效，默认0.05
+        controls.dampingFactor = 0.05;
+        // 自动旋转
+        controls.autoRotate = false;
+        controls.autoRotateSpeed = 2.0;
+        // 控制器最大仰视角 / 最小俯视角  （抬头/低头角度）
+        controls.maxPolarAngle = Math.PI;
+        // 控制器最小俯视角
+        controls.minPolarAngle = 0;
+        // 控制器的基点 / 控制器的焦点，.object的轨道围绕它运行。 它可以在任何时候被手动更新，以更改控制器的焦点
+        controls.target = new THREE.Vector3(
+            scene.position.x,
+            scene.position.y,
+            scene.position.z
+        );
+
         /*
          * ------------ start ----------
          */
@@ -201,78 +242,38 @@ export default function ThreeComponent() {
             });
         };
 
-        /*
-         * ------------end ----------
-         */
+        // 创建烟花
+        // 每次调用类函数，往fireworkListManage里推入数据，进行后期管理
+        const fireworkListManage = [];
+        const createFirework = () => {
+            // 随机颜色
+            const color = `hsl(${Math.floor(Math.random() * 360)},100%,80%)`;
+            // 随机位置
+            const position = {
+                x: (Math.random() - 0.5) * 40,
+                z: -(Math.random() - 0.5) * 40,
+                y: 3 + Math.random() * 15,
+            };
 
-        // 初始化<渲染器>
-        const renderer = new THREE.WebGLRenderer({
-            antialias: true, // 消除锯齿
-            alpha: true, // 背景透明
-        });
-        // 设置渲染器编码格式  THREE.NoColorSpace = "" || THREE.SRGBColorSpace = "srgb" || THREE.LinearSRGBColorSpace = "srgb-linear"
-        renderer.outputColorSpace = 'srgb';
-        // 色调映射 THREE.NoToneMapping || THREE.LinearToneMapping || THREE.ReinhardToneMapping || THREE.CineonToneMapping || THREE.ACESFilmicToneMapping
-        renderer.toneMapping = THREE.NoToneMapping;
-        // 色调映射的曝光级别。默认是1，屏幕是2.2，越低越暗
-        renderer.toneMappingExposure = 2.2;
+            // 将随机创建烟花颜色+烟花终点位置，放入类组件中
+            const fireWork = new FireWork({ color, position, scene });
 
-        const WIDTH = Number(
-            window
-                .getComputedStyle(
-                    document.getElementsByClassName('ant-layout-content')[0]
-                )
-                .width.split('px')[0]
-        );
-        const HEIGHT = Number(
-            window
-                .getComputedStyle(
-                    document.getElementsByClassName('ant-layout-content')[0]
-                )
-                .height.split('px')[0]
-        );
+            // 烟花创建成功后添加到场景中
+            fireWork.addScene(scene, camera);
+            // 把每次创建的烟花放到数组里进行管理
+            fireworkListManage.push(fireWork);
+        };
 
-        // 改变渲染器尺寸
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        // 设置像素比 使图形锯齿 消失
-        renderer.setPixelRatio(window.devicePixelRatio);
-        // 设置渲染器开启阴影计算
-        renderer.shadowMap.enabled = true;
-        // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能.
-        // renderer.physicallyCorrectLights = true;
-        // renderer.useLegacyLightsback = true;
-        // 轨道控制器
-        const controls = new OrbitControls(camera, renderer.domElement);
-        // 控制器阻尼
-        controls.enableDamping = true;
-        // 阻尼系数，只有在.enableDamping = true时才生效，默认0.05
-        controls.dampingFactor = 0.05;
-        // 自动旋转
-        controls.autoRotate = false;
-        controls.autoRotateSpeed = 2.0;
-        // 控制器最大仰视角 / 最小俯视角  （抬头/低头角度）
-        controls.maxPolarAngle = Math.PI;
-        // 控制器最小俯视角
-        controls.minPolarAngle = 0;
-        // 控制器的基点 / 控制器的焦点，.object的轨道围绕它运行。 它可以在任何时候被手动更新，以更改控制器的焦点
-        controls.target = new THREE.Vector3(
-            scene.position.x,
-            scene.position.y,
-            scene.position.z
-        );
+        window.addEventListener('click', createFirework);
 
         // 渲染函数
         const clock = new THREE.Clock();
         function render(t) {
             controls.update();
-            // 获取秒数
-            const time = clock.getElapsedTime();
 
-            // 通过摄像机和鼠标位置更新射线
-            // raycaster.setFromCamera(mouse, camera);
-
-            // 最后，想要成功的完成这种效果，你需要在主函数中调用 TWEEN.update()
-            // TWEEN.update();
+            // 调用类中的updateTime
+            fireworkListManage.forEach((item) => item.updateTime());
+            // console.log(fireworkListManage);
 
             renderer.render(scene, camera);
             // 动画帧
@@ -280,6 +281,10 @@ export default function ThreeComponent() {
         }
         // 渲染
         render();
+
+        /*
+         * ------------end ----------
+         */
 
         // DOM承载渲染器
         container.current.appendChild(renderer.domElement);
@@ -315,29 +320,6 @@ export default function ThreeComponent() {
             // 设置渲染器像素比:
             renderer.setPixelRatio(window.devicePixelRatio);
         });
-
-        // 创建烟花函数
-        const fireWorkManage = [];
-        const createFirework = () => {
-            // 随机颜色
-            const color = `hsl(${Math.floor(Math.random() * 360)},100%,80%)`;
-            // 随机位置
-            const position = {
-                x: (Math.random() - 0.5) * 40,
-                z: -(Math.random() - 0.5) * 40,
-                y: 3 + Math.random() * 15,
-            };
-
-            // 将随机创建烟花颜色+烟花终点位置，放入类组件中
-            const fireWork = new FireWork({ color, position, scene });
-
-            // 烟花创建成功后添加到场景中
-            fireWork.addScene(scene, camera);
-            // 把每次创建的烟花放到数组里进行管理
-            fireWorkManage.push(fireWork);
-        };
-
-        window.addEventListener('click', createFirework);
     };
 
     useEffect(() => {

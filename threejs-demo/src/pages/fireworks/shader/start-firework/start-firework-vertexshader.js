@@ -1,11 +1,22 @@
 const startFireworkVertexshader = /*glsl*/ `
-    varying vec2 vUv;
+    
+    attribute vec3 step;
+    // 时间
+    uniform float uTime;
+    // 小球尺寸
+    uniform float uSize;
+
     void main(){
-    vUv=uv;
-        gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4( position, 1.0 ) ;
+    
+        vec4 modelPosition =  modelMatrix * vec4( position, 1.0 );
+        // 位置 = 时间*距离
+        modelPosition.xyz += ( step * uTime);
+    
+        gl_Position = projectionMatrix * viewMatrix * modelPosition;
 
         //⭐️ 设置点大小才能显示
-        gl_PointSize = 50.0;
+        // 随时间逐渐变大
+        gl_PointSize = uSize * uTime;
 
     }
 

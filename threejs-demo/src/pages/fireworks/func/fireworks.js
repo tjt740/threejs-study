@@ -10,6 +10,7 @@ export default class FireWork {
         // console.log('创建烟花:', color, position);
         // 转换成three.js color
         this.color = new THREE.Color(color);
+        console.log(this.color);
         // 烟花终点位置
         this.position = position;
         // 创建烟花起始小球
@@ -90,23 +91,23 @@ export default class FireWork {
             this.fireworkBoomPositionList[i * 3 + 1] = position.y;
             this.fireworkBoomPositionList[i * 3 + 2] = position.z;
 
-            // // 负责每一个烟花的大小
-            // this.fireworkBoomScaleList[i] = Math.random();
+            // 负责每一个烟花的大小
+            this.fireworkBoomScaleList[i] = Math.random();
 
-            // // 每一个烟花向4周发射的角度
-            // // 发射上下为圆
-            // const theta = Math.random() * 2 * Math.PI;
-            // // 发射左右为圆
-            // const beta = Math.random() * 2 * Math.PI;
-            // // 发射半径
-            // const r = Math.random();
+            // 每一个烟花向4周发射的角度
+            // 发射上下为圆
+            const theta = Math.random() * 2 * Math.PI;
+            // 发射左右为圆
+            const beta = Math.random() * 2 * Math.PI;
+            // 发射半径
+            const r = Math.random();
 
-            // this.fireworkBoomDirectionList[i * 3 + 0] =
-            //     r * Math.sin(theta) + r * Math.sin(beta);
-            // this.fireworkBoomDirectionList[i * 3 + 1] =
-            //     r * Math.cos(theta) + r * Math.cos(beta);
-            // this.fireworkBoomDirectionList[i * 3 + 2] =
-            //     r * Math.sin(theta) + r * Math.cos(beta);
+            this.fireworkBoomDirectionList[i * 3 + 0] =
+                r * Math.sin(theta) + r * Math.sin(beta);
+            this.fireworkBoomDirectionList[i * 3 + 1] =
+                r * Math.cos(theta) + r * Math.cos(beta);
+            this.fireworkBoomDirectionList[i * 3 + 2] =
+                r * Math.sin(theta) + r * Math.cos(beta);
         }
 
         // 设置爆炸💥烟花顶点位置
@@ -138,36 +139,48 @@ export default class FireWork {
         this.fireworkBoomMaterial = new THREE.ShaderMaterial({
             // 顶点着色器
             vertexShader: /*glsl*/ `
-            // attribute vec3 step;
+            attribute float boomScale;
+            attribute vec3 randomDirection;
             // 时间
-            // uniform float uTime;
+            uniform float uTime;
             // 小球尺寸
-            // uniform float uSize;
+            uniform float uSize;
 
             void main(){
             
                 vec4 modelPosition =  modelMatrix * vec4( position, 1.0 );
                 // 位置 = 时间*距离
-                // modelPosition.xyz += ( step * uTime);
+                modelPosition.xyz+=randomDirection*uTime*10.0;
+
             
                 gl_Position = projectionMatrix * viewMatrix * modelPosition;
 
                 //⭐️ 设置点大小才能显示
                 // 随时间逐渐变大
-                gl_PointSize = 20.0;
-                // gl_PointSize = uSize * uTime;
+               // 设置顶点大小
+                gl_PointSize =  uSize * boomScale-(uTime*5.0);
+                
+              
 
             }
                     `,
             // 片元着色器
             fragmentShader: /*glsl*/ `
+                    uniform vec3 uColor;
                 void main(){
-               
-                    float strength = distance(gl_PointCoord,vec2(0.5));
-                    strength*=2.0;
-                    strength = 1.0-strength;
-                    gl_FragColor = vec4(strength);
 
+                    // float strength = distance(gl_PointCoord,vec2(0.5));
+                    // strength*=2.0;
+                    // strength = 1.0-strength;
+                    // gl_FragColor = vec4(strength);
+
+                    // 颜色烟花
+                    float distanceToCenter = distance(gl_PointCoord,vec2(0.5));
+                    float strength = distanceToCenter*2.0;
+                    strength = 1.0-strength;
+                    strength = pow(strength,1.5);
+                     gl_FragColor = vec4(strength);
+                    // gl_FragColor = vec4(uColor,strength);
                 }
             `,
             transparent: true,
@@ -182,8 +195,10 @@ export default class FireWork {
                 },
                 // 尺寸
                 uSize: {
-                    value: 15.0,
+                    value: 0,
                 },
+                // 随机圆球颜色
+                uColor: { value: this.Color },
             },
         });
         // 爆炸💥烟花
@@ -196,6 +211,7 @@ export default class FireWork {
     // 调用场景添加
     addScene() {
         this.scene.add(this.startFireworkBail);
+
         this.scene.add(this.fireworkBoomMesh);
     }
 
@@ -216,6 +232,23 @@ export default class FireWork {
             this.startFireworkBailGeometry.dispose();
             // 重置小球的uSize
             this.startFireworkBailMaterial.uniforms.uSize.value = 0;
+
+            if (getElapsedTime > 1) {
+                this.fireworkBoomMaterial.uniforms.uTime.value = getElapsedTime;
+                this.fireworkBoomMaterial.uniforms.uSize.value = 20;
+
+                if (getElapsedTime > 4) {
+                    // 清除物体
+                    this.scene.remove(this.fireworkBoomMesh);
+                    // 清除小球自定义几何体
+                    this.fireworkBoomGeometry.dispose();
+                    this.fireworkBoomMaterial.dispose();
+                    // 重置小球的uSize
+                    this.fireworkBoomMaterial.uniforms.uSize.value = 0;
+                    // 重置小球的uSize
+                    this.fireworkBoomMaterial.uniforms.uTime.value = 0;
+                }
+            }
         }
         // console.log('运行时间:', getElapsedTime);
     }

@@ -3,6 +3,9 @@ import * as THREE from 'three';
 // 导入轨道控制器 只能通过这种方法
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
+//
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
+
 export default function ThreeComponent() {
     const container = useRef(null);
 
@@ -48,11 +51,15 @@ export default function ThreeComponent() {
             () => {
                 console.log('纹理加载结束！');
             },
-            // onProgress 
+            // onProgress
             (url, progress, total) => {
-                console.log('纹理url:',url);
-                console.log('纹理加载进度:',progress, Number((progress/total)*100).toFixed(2)+'%');
-                console.log('纹理需要加载总数:',total);
+                console.log('纹理url:', url);
+                console.log(
+                    '纹理加载进度:',
+                    progress,
+                    Number((progress / total) * 100).toFixed(2) + '%'
+                );
+                console.log('纹理需要加载总数:', total);
             },
             // onError
             () => {
@@ -69,7 +76,7 @@ export default function ThreeComponent() {
             require('./2k/vlzraabfw_2K_Albedo.jpg'),
             // onLoad
             (texture) => {
-                console.log('纹理图片加载结束！',texture);
+                console.log('纹理图片加载结束！', texture);
             },
             // onProgress  🌟暂不支持💡
             () => {
@@ -109,40 +116,53 @@ export default function ThreeComponent() {
         const normalTexture = textureLoader.load(
             require('./2k/vlzraabfw_2K_Normal.jpg')
         );
-        // 创建<标准网格材质> 🌟 必须要有灯光
-        const material = new THREE.MeshStandardMaterial({
-            // 纹理图片
-            map: mapTexture,
-            aoMap: aoMapTexture,
-            // 设置aoMap 纹理遮挡效果透明度
-            aoMapIntensity: 1,
-            // 纹理图片双面显示
-            side: THREE.DoubleSide,
-            // 位移（置换）贴图会影响网格顶点的位置。换句话说就是它可以移动顶点来创建浮雕。（白色越高，黑色越低，形成山地形状的贴图）
-            displacementMap: displacementTexture,
-            // 位移（置换）贴图对网格的影响程度（黑色是无位移，白色是最大位移）。如果没有设置位移贴图，则不会应用此值。默认值为1——xxx。
-            displacementScale: 1,
-            // 相当于 XYZ 位移。 没有位移（置换）贴图时，默认为0
-            displacementBias: 3,
-            // 凹凸纹理材质
-            bumpMap: bumpTexture,
-            bumpScale: 1,
-            // 粗糙度纹理贴图 颜色越白越突出
-            roughnessMap: roughnessTexture,
-            // 材质的粗糙程度。0.0表示平滑的镜面反射，1.0表示完全漫反射。默认值为1.0。如果还提供roughnessMap，则两个值相乘。
-            roughness: 0,
-            // 法线纹理贴图，RGB值会影响每个像素片段的曲面法线，并更改颜色照亮的方式。法线贴图不会改变曲面的实际形状，只会改变光照。
-            normalMap: normalTexture,
-            // 设置法线贴图对材质的深浅程度影响程度。典型范围是0-1。默认值是Vector2设置为（1,1）。
-            normalScale: new THREE.Vector2(1, 1),
-            // x - 向量的x值，默认为0。
-            // y - 向量的y值，默认为0。
-        });
 
-        // 通过网格生成图形 （几何体+材质）
-        const plane = new THREE.Mesh(planeGeometry, material);
-        // 将图形放入场景中
-        scene.add(plane);
+        const rgbeLoader = new RGBELoader();
+        rgbeLoader.load(
+            require('./christmas_photo_studio_04_2k.hdr'),
+            (envMap) => {
+                // 创建<标准网格材质> 🌟 必须要有灯光
+                const material = new THREE.MeshStandardMaterial({
+                    // 纹理图片
+                    map: mapTexture,
+                    aoMap: aoMapTexture,
+                    // 设置aoMap 纹理遮挡效果透明度
+                    aoMapIntensity: 1,
+                    // 纹理图片双面显示
+                    side: THREE.DoubleSide,
+                    // 位移（置换）贴图会影响网格顶点的位置。换句话说就是它可以移动顶点来创建浮雕。（白色越高，黑色越低，形成山地形状的贴图）
+                    displacementMap: displacementTexture,
+                    // 位移（置换）贴图对网格的影响程度（黑色是无位移，白色是最大位移）。如果没有设置位移贴图，则不会应用此值。默认值为1——xxx。
+                    displacementScale: 4,
+                    // 相当于 XYZ 位移。 没有位移（置换）贴图时，默认为0
+                    displacementBias: 3,
+                    // 凹凸纹理材质
+                    bumpMap: bumpTexture,
+                    bumpScale: 4,
+                    // 粗糙度纹理贴图 颜色越白越突出
+                    roughnessMap: roughnessTexture,
+                    // 材质的粗糙程度。0.0表示平滑的镜面反射，1.0表示完全漫反射。默认值为1.0。如果还提供roughnessMap，则两个值相乘。
+                    roughness: 1,
+                    // 法线纹理贴图，RGB值会影响每个像素片段的曲面法线，并更改颜色照亮的方式。法线贴图不会改变曲面的实际形状，只会改变光照。
+                    normalMap: normalTexture,
+                    // 设置法线贴图对材质的深浅程度影响程度。典型范围是0-1。默认值是Vector2设置为（1,1）。
+                    normalScale: new THREE.Vector2(1, 1),
+                    // x - 向量的x值，默认为0。
+                    // y - 向量的y值，默认为0。
+                });
+
+                envMap.mapping = THREE.EquirectangularRefractionMapping;
+                // 设置环境贴图
+                scene.background = envMap;
+                // 设置环境贴图
+                scene.environment = envMap;
+
+                // 通过网格生成图形 （几何体+材质）
+                const plane = new THREE.Mesh(planeGeometry, material);
+                // 将图形放入场景中
+                scene.add(plane);
+            }
+        );
 
         //* end
 

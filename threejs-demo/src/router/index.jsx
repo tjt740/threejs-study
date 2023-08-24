@@ -149,21 +149,84 @@ export const routerPaths = [
                 elementPath: 'lessons/day12',
                 key: 'lessons/day12',
             },
-
             {
                 label: '基础网格材质',
                 icon: <MyIcon type="icon-paobing" />,
                 elementPath: 'lessons/day13',
                 key: 'lessons/day13',
             },
-
+            {
+                label: 'MeshMatcapMaterial材质（无需灯光）',
+                icon: <MyIcon type="icon-mantou" />,
+                elementPath: 'lessons/MeshMatcapMaterial',
+                key: 'lessons/MeshMatcapMaterial',
+            },
+            {
+                label: 'lamert(朗伯特)网格材质（漫反射）',
+                icon: <MyIcon type="icon-paobing" />,
+                elementPath: 'lessons/MeshLamertMaterial',
+                key: 'lessons/MeshLamertMaterial',
+            },
+            {
+                label: 'MeshPhongMaterial镜面材质',
+                icon: <MyIcon type="icon-paobing" />,
+                elementPath: 'lessons/MeshPhongMaterial',
+                key: 'lessons/MeshPhongMaterial',
+            },
+            {
+                label: '精讲标准网格材质',
+                icon: <MyIcon type="icon-mantou" />,
+                elementPath: 'lessons/MeshStandardMaterial',
+                key: 'lessons/MeshStandardMaterial',
+            },
+            {
+                label: '物理网格材质MeshPhysicalMaterial',
+                icon: <MyIcon type="icon-mantou" />,
+                elementPath: 'lessons/MeshPhysicalMaterial',
+                key: 'lessons/MeshPhysicalMaterial',
+            },
             {
                 label: '标准网格材质',
                 icon: <MyIcon type="icon-mantou" />,
                 elementPath: 'lessons/day14',
                 key: 'lessons/day14',
             },
-
+            {
+                label: 'texture学习',
+                icon: <MyIcon type="icon-mantou" />,
+                elementPath: 'lessons/texture',
+                key: 'lessons/texture',
+            },
+            {
+                label: '加载不同文件类型的纹理',
+                icon: <MyIcon type="icon-mantou" />,
+                elementPath: 'lessons/other-texture',
+                key: 'lessons/other-texture',
+            },
+            {
+                label: '材质的深度相关内容学习depth',
+                icon: <MyIcon type="icon-mantou" />,
+                elementPath: 'lessons/material_depth',
+                key: 'lessons/material_depth',
+            },
+            {
+                label: '材质混合模式详解',
+                icon: <MyIcon type="icon-mantou" />,
+                elementPath: 'lessons/material_blend',
+                key: 'lessons/material_blend',
+            },
+            {
+                label: ' 对平面/物体/场景裁剪',
+                icon: <MyIcon type="icon-mantou" />,
+                elementPath: 'lessons/裁剪平面、对物体裁剪',
+                key: 'lessons/裁剪平面、对物体裁剪',
+            },
+            {
+                label: '模板渲染',
+                icon: <MyIcon type="icon-mantou" />,
+                elementPath: 'lessons/template-render',
+                key: 'lessons/template-render',
+            },
             {
                 label: '清除物体',
                 icon: <MyIcon type="icon-hebaodan" />,
@@ -220,12 +283,7 @@ export const routerPaths = [
                 elementPath: 'lessons/gltfloader',
                 key: 'lessons/gltfloader',
             },
-            {
-                label: '着色器设置点材质',
-                icon: <MyIcon type="icon-meishikafei" />,
-                elementPath: 'lessons/point-material',
-                key: 'lessons/point-material',
-            },
+
             {
                 label: '线性雾、指数雾',
                 icon: <MyIcon type="icon-banji" />,
@@ -261,6 +319,18 @@ export const routerPaths = [
                 icon: <MyIcon type="icon-futejia" />,
                 elementPath: 'lessons/surround',
                 key: 'lessons/surround',
+            },
+            {
+                label: '着色器设置点材质',
+                icon: <MyIcon type="icon-meishikafei" />,
+                elementPath: 'lessons/point-material',
+                key: 'lessons/point-material',
+            },
+            {
+                label: 'shader-粒子效果',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: 'lessons/shader-粒子效果',
+                key: 'lessons/shader-粒子效果',
             },
         ],
     },
@@ -348,6 +418,12 @@ export const routerPaths = [
                 key: 'galaxy-demo',
             },
             {
+                label: '银河系demo（粒子实现）',
+                icon: <MyIcon type="icon-zhangyuxiaowanzi" />,
+                elementPath: 'galaxy-demo-points',
+                key: 'galaxy-demo-points',
+            },
+            {
                 label: '3d滚动页面',
                 icon: <MyIcon type="icon-futejia" />,
                 elementPath: '3d-scroll-demo',
@@ -360,11 +436,48 @@ export const routerPaths = [
                 key: '点击屏幕创建立方体撞击地面',
             },
             {
+                label: 'MeshPhongMaterialdemo',
+                icon: <MyIcon type="icon-050-forest" />,
+                elementPath: 'MeshPhongMaterialdemo',
+                key: 'MeshPhongMaterialdemo',
+            },
+            {
                 label: '标准网格材质泥路',
                 icon: <MyIcon type="icon-050-forest" />,
                 elementPath: '标准网格材质泥路',
                 key: '标准网格材质泥路',
             },
+            {
+                label: '加载three.js editor 编辑后的物理网格材质模型',
+                icon: <MyIcon type="icon-050-forest" />,
+                elementPath: 'MeshPhysicalMaterial-demo',
+                key: 'MeshPhysicalMaterial-demo',
+            },
+            {
+                label: '物理网格材质中自发光贴图（iphone手机模型）',
+                icon: <MyIcon type="icon-050-forest" />,
+                elementPath: 'MeshPhysicalMaterial-moblie',
+                key: 'MeshPhysicalMaterial-moblie',
+            },
+            {
+                label: '使用物理材质加载室内家具',
+                icon: <MyIcon type="icon-050-forest" />,
+                elementPath: 'MeshPhysicalMaterial-home',
+                key: 'MeshPhysicalMaterial-home',
+            },
+            {
+                label: '材质混合实现水杯+果汁+🧊',
+                icon: <MyIcon type="icon-050-forest" />,
+                elementPath: 'water-cup',
+                key: 'water-cup',
+            },
+            {
+                label: '实现金属剖面（运用材质裁剪+模板缓冲）',
+                icon: <MyIcon type="icon-050-forest" />,
+                elementPath: 'metal-anatomy',
+                key: 'metal-anatomy',
+            },
+
             {
                 label: '原始着色器RawshaderMaterial纹理贴图Texture',
                 icon: <MyIcon type="icon-zhangyuxiaowanzi" />,
@@ -418,6 +531,18 @@ export const routerPaths = [
                 icon: <MyIcon type="icon-zhangyuxiaowanzi" />,
                 elementPath: 'model-line',
                 key: 'model-line',
+            },
+            {
+                label: '烟花🎆（着色器材质+点粒子）',
+                icon: <MyIcon type="icon-zhangyuxiaowanzi" />,
+                elementPath: 'fireworks',
+                key: 'fireworks',
+            },
+            {
+                label: '测试',
+                icon: <MyIcon type="icon-zhangyuxiaowanzi" />,
+                elementPath: 'test-demo',
+                key: 'test-demo',
             },
         ],
     },

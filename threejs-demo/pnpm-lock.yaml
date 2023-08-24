@@ -104,6 +104,9 @@ dependencies:
   cannon-es:
     specifier: ^0.20.0
     version: registry.npmmirror.com/cannon-es@0.20.0
+  canvas-highlighter:
+    specifier: ^1.0.3
+    version: 1.0.3
   case-sensitive-paths-webpack-plugin:
     specifier: ^2.4.0
     version: 2.4.0
@@ -269,6 +272,9 @@ dependencies:
   typescript:
     specifier: ^4.8.4
     version: registry.npmmirror.com/typescript@4.9.5
+  use-immer:
+    specifier: ^0.9.0
+    version: 0.9.0(immer@9.0.19)(react@18.2.0)
   web-vitals:
     specifier: ^2.1.4
     version: registry.npmmirror.com/web-vitals@2.1.4
@@ -3984,6 +3990,13 @@ packages:
     resolution: {integrity: sha512-XY7UbUpGRatZzoRft//5xOa69/1iGJRBlrieH6QYrkKLIFn3m7OVEJ81dSrKoy2BnKsdbX5cLrOispZNYo9v2w==}
     dev: false
 
+  /canvas-highlighter@1.0.3:
+    resolution: {integrity: sha512-bSnbI4PUPsiccGc3wtgctRUwS34zXi4n7h8PlqY1Q+QyReQEcljPtCBRn5QMRYel2ppBdZSAIU382izqgi79JQ==}
+    engines: {node: '>=16'}
+    dependencies:
+      konva: 8.4.3
+    dev: false
+
   /case-sensitive-paths-webpack-plugin@2.4.0:
     resolution: {integrity: sha512-roIFONhcxog0JSSWbvVAh3OocukmSgpqOH6YpMkCvav/ySIV3JKg4Dc8vYtQjYi/UxpNE36r/9v+VqTQqgkYmw==}
     engines: {node: '>=4'}
@@ -7148,6 +7161,10 @@ packages:
     engines: {node: '>= 8'}
     dev: false
 
+  /konva@8.4.3:
+    resolution: {integrity: sha512-ARqdgAbdNIougRlOKvkQwHlGhXPRBV4KvhCP+qoPpGoVQwwiJe4Hkdu4HHdRPb9rGUp04jDTAxBzEwBsE272pg==}
+    dev: false
+
   /language-subtag-registry@0.3.22:
     resolution: {integrity: sha512-tN0MCzyWnoz/4nHS6uxdlFWoUZT7ABptwKPQ52Ea7URk6vll88bWBVhodtnlfEuCcKWNGoc+uGbw1cwa9IKh/w==}
     dev: false
@@ -10098,6 +10115,16 @@ packages:
     dependencies:
       querystringify: 2.2.0
       requires-port: 1.0.0
+    dev: false
+
+  /use-immer@0.9.0(immer@9.0.19)(react@18.2.0):
+    resolution: {integrity: sha512-/L+enLi0nvuZ6j4WlyK0US9/ECUtV5v9RUbtxnn5+WbtaXYUaOBoKHDNL9I5AETdurQ4rIFIj/s+Z5X80ATyKw==}
+    peerDependencies:
+      immer: '>=2.0.0'
+      react: ^16.8.0 || ^17.0.1 || ^18.0.0
+    dependencies:
+      immer: 9.0.19
+      react: registry.npmmirror.com/react@18.2.0
     dev: false
 
   /use-json-comparison@1.0.6(react@18.2.0):

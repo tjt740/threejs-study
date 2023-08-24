@@ -17,7 +17,7 @@ export default function ThreeComponent() {
             // gui宽度
             width: '600px',
             // 设置gui title
-            title: 'gui控制器',
+            title: 'gui控制器 ◀️点击才能使用',
             // 收起分区，默认false
             closeFolders: false,
             // 自动生成在页面右上角，默认为true

@@ -6,6 +6,8 @@ import * as dat from 'dat.gui';
 
 // 导入附加组件GLTFLoader
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+// 引入加载.hdr 文件组件
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
 
 export default function GLTFLoaderComponent() {
     const container = useRef(null);
@@ -96,6 +98,14 @@ export default function GLTFLoaderComponent() {
             // onError
             (err) => {
                 console.log('加载失败');
+            }
+        );
+
+        const rgbeLoader = new RGBELoader();
+        rgbeLoader.load(
+            require('../MeshPhysicalMaterial/texture/environment.hdr'),
+            (env) => {
+                scene.environment = env;
             }
         );
 

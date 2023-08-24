@@ -23,9 +23,13 @@ export default function ThreeComponent() {
         //------------ start ----------
         // 导入纹理
         const textureLoader = new THREE.TextureLoader();
-        const doorTexture = textureLoader.load(require('./texture/door.jpg'));
-        doorTexture.magFilter = THREE.NearestFilter;
+        const doorTexture = textureLoader.load(
+            // require('./texture/minecraft.png')
+            require('../texture/texture/uv_grid_opengl.jpg')
+        );
+        // doorTexture.magFilter = THREE.NearestFilter;
         doorTexture.minFilter = THREE.NearestFilter;
+
         doorTexture.colorSpace = THREE.LinearSRGBColorSpace;
         const alphaTexture = textureLoader.load(require('./texture/alpha.jpg'));
         const aoMapTexture = textureLoader.load(
@@ -63,12 +67,12 @@ export default function ThreeComponent() {
             // 纹理图片
             map: doorTexture,
             // 纹理透明
-            alphaMap: alphaTexture,
+            // alphaMap: alphaTexture,
             transparent: true,
             // 纹理图片双面显示
             side: THREE.DoubleSide, // 双面渲染
             // aoMap 在纹理较深的地方添加贴图
-            aoMap: aoMapTexture,
+            // aoMap: aoMapTexture,
             // 设置aoMap 纹理遮挡效果透明度
             aoMapIntensity: 0.5,
         });
@@ -149,7 +153,6 @@ export default function ThreeComponent() {
 
     return (
         <>
-            基础网格材质+纹理
             <div id="container" ref={container}></div>
         </>
     );

@@ -40,7 +40,7 @@ export default class FireWork {
             // 设置uniforms 把变量带给顶点着色器、片元着色器
             uniforms: {
                 // 随机圆球颜色
-                uColor: { value: this.Color },
+                uColor: { value: this.color },
                 // 设置uTime,通过updateTime更新
                 uTime: {
                     value: 0,
@@ -81,8 +81,7 @@ export default class FireWork {
         // 创建爆炸💥烟花
         this.fireworkBoomGeometry = new THREE.BufferGeometry();
         // 烟花爆炸数量
-        this.maxFireworkCount = 9;
-        // 180 + Math.floor(Math.random() * 180);
+        this.maxFireworkCount = 180 + Math.floor(Math.random() * 180);
         // 爆炸烟花顶点位置
         this.fireworkBoomPositionList = [];
         // 烟花大小
@@ -144,55 +143,9 @@ export default class FireWork {
         // 设置爆炸💥烟花材质
         this.fireworkBoomMaterial = new THREE.ShaderMaterial({
             // 顶点着色器
-            // vertexShader: fireworksVertexshader,
+            vertexShader: fireworksVertexshader,
             // 片元着色器
-            // fragmentShader: fireworksFragmentshader,
-
-            vertexShader: /*glsl*/ `
-            attribute float boomScale;
-            attribute vec3 randomDirection;
-            // 时间
-            uniform float uTime;
-            // 小球尺寸
-            uniform float uSize;
-
-            void main(){
-            
-                vec4 modelPosition =  modelMatrix * vec4( position, 1.0 );
-                // 位置 = 时间*距离
-                modelPosition.xyz+=randomDirection*uTime*10.0;
-
-            
-                gl_Position = projectionMatrix * viewMatrix * modelPosition;
-
-                //⭐️ 设置点大小才能显示
-                // 随时间逐渐变大
-               // 设置顶点大小
-                gl_PointSize =  uSize * boomScale-(uTime*5.0);
-                
-              
-
-            }
-                    `,
-            // 片元着色器
-            fragmentShader: /*glsl*/ `
-                    uniform vec3 uColor;
-                void main(){
-
-                    // float strength = distance(gl_PointCoord,vec2(0.5));
-                    // strength*=2.0;
-                    // strength = 1.0-strength;
-                    // gl_FragColor = vec4(strength);
-
-                    // 颜色烟花
-                    float distanceToCenter = distance(gl_PointCoord,vec2(0.5));
-                    float strength = distanceToCenter*2.0;
-                    strength = 1.0-strength;
-                    strength = pow(strength,1.5);
-                     gl_FragColor = vec4(strength);
-                    // gl_FragColor = vec4(uColor,strength);
-                }
-            `,
+            fragmentShader: fireworksFragmentshader,
             transparent: true,
             vertexColors: true,
             depthWrite: false,
@@ -208,13 +161,8 @@ export default class FireWork {
                     value: 0,
                 },
                 // 随机圆球颜色
-                uColor: { value: this.Color },
+                uColor: { value: this.color },
             },
-
-            transparent: true,
-            vertexColors: true,
-            depthWrite: false,
-            blending: THREE.AdditiveBlending,
         });
         // 爆炸💥烟花
         this.fireworkBoomMesh = new THREE.Points(
@@ -226,7 +174,6 @@ export default class FireWork {
     // 调用场景添加
     addScene() {
         this.scene.add(this.startFireworkBail);
-
         this.scene.add(this.fireworkBoomMesh);
     }
 
@@ -257,15 +204,22 @@ export default class FireWork {
 
                 // 烟火大小
                 this.fireworkBoomMaterial.uniforms.uSize.value = 20;
+
+                // 创建烟花爆炸声，使用three.j
+                const 
             }
 
             // 如果烟花持续时间大于3秒就销毁烟火
             if (getElapsedTime >= 3) {
+                // 销毁烟花
                 this.startFireworkBailMaterial.uniforms.uTime.value = 0;
                 this.fireworkBoomMaterial.uniforms.uSize.value = 0;
                 this.scene.remove(this.fireworkBoomMesh);
                 this.fireworkBoomGeometry.dispose();
                 this.fireworkBoomMaterial.dispose();
+            }
+            if (getElapsedTime >= 4) {
+                return 'remove';
             }
         }
         // console.log('运行时间:', getElapsedTime);

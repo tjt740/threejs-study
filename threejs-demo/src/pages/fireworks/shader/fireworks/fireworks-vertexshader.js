@@ -2,7 +2,7 @@ const fireworksVertexshader = /*glsl*/ `
 
     
     attribute float boomScale;
-    attribute float randomDirection;
+    attribute vec3 randomDirection;
     
 
     uniform float uTime;

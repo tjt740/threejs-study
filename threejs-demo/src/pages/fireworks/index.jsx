@@ -271,9 +271,20 @@ export default function ThreeComponent() {
         function render(t) {
             controls.update();
 
+            let elapsedTime = clock.getElapsedTime();
+
             // 调用类中的updateTime
             fireworkListManage.forEach((item) => item.updateTime());
-            // console.log(fireworkListManage);
+            if (elapsedTime >= 5) {
+                fireworkListManage.forEach((item, i) => {
+                    const type = item.updateTime();
+                    if (type === 'remove') {
+                        fireworkListManage.splice(i, 1);
+                    }
+                });
+                // console.log(fireworkListManage);
+                // elapsedTime = 0;
+            }
 
             renderer.render(scene, camera);
             // 动画帧

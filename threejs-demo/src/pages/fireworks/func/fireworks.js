@@ -14,6 +14,7 @@ export default class FireWork {
         // console.log('创建烟花:', color, position);
         // 转换成three.js color
         this.color = new THREE.Color(color);
+        console.log(this.color);
         // 烟花终点位置
         this.position = position;
         // 创建烟花起始小球
@@ -96,7 +97,7 @@ export default class FireWork {
             this.fireworkBoomPositionList[i * 3 + 2] = position.z;
 
             // 负责每一个烟花的大小
-            this.fireworkBoomScaleList[i] = Math.random() * 20;
+            this.fireworkBoomScaleList[i] = Math.random();
 
             // 每一个烟花向4周发射的角度
             // 发射上下为圆
@@ -143,10 +144,59 @@ export default class FireWork {
         // 设置爆炸💥烟花材质
         this.fireworkBoomMaterial = new THREE.ShaderMaterial({
             // 顶点着色器
-            vertexShader: fireworksVertexshader,
+            // vertexShader: fireworksVertexshader,
             // 片元着色器
-            fragmentShader: fireworksFragmentshader,
+            // fragmentShader: fireworksFragmentshader,
 
+            vertexShader: /*glsl*/ `
+            attribute float boomScale;
+            attribute vec3 randomDirection;
+            // 时间
+            uniform float uTime;
+            // 小球尺寸
+            uniform float uSize;
+
+            void main(){
+            
+                vec4 modelPosition =  modelMatrix * vec4( position, 1.0 );
+                // 位置 = 时间*距离
+                modelPosition.xyz+=randomDirection*uTime*10.0;
+
+            
+                gl_Position = projectionMatrix * viewMatrix * modelPosition;
+
+                //⭐️ 设置点大小才能显示
+                // 随时间逐渐变大
+               // 设置顶点大小
+                gl_PointSize =  uSize * boomScale-(uTime*5.0);
+                
+              
+
+            }
+                    `,
+            // 片元着色器
+            fragmentShader: /*glsl*/ `
+                    uniform vec3 uColor;
+                void main(){
+
+                    // float strength = distance(gl_PointCoord,vec2(0.5));
+                    // strength*=2.0;
+                    // strength = 1.0-strength;
+                    // gl_FragColor = vec4(strength);
+
+                    // 颜色烟花
+                    float distanceToCenter = distance(gl_PointCoord,vec2(0.5));
+                    float strength = distanceToCenter*2.0;
+                    strength = 1.0-strength;
+                    strength = pow(strength,1.5);
+                     gl_FragColor = vec4(strength);
+                    // gl_FragColor = vec4(uColor,strength);
+                }
+            `,
+            transparent: true,
+            vertexColors: true,
+            depthWrite: false,
+            blending: THREE.AdditiveBlending,
             // 设置uniforms 把变量带给顶点着色器、片元着色器
             uniforms: {
                 // 设置uTime,通过updateTime更新
@@ -176,6 +226,7 @@ export default class FireWork {
     // 调用场景添加
     addScene() {
         this.scene.add(this.startFireworkBail);
+
         this.scene.add(this.fireworkBoomMesh);
     }
 

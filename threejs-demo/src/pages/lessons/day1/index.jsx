@@ -50,13 +50,13 @@ export default function Demo1Component() {
                 .height.split('px')[0]
         );
 
-        console.log(cube)
+        console.log(cube);
         // Step8 修改渲染器大小
         renderer.setSize(window.innerWidth, window.innerHeight);
 
         // Step9 渲染器渲染 场景+相机
         renderer.render(scene, camera);
-        console.log(container)
+        console.log(container);
         // @ts-ignore
         container.current.appendChild(renderer.domElement);
     };

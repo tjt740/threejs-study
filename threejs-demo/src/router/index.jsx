@@ -332,6 +332,18 @@ export const routerPaths = [
                 elementPath: 'lessons/shader-粒子效果',
                 key: 'lessons/shader-粒子效果',
             },
+            {
+                label: '着色器加工材质+阴影补正',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: 'lessons/着色器加工材质',
+                key: 'lessons/着色器加工材质',
+            },
+            {
+                label: '后期合成-效果合成器',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: 'lessons/EffectComposer',
+                key: 'lessons/EffectComposer',
+            },
         ],
     },
     {

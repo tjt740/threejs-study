@@ -10,7 +10,13 @@ import fireworksFragmentshader from '../shader/fireworks/fireworks-fragmentshade
 // 创建类组件
 export default class FireWork {
     // from: 烟花初始发射位置 position:烟花终点位置
-    constructor({ color, position, from = { x: 0, y: 0, z: 0 }, scene }) {
+    constructor({
+        color,
+        position,
+        from = { x: 0, y: 0, z: 0 },
+        scene,
+        camera,
+    }) {
         // console.log('创建烟花:', color, position);
         // 转换成three.js color
         this.color = new THREE.Color(color);
@@ -57,7 +63,7 @@ export default class FireWork {
             this.startFireworkBailMaterial
         );
 
-        // 给初始小球设置，烟花🎆位移距离
+        // 给初始小球设置a，烟花🎆位移距离
         this.startFireworkBailGeometry.setAttribute(
             'step',
             new THREE.BufferAttribute(
@@ -73,6 +79,8 @@ export default class FireWork {
         // console.log(this.startFireworkBailGeometry);
         // 定义场景
         this.scene = scene;
+        // 定义相机
+        this.camera = camera;
 
         // 通过uTimes去实现烟花的移动
         // 定义时间
@@ -175,6 +183,36 @@ export default class FireWork {
     addScene() {
         this.scene.add(this.startFireworkBail);
         this.scene.add(this.fireworkBoomMesh);
+
+        // 创建烟花爆炸声，使用three.js
+        const listener1 = new THREE.AudioListener();
+        // 设置烟花发射音效
+        const listener2 = new THREE.AudioListener();
+        const sound = new THREE.Audio(listener1);
+        const sound2 = new THREE.Audio(listener2);
+        this.camera.add(listener1);
+        this.camera.add(listener2);
+
+        // 加载爆炸声音
+        const audioLoader = new THREE.AudioLoader();
+        audioLoader.load(
+            require(`../audio/pow${Math.floor(Math.random() * 4)}.ogg`),
+            function (buffer) {
+                sound.setBuffer(buffer);
+                sound.setLoop(false); // 设置循环
+                // sound.setVolume(); // 设置音量
+                setTimeout(() => {
+                    sound.play();
+                }, 1000);
+            }
+        );
+
+        // 加载发射声音
+        audioLoader.load(require('../audio/send.mp3'), (buffer) => {
+            sound2.setBuffer(buffer);
+            sound2.setLoop(false); // 设置声韯否声韦
+            sound2.play();
+        });
     }
 
     // 更新时间，获取时间步数
@@ -204,9 +242,6 @@ export default class FireWork {
 
                 // 烟火大小
                 this.fireworkBoomMaterial.uniforms.uSize.value = 20;
-
-                // 创建烟花爆炸声，使用three.j
-                const 
             }
 
             // 如果烟花持续时间大于3秒就销毁烟火

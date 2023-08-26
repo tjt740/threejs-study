@@ -54,6 +54,62 @@ export default function ThreeComponent() {
         //  坐标辅助线添加到场景中
         scene.add(axesHelper);
 
+        // 初始化<渲染器>
+        const renderer = new THREE.WebGLRenderer({
+            antialias: true, // 消除锯齿
+            alpha: true, // 背景透明
+        });
+        // 设置渲染器编码格式  THREE.NoColorSpace = "" || THREE.SRGBColorSpace = "srgb" || THREE.LinearSRGBColorSpace = "srgb-linear"
+        renderer.outputColorSpace = 'srgb';
+        // 色调映射 THREE.NoToneMapping || THREE.LinearToneMapping || THREE.ReinhardToneMapping || THREE.CineonToneMapping || THREE.ACESFilmicToneMapping
+        renderer.toneMapping = THREE.NoToneMapping;
+        // 色调映射的曝光级别。默认是1，屏幕是2.2，越低越暗
+        renderer.toneMappingExposure = 2.2;
+
+        const WIDTH = Number(
+            window
+                .getComputedStyle(
+                    document.getElementsByClassName('ant-layout-content')[0]
+                )
+                .width.split('px')[0]
+        );
+        const HEIGHT = Number(
+            window
+                .getComputedStyle(
+                    document.getElementsByClassName('ant-layout-content')[0]
+                )
+                .height.split('px')[0]
+        );
+
+        // 改变渲染器尺寸
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        // 设置像素比 使图形锯齿 消失
+        renderer.setPixelRatio(window.devicePixelRatio);
+        // 设置渲染器开启阴影计算
+        renderer.shadowMap.enabled = true;
+        // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能.
+        // renderer.physicallyCorrectLights = true;
+
+        // 轨道控制器
+        const controls = new OrbitControls(camera, renderer.domElement);
+        // 控制器阻尼
+        controls.enableDamping = true;
+        // 阻尼系数，只有在.enableDamping = true时才生效，默认0.05
+        controls.dampingFactor = 0.05;
+        // 自动旋转
+        controls.autoRotate = false;
+        controls.autoRotateSpeed = 2.0;
+        // 控制器最大仰视角 / 最小俯视角  （抬头/低头角度）
+        controls.maxPolarAngle = Math.PI;
+        // 控制器最小俯视角
+        controls.minPolarAngle = 0;
+        // 控制器的基点 / 控制器的焦点，.object的轨道围绕它运行。 它可以在任何时候被手动更新，以更改控制器的焦点
+        controls.target = new THREE.Vector3(
+            scene.position.x,
+            scene.position.y,
+            scene.position.z
+        );
+
         /*
          * ------------ start ----------
          */
@@ -81,7 +137,7 @@ export default function ThreeComponent() {
             .name('平行光z位置');
 
         // 创建自然光
-        const ambientLight = new THREE.AmbientLight(0xffffff, 3);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 1);
         ambientLight.position.set(5, 7, 7);
         scene.add(ambientLight);
 
@@ -249,62 +305,6 @@ export default function ThreeComponent() {
         /*
          * ------------end ----------
          */
-
-        // 初始化<渲染器>
-        const renderer = new THREE.WebGLRenderer({
-            antialias: true, // 消除锯齿
-            alpha: true, // 背景透明
-        });
-        // 设置渲染器编码格式  THREE.NoColorSpace = "" || THREE.SRGBColorSpace = "srgb" || THREE.LinearSRGBColorSpace = "srgb-linear"
-        renderer.outputColorSpace = 'srgb';
-        // 色调映射 THREE.NoToneMapping || THREE.LinearToneMapping || THREE.ReinhardToneMapping || THREE.CineonToneMapping || THREE.ACESFilmicToneMapping
-        renderer.toneMapping = THREE.NoToneMapping;
-        // 色调映射的曝光级别。默认是1，屏幕是2.2，越低越暗
-        renderer.toneMappingExposure = 2.2;
-
-        const WIDTH = Number(
-            window
-                .getComputedStyle(
-                    document.getElementsByClassName('ant-layout-content')[0]
-                )
-                .width.split('px')[0]
-        );
-        const HEIGHT = Number(
-            window
-                .getComputedStyle(
-                    document.getElementsByClassName('ant-layout-content')[0]
-                )
-                .height.split('px')[0]
-        );
-
-        // 改变渲染器尺寸
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        // 设置像素比 使图形锯齿 消失
-        renderer.setPixelRatio(window.devicePixelRatio);
-        // 设置渲染器开启阴影计算
-        renderer.shadowMap.enabled = true;
-        // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能.
-        renderer.physicallyCorrectLights = true;
-
-        // 轨道控制器
-        const controls = new OrbitControls(camera, renderer.domElement);
-        // 控制器阻尼
-        controls.enableDamping = true;
-        // 阻尼系数，只有在.enableDamping = true时才生效，默认0.05
-        controls.dampingFactor = 0.05;
-        // 自动旋转
-        controls.autoRotate = false;
-        controls.autoRotateSpeed = 2.0;
-        // 控制器最大仰视角 / 最小俯视角  （抬头/低头角度）
-        controls.maxPolarAngle = Math.PI;
-        // 控制器最小俯视角
-        controls.minPolarAngle = 0;
-        // 控制器的基点 / 控制器的焦点，.object的轨道围绕它运行。 它可以在任何时候被手动更新，以更改控制器的焦点
-        controls.target = new THREE.Vector3(
-            scene.position.x,
-            scene.position.y,
-            scene.position.z
-        );
 
         // 渲染函数
         const clock = new THREE.Clock();

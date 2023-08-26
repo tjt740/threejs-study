@@ -130,7 +130,7 @@ export default function ThreeComponent() {
                     createFlylight();
                 });
         };
-        // createModel();
+        createModel();
 
         // 加载水模型
         const createWater = () => {
@@ -256,7 +256,7 @@ export default function ThreeComponent() {
             };
 
             // 将随机创建烟花颜色+烟花终点位置，放入类组件中
-            const fireWork = new FireWork({ color, position, scene });
+            const fireWork = new FireWork({ color, position, scene, camera });
 
             // 烟花创建成功后添加到场景中
             fireWork.addScene(scene, camera);

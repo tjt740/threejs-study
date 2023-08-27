@@ -142,8 +142,8 @@ export default function ThreeComponent() {
         const earth2D = new CSS2DObject(div);
         // 5. 设置 CSS2DObject 位置 (地球半径)
         earth2D.position.set(0, 15, 0);
-        // 6. 将 CSS2DObject 添加到场景中
-        scene.add(earth2D);
+        // 6. 将 CSS2DObject 添加到earth模型中
+        earth.add(earth2D);
 
         // 7. 实例化CSS2DRenderer，模仿renderer塞入document.body中
         const css2DRenderer = new CSS2DRenderer();

@@ -141,8 +141,8 @@ export default function ThreeComponent() {
         ambientLight.position.set(5, 7, 7);
         scene.add(ambientLight);
 
-        gui.add(directionalLight, 'intensity', 0, 10);
-        gui.add(ambientLight, 'intensity', 0, 10);
+        gui.add(directionalLight, 'intensity', 0, 10).name('平行光亮度');
+        gui.add(ambientLight, 'intensity', 0, 10).name('自然光亮度');
 
         // const rgbeLoader = new RGBELoader();
         // rgbeLoader.loadAsync(require('./assets/050.hdr')).then((texture) => {

@@ -16,7 +16,9 @@ import * as TWEEN from 'three/examples/jsm/libs/tween.module.js';
 
 // 导入后期效果合成器
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
+// 导入渲染通道，用来进行后期特效加载排序
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
+// three框架本身自带效果。其他效果路径： /node_modules/three/examples/jsm/postprocessing/xxx.js
 import { DotScreenPass } from 'three/examples/jsm/postprocessing/DotScreenPass';
 import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass';
 import { SSAARenderPass } from 'three/examples/jsm/postprocessing/SSAARenderPass';
@@ -175,17 +177,156 @@ export default function ThreeComponent() {
         const renderPass = new RenderPass(scene, camera);
         effectComposer.addPass(renderPass);
 
-        // 点效果
-        const dotScreenPass = new DotScreenPass();
-        dotScreenPass.enabled = true;
-        effectComposer.addPass(dotScreenPass);
+        // // 自定义渲染管道1
+        // const customPass = new ShaderPass({
+        //     // 顶点着色器
+        //     vertexShader: /*glsl*/ `
+        //         void main(){
+        //             gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.0);
+        //         }
+        //     `,
+        //     // 片元着色器
+        //     fragmentShader: /*glsl*/ `
+        //         void main(){
+        //             gl_FragColor = vec4(1.0,1.0,0.0,1.0);
+        //         }
+        //     `,
+        // });
+        // effectComposer.addPass(customPass);
 
-        // 发光效果
-        // const unrealBloomPass = new UnrealBloomPass();
-        // effectComposer.addPass(unrealBloomPass);
+        // 自定义渲染管道2
 
-        // const glitchPass = new GlitchPass();
-        // effectComposer.addPass(glitchPass);
+        // const customPass = new ShaderPass({
+        //     // 顶点着色器
+        //     vertexShader: /*glsl*/ `
+        //     varying vec2 vUv;
+        //         void main(){
+        //         vUv = uv;
+        //             gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.0);
+        //         }
+        //     `,
+        //             // 片元着色器
+        //             fragmentShader: /*glsl*/ `
+        //     varying vec2 vUv;
+        //         void main(){
+        //             gl_FragColor = vec4(vUv,0.0,1.0);
+        //         }
+        //     `,
+        // });
+        // effectComposer.addPass(customPass);
+
+        // const colorParams = {
+        //     r: 0,
+        //     g: 0,
+        //     b: 0,
+        // };
+
+        // // 着色器写渲染通道
+        // const customPass = new ShaderPass({
+        //     uniforms: {
+        //         tDiffuse: {
+        //             value: null,
+        //         },
+        //         uColor: {
+        //             value: new THREE.Color(
+        //                 colorParams.r,
+        //                 colorParams.g,
+        //                 colorParams.b
+        //             ),
+        //         },
+        //     },
+        //     vertexShader: `
+        //         varying vec2 vUv;
+        //         void main(){
+        //           vUv = uv;
+        //           gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.0);
+        //         }
+        //       `,
+        //     fragmentShader: `
+        //         varying vec2 vUv;
+        //         uniform sampler2D tDiffuse;
+        //         uniform vec3 uColor;
+        //         void main(){
+        //           vec4 color = texture2D(tDiffuse,vUv);
+        //           color.xyz+=uColor;
+        //           gl_FragColor = color;
+        //         }
+        //       `,
+        // });
+        // effectComposer.addPass(customPass);
+
+        // gui.add(colorParams, 'r')
+        //     .min(-1)
+        //     .max(1)
+        //     .step(0.01)
+        //     .onChange((value) => {
+        //         customPass.uniforms.uColor.value.r = value;
+        //     });
+        // gui.add(colorParams, 'g')
+        //     .min(-1)
+        //     .max(1)
+        //     .step(0.01)
+        //     .onChange((value) => {
+        //         customPass.uniforms.uColor.value.g = value;
+        //     });
+        // gui.add(colorParams, 'b')
+        //     .min(-1)
+        //     .max(1)
+        //     .step(0.01)
+        //     .onChange((value) => {
+        //         customPass.uniforms.uColor.value.b = value;
+        //     });
+
+        const customPass = new ShaderPass({
+            uniforms: {
+                tDiffuse: {
+                    value: null,
+                },
+                u_normalMap: {
+                    value: null,
+                },
+                u_time: {
+                    value: 0,
+                },
+            },
+            vertexShader: `
+                varying vec2 vUv;
+                void main(){
+                  vUv = uv;
+                  gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.0);
+                }
+              `,
+            fragmentShader: `
+                varying vec2 vUv;
+                uniform sampler2D tDiffuse;
+                uniform sampler2D u_normalMap;
+                uniform float u_time;
+                void main(){
+
+                  vec2 newUv = vUv;
+                  newUv += sin(newUv.x*10.0+u_time*0.5)*0.03;
+
+                  vec4 color = texture2D(tDiffuse,newUv);
+                  // gl_FragColor = vec4(vUv,0.0,1.0);
+                  vec4 normalColor = texture2D(u_normalMap,vUv);
+                  // 设置光线的角度
+                  vec3 lightDirection = normalize(vec3(-5,5,2)) ;
+
+                  float lightness = clamp(dot(normalColor.xyz,lightDirection),0.0,1.0) ;
+                  color.xyz+=lightness;
+                  gl_FragColor = color;
+                }
+              `,
+        });
+        // 设置uniforms中的u_normalMap的值为纹理材质
+        customPass.material.uniforms.u_normalMap.value =
+            new THREE.TextureLoader().load(
+                require('./textures/interfaceNormalMap.png')
+            );
+
+        //5️⃣ 添加自定义渲染管道
+        effectComposer.addPass(customPass);
+
         /*
          * ------------end ----------
          */
@@ -197,6 +338,7 @@ export default function ThreeComponent() {
             // 获取秒数
             const time = clock.getElapsedTime();
 
+            customPass.material.uniforms.u_time.value = time;
             // 通过摄像机和鼠标位置更新射线
             // raycaster.setFromCamera(mouse, camera);
 

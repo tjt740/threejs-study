@@ -345,7 +345,7 @@ export default function ThreeComponent() {
         gui.add(eventObj, 'Fullscreen').name('全屏');
         gui.add(eventObj, 'ExitFullscreen').name('退出全屏');
 
-        // 更具页面大小变化，更新渲染
+        // 根据页面大小变化，更新渲染
         window.addEventListener('resize', () => {
             // 更新camera 宽高比;
             camera.aspect = window.innerWidth / window.innerHeight;

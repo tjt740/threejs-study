@@ -22,6 +22,23 @@ const gui = new GUI();
 
 export default function ThreeComponent() {
     const container = useRef(null);
+
+    // 实际three.js渲染区域
+    const WIDTH = Number(
+        window
+            .getComputedStyle(
+                document.getElementsByClassName('ant-layout-content')[0]
+            )
+            .width.split('px')[0]
+    );
+    const HEIGHT = Number(
+        window
+            .getComputedStyle(
+                document.getElementsByClassName('ant-layout-content')[0]
+            )
+            .height.split('px')[0]
+    );
+
     const init = () => {
         const scene = new THREE.Scene();
         // 场景颜色
@@ -29,14 +46,14 @@ export default function ThreeComponent() {
         // scene.background = new THREE.Color(0x000000);
         const camera = new THREE.PerspectiveCamera(
             45, // 90
-            window.innerWidth / window.innerHeight,
+            WIDTH / HEIGHT,
             0.1,
             1000
         );
         // 更新camera 投影矩阵
         camera.updateProjectionMatrix();
         // 更新camera 宽高比;
-        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.aspect = WIDTH / HEIGHT;
         // 设置相机位置 object3d具有position，属性是一个3维的向量。
         camera.position.set(0, 0, 20);
         // 更新camera 视角方向, 摄像机看的方向，配合OrbitControls.target = new THREE.Vector3(
@@ -66,23 +83,8 @@ export default function ThreeComponent() {
         // 色调映射的曝光级别。默认是1，屏幕是2.2，越低越暗
         renderer.toneMappingExposure = 2.2;
 
-        const WIDTH = Number(
-            window
-                .getComputedStyle(
-                    document.getElementsByClassName('ant-layout-content')[0]
-                )
-                .width.split('px')[0]
-        );
-        const HEIGHT = Number(
-            window
-                .getComputedStyle(
-                    document.getElementsByClassName('ant-layout-content')[0]
-                )
-                .height.split('px')[0]
-        );
-
         // 改变渲染器尺寸
-        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setSize(WIDTH, HEIGHT);
         // 设置像素比 使图形锯齿 消失
         renderer.setPixelRatio(window.devicePixelRatio);
         // 设置渲染器开启阴影计算
@@ -195,8 +197,8 @@ export default function ThreeComponent() {
         // 监听鼠标位置
         function onClick(e) {
             // 将鼠标位置归一化为设备坐标。x 和 y 方向的取值范围是 (-1 —— 1)
-            // mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-            // mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+            // mouse.x = (e.clientX / WIDTH) * 2 - 1;
+            // mouse.y = -(e.clientY / HEIGHT) * 2 + 1;
             // 修复点击事件精度
             mouse.x =
                 ((e.clientX - renderer.domElement.offsetLeft) /
@@ -348,7 +350,7 @@ export default function ThreeComponent() {
         // 根据页面大小变化，更新渲染
         window.addEventListener('resize', () => {
             // 更新camera 宽高比;
-            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.aspect = WIDTH / HEIGHT;
             /* 
                 更新camera 投影矩阵
                 .updateProjectionMatrix () : undefined
@@ -356,7 +358,7 @@ export default function ThreeComponent() {
                 */
             camera.updateProjectionMatrix();
             // 更新渲染器
-            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setSize(WIDTH, HEIGHT);
             // 设置渲染器像素比:
             renderer.setPixelRatio(window.devicePixelRatio);
         });

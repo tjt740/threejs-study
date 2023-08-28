@@ -27,8 +27,24 @@ import './index.less';
 import GUI from 'lil-gui';
 const gui = new GUI();
 
+let WIDTH = Number(
+    window
+        .getComputedStyle(
+            document.getElementsByClassName('ant-layout-content')[0]
+        )
+        .width.split('px')[0]
+);
+let HEIGHT = Number(
+    window
+        .getComputedStyle(
+            document.getElementsByClassName('ant-layout-content')[0]
+        )
+        .height.split('px')[0]
+);
+
 export default function ThreeComponent() {
     const container = useRef(null);
+
     const init = () => {
         const scene = new THREE.Scene();
         // 场景颜色
@@ -36,14 +52,14 @@ export default function ThreeComponent() {
         scene.background = new THREE.Color(0x000000);
         const camera = new THREE.PerspectiveCamera(
             45, // 90
-            window.innerWidth / window.innerHeight,
+            WIDTH / HEIGHT,
             0.1,
             1000
         );
         // 更新camera 投影矩阵
         camera.updateProjectionMatrix();
         // 更新camera 宽高比;
-        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.aspect = WIDTH / HEIGHT;
         // 设置相机位置 object3d具有position，属性是一个3维的向量。
         // camera.position.set(0, 0, 50);
         camera.position.set(0, 5, -10);
@@ -75,7 +91,7 @@ export default function ThreeComponent() {
         renderer.toneMappingExposure = 2.2;
 
         // 改变渲染器尺寸
-        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setSize(WIDTH, HEIGHT);
         // 设置像素比 使图形锯齿 消失
         renderer.setPixelRatio(window.devicePixelRatio);
         // 设置渲染器开启阴影计算
@@ -83,20 +99,6 @@ export default function ThreeComponent() {
         // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能.
         // renderer.physicallyCorrectLights = true;
 
-        const WIDTH = Number(
-            window
-                .getComputedStyle(
-                    document.getElementsByClassName('ant-layout-content')[0]
-                )
-                .width.split('px')[0]
-        );
-        const HEIGHT = Number(
-            window
-                .getComputedStyle(
-                    document.getElementsByClassName('ant-layout-content')[0]
-                )
-                .height.split('px')[0]
-        );
         /*
          * ------------ start ----------
          */
@@ -140,7 +142,19 @@ export default function ThreeComponent() {
         });
         const moon = new THREE.Mesh(moonGeometry, moonMaterial);
         scene.add(moon);
-        moon.position.set(2, 0, 0);
+        // moon.position.set(2, 0, 0);
+
+        // 7. 实例化CSS2DRenderer，模仿renderer塞入document.body中
+        const css2DRenderer = new CSS2DRenderer();
+        css2DRenderer.setSize(WIDTH, HEIGHT);
+        // 8. 因为使用了setSize，所以会跟renderer样式冲突，所以需要修改style。（因为设置了fixed，所以控制器没有效果）
+        css2DRenderer.domElement.style.position = 'fixed';
+        css2DRenderer.domElement.style.top = '0px';
+        css2DRenderer.domElement.style.right = '0px';
+        css2DRenderer.domElement.style.zIndex = '10';
+
+        // 9. 将实例化的CSS2DRenderer对象，塞入document.body中。
+        document.body.appendChild(css2DRenderer.domElement);
 
         // 1. 创建DOM标签
         const earthDOM = document.createElement('div');
@@ -154,18 +168,6 @@ export default function ThreeComponent() {
         earth2DObject.position.set(0, 1, 0);
         // 6. 将 CSS2DObject 添加到earth模型中
         earth.add(earth2DObject);
-
-        // 7. 实例化CSS2DRenderer，模仿renderer塞入document.body中
-        const css2DRenderer = new CSS2DRenderer();
-        css2DRenderer.setSize(WIDTH, HEIGHT);
-        // 8. 因为使用了setSize，所以会跟renderer样式冲突，所以需要修改style。（因为设置了fixed，所以控制器没有效果）
-        css2DRenderer.domElement.style.position = 'fixed';
-        css2DRenderer.domElement.style.top = '0px';
-        css2DRenderer.domElement.style.left = '0px';
-        css2DRenderer.domElement.style.zIndex = '10';
-
-        // 9. 将实例化的CSS2DRenderer对象，塞入document.body中。
-        document.body.appendChild(css2DRenderer.domElement);
 
         // 创建月球文案
         const moonDOM = document.createElement('div');
@@ -185,6 +187,7 @@ export default function ThreeComponent() {
         china2DObject.position.set(-0.3, 0.5, -0.9);
         earth.add(china2DObject);
 
+        // 创建射线
         const raycaster = new THREE.Raycaster();
 
         // 轨道控制器
@@ -215,15 +218,15 @@ export default function ThreeComponent() {
             const time = clock.getElapsedTime();
 
             // 设置地球🌏自旋转
-            // earth.rotation.y = time * 0.1;
+            earth.rotation.y = time * 0.1;
             // 设置月球🌙绕地球旋转
-            // moon.position.set(
-            //     Math.sin(time * 0.5) * 20,
-            //     0,
-            //     Math.cos(time * 0.5) * 20
-            // );
+            moon.position.set(
+                Math.sin(time * 0.5) * 20,
+                0,
+                Math.cos(time * 0.5) * 20
+            );
             // 设置月球🌙自旋转
-            // moon.rotation.y = time * 1;
+            moon.rotation.y = time * 1;
 
             // 射线碰撞检测
             const _cloneChinaPosition = china2DObject.position.clone();
@@ -290,17 +293,17 @@ export default function ThreeComponent() {
         // 更具页面大小变化，更新渲染
         window.addEventListener('resize', () => {
             // 更新camera 宽高比;
-            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.aspect = WIDTH / HEIGHT;
             /* 
                 更新camera 投影矩阵
                 .updateProjectionMatrix () : undefined
                 更新摄像机投影矩阵。在任何参数被改变以后必须被调用。
                 */
             camera.updateProjectionMatrix();
-            css2DRenderer.setSize(window.innerWidth, window.innerHeight);
+            css2DRenderer.setSize(WIDTH, HEIGHT);
 
             // 更新渲染器
-            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setSize(WIDTH, HEIGHT);
             // 设置渲染器像素比:
             renderer.setPixelRatio(window.devicePixelRatio);
         });

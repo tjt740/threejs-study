@@ -344,6 +344,12 @@ export const routerPaths = [
                 elementPath: 'lessons/EffectComposer',
                 key: 'lessons/EffectComposer',
             },
+            {
+                label: '曲线相关Curve',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: 'lessons/线相关Curve',
+                key: 'lessons/线相关Curve',
+            },
         ],
     },
     {

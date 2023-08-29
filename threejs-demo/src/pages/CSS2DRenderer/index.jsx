@@ -210,6 +210,35 @@ export default function ThreeComponent() {
             scene.position.z
         );
 
+        // 创建控制点数组
+        const points = [
+            new THREE.Vector3(-10, 0, 10),
+            new THREE.Vector3(-5, 5, 5),
+            new THREE.Vector3(13, -5, 9),
+            new THREE.Vector3(5, -5, 5),
+            new THREE.Vector3(8, -20, 12),
+            new THREE.Vector3(10, 0, 10),
+        ];
+
+        // 创建 Catmull-Rom 曲线
+        const curve = new THREE.CatmullRomCurve3(points);
+        curve.closed = true;
+
+        // 将曲线转化为几何体并创建线条对象
+        const geometry = new THREE.BufferGeometry().setFromPoints(
+            // 创建101个点 -'-'-’-
+            curve.getPoints(100)
+        );
+
+        // 创建曲线的材质，用线段材质。
+        const material = new THREE.LineBasicMaterial({ color: 0xff0000 });
+
+        // 创建曲线
+        const curveLine = new THREE.Line(geometry, material);
+
+        // 将线条对象添加到场景中
+        scene.add(curveLine);
+
         // 渲染函数
         const clock = new THREE.Clock();
         function render(t) {
@@ -220,11 +249,15 @@ export default function ThreeComponent() {
             // 设置地球🌏自旋转
             earth.rotation.y = time * 0.1;
             // 设置月球🌙绕地球旋转
-            moon.position.set(
-                Math.sin(time * 0.5) * 20,
-                0,
-                Math.cos(time * 0.5) * 20
-            );
+            // moon.position.set(
+            //     Math.sin(time * 0.5) * 20,
+            //     0,
+            //     Math.cos(time * 0.5) * 20
+            // );
+
+            const curvePosition = curve.getPoint(time);
+            moon.position.copy(curvePosition);
+
             // 设置月球🌙自旋转
             moon.rotation.y = time * 1;
 

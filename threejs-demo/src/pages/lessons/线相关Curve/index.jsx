@@ -69,7 +69,7 @@ export default function ThreeComponent() {
         //  创建XYZ直角坐标系  (红色代表 X 轴. 绿色代表 Y 轴. 蓝色代表 Z 轴.)，帮助我们查看3维坐标轴
         const axesHelper = new THREE.AxesHelper(25);
         //  坐标辅助线添加到场景中
-        scene.add(axesHelper);
+        // scene.add(axesHelper);
 
         // 初始化<渲染器>
         const renderer = new THREE.WebGLRenderer({
@@ -134,17 +134,38 @@ export default function ThreeComponent() {
         // 将曲线转化为几何体并创建线条对象
         const geometry = new THREE.BufferGeometry().setFromPoints(
             // 创建101个点 -'-'-’-
-            curve.getPoints(999)
+            curve.getPoints(100)
         );
 
         // 创建曲线的材质，用线段材质。
-        const material = new THREE.LineBasicMaterial({ color: 0xff0000 });
+        const material = new THREE.LineBasicMaterial({
+            color: 0xff0000,
+            map: new THREE.TextureLoader().load(
+                require('../MeshStandardMaterial/texture/sword/Sting_Height.png')
+            ),
+        });
 
         // 创建曲线
         const curveLine = new THREE.Line(geometry, material);
 
         // 将线条对象添加到场景中
         scene.add(curveLine);
+
+        console.log(curve.getPoints(100));
+
+        const box = new THREE.Mesh(
+            new THREE.BoxGeometry(2, 2, 2),
+            new THREE.MeshBasicMaterial({})
+        );
+        scene.add(box);
+
+        // 创建小球
+        const shpereGeometry = new THREE.SphereGeometry(1, 32, 16);
+        const shpereMesh = new THREE.Mesh(
+            shpereGeometry,
+            new THREE.MeshBasicMaterial({})
+        );
+        scene.add(shpereMesh);
 
         /*
          * ------------end ----------
@@ -153,16 +174,24 @@ export default function ThreeComponent() {
         // 渲染函数
         const clock = new THREE.Clock();
         function render(t) {
-            controls.update();
             // 获取秒数
             const time = clock.getElapsedTime();
 
-            // 通过摄像机和鼠标位置更新射线
-            // raycaster.setFromCamera(mouse, camera);
+            // 实现小球沿曲线运动
+            // 通过 curve.getPoint(time); 获取每一帧的坐标。time
+            const curvePointPosition = curve.getPoint(time);
 
-            // 最后，想要成功的完成这种效果，你需要在主函数中调用 TWEEN.update()
-            // TWEEN.update();
+            //1. 配合time设置小球位置（ps: 通过position= vec3(x,y,z)时，因为Mesh.position为只读属性，所以无法赋值，解决办法🔽）
+            // shpereMesh.position = curvePointPosition;
+            shpereMesh.position.copy(curvePointPosition);
 
+            //2. 通过改变相机视角实现沿曲线轨道运动
+            // camera.position.copy(curvePointPosition);
+            // 相机朝向几何体
+            // camera.lookAt(box);
+
+            // 控制器更新
+            controls.update();
             renderer.render(scene, camera);
             // 动画帧
             requestAnimationFrame(render);

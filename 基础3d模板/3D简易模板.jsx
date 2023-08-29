@@ -60,7 +60,8 @@ export default function ThreeComponent() {
         //     scene.position.x,
         //     scene.position.y,
         //     scene.position.z
-        // ); 使用
+        // );
+        // 摄像机看向方向（可以是场景中某个物体）
         camera.lookAt(scene.position);
 
         // 摄像机添加到场景中
@@ -311,7 +312,6 @@ export default function ThreeComponent() {
         // 渲染函数
         const clock = new THREE.Clock();
         function render(t) {
-            controls.update();
             // 获取秒数
             const time = clock.getElapsedTime();
 
@@ -321,6 +321,8 @@ export default function ThreeComponent() {
             // 最后，想要成功的完成这种效果，你需要在主函数中调用 TWEEN.update()
             // TWEEN.update();
 
+            // 控制器更新
+            controls.update();
             renderer.render(scene, camera);
             // 动画帧
             requestAnimationFrame(render);

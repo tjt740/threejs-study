@@ -557,7 +557,7 @@ export const routerPaths = [
                 key: 'fireworks',
             },
             {
-                label: '月亮围绕地球旋转',
+                label: '月球🌙绕着地球🌏转',
                 icon: <MyIcon type="icon-zhangyuxiaowanzi" />,
                 elementPath: 'CSS2DRenderer',
                 key: 'CSS2DRenderer',

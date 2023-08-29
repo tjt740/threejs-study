@@ -562,7 +562,12 @@ export const routerPaths = [
                 elementPath: 'CSS2DRenderer',
                 key: 'CSS2DRenderer',
             },
-
+            {
+                label: '变形动画原理和实现',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: '变形动画原理和实现',
+                key: '变形动画原理和实现',
+            },
             {
                 label: '测试',
                 icon: <MyIcon type="icon-zhangyuxiaowanzi" />,

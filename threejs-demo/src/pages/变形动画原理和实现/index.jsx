@@ -14,6 +14,8 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 // 引入补间动画tween.js three.js 自带
 import * as TWEEN from 'three/examples/jsm/libs/tween.module.js';
 
+import gsap from 'gsap';
+
 // import * as dat from 'dat.gui';
 // const gui = new dat.GUI();
 // 使用 lil-gui 调试 three.js 图形
@@ -136,6 +138,7 @@ export default function ThreeComponent() {
             scene.environment = texture;
         });
 
+        // 加载.glb文件
         const gltfLoader = new GLTFLoader();
         // 加载被压缩的.glb文件会报错，需要draco解码器
         const dracoLoader = new DRACOLoader();
@@ -149,8 +152,48 @@ export default function ThreeComponent() {
         dracoLoader.preload();
         // 设置gltf加载器dracoLoader解码器
         gltfLoader.setDRACOLoader(dracoLoader);
-        gltfLoader.loadAsync(require('./model/sphere1.glb')).then((glb) => {
-            scene.add(glb.scene);
+
+        // 加载 <模型0>
+        gltfLoader.loadAsync(require('./model/sphere0.glb')).then((glb0) => {
+            // 场景添加 <模型0>
+            glb0.scene.position.set(-10, 0, 0);
+            scene.add(glb0.scene);
+
+            // 获取 <模型0>模型
+            const glb0Mesh = glb0.scene.children[0];
+
+            gltfLoader
+                .loadAsync(require('./model/sphere1.glb'))
+                .then((glb1) => {
+                    // 给设置变形属性里增加 position 属性。并设置为[];
+                    glb0Mesh.geometry.morphAttributes.position = [];
+
+                    // 将<模型1>中的模型32位顶点位置属性 塞入 <模型0>的变形属性的position属性中
+                    glb0Mesh.geometry.morphAttributes.position.push(
+                        glb1.scene.children[0].geometry.attributes.position
+                    );
+
+                    // 更新morphTargets，但会对 .morphTargetInfluences 产生影响，重置为一个空数组。
+                    glb0Mesh.updateMorphTargets();
+
+                    // 指定模型形变多少 0~1。 0:不形变，1:形变。
+                    glb0Mesh.morphTargetInfluences[0] = 1;
+
+                    // 配合GSAP实现动画过渡效果
+                    const params = {
+                        value: 0,
+                    };
+                    gsap.to(params, {
+                        value: 1, // 终点值
+                        duration: 1,
+                        repeat: -1,
+                        yoyo: true,
+                        onUpdate: () => {
+                            // console.log(params.value);
+                            glb0Mesh.morphTargetInfluences[0] = params.value;
+                        },
+                    });
+                });
         });
 
         /*

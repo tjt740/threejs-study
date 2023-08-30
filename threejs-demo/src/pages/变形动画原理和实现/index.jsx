@@ -55,7 +55,7 @@ export default function ThreeComponent() {
         // 更新camera 宽高比;
         camera.aspect = WIDTH / HEIGHT;
         // 设置相机位置 object3d具有position，属性是一个3维的向量。
-        camera.position.set(0, 0, 50);
+        camera.position.set(0, 0, 20);
         // 更新camera 视角方向, 摄像机看的方向，配合OrbitControls.target = new THREE.Vector3(
         //     scene.position.x,
         //     scene.position.y,
@@ -149,9 +149,7 @@ export default function ThreeComponent() {
         dracoLoader.preload();
         // 设置gltf加载器dracoLoader解码器
         gltfLoader.setDRACOLoader(dracoLoader);
-        gltfLoader.loadAsync(require('./model/flower0.glb')).then((glb) => {
-            glb.scene.rotation.z = -Math.PI;
-            glb.scene.position.y = -5;
+        gltfLoader.loadAsync(require('./model/sphere1.glb')).then((glb) => {
             scene.add(glb.scene);
         });
 

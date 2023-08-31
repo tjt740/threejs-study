@@ -24,20 +24,22 @@ export default function ThreeComponent() {
     const container = useRef(null);
 
     // 实际three.js渲染区域
-    const WIDTH = Number(
-        window
-            .getComputedStyle(
-                document.getElementsByClassName('ant-layout-content')[0]
-            )
-            .width.split('px')[0]
-    );
-    const HEIGHT = Number(
-        window
-            .getComputedStyle(
-                document.getElementsByClassName('ant-layout-content')[0]
-            )
-            .height.split('px')[0]
-    );
+    const WIDTH =
+        Number(
+            window
+                .getComputedStyle(
+                    document.getElementsByClassName('ant-layout-content')[0]
+                )
+                .width.split('px')[0]
+        ) || window.innerWidth;
+    const HEIGHT =
+        Number(
+            window
+                .getComputedStyle(
+                    document.getElementsByClassName('ant-layout-content')[0]
+                )
+                .height.split('px')[0]
+        ) || window.innerHeight;
 
     const init = () => {
         const scene = new THREE.Scene();
@@ -121,13 +123,12 @@ export default function ThreeComponent() {
         const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
         directionalLight.position.set(2.4, 5.3, 2);
         scene.add(directionalLight);
-
-        const box = new THREE.Mesh(
-            new THREE.BoxGeometry(1, 1, 1),
-            new THREE.MeshBasicMaterial({})
+        // 平行光辅助线
+        const directionalLightHelper = new THREE.DirectionalLightHelper(
+            directionalLight,
+            20
         );
-        box.position.copy(directionalLight.position);
-        scene.add(box);
+        scene.add(directionalLightHelper);
 
         gui.add(directionalLight.position, 'x', 0, 10, 0.1)
             .onChange((v) => (box.position.x = v))
@@ -351,6 +352,27 @@ export default function ThreeComponent() {
 
         // 根据页面大小变化，更新渲染
         window.addEventListener('resize', () => {
+            // 实际three.js渲染区域
+            const WIDTH =
+                Number(
+                    window
+                        .getComputedStyle(
+                            document.getElementsByClassName(
+                                'ant-layout-content'
+                            )[0]
+                        )
+                        .width.split('px')[0]
+                ) || window.innerWidth;
+            const HEIGHT =
+                Number(
+                    window
+                        .getComputedStyle(
+                            document.getElementsByClassName(
+                                'ant-layout-content'
+                            )[0]
+                        )
+                        .height.split('px')[0]
+                ) || window.innerHeight;
             // 更新camera 宽高比;
             camera.aspect = WIDTH / HEIGHT;
             /* 

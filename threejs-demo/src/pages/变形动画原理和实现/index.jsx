@@ -57,7 +57,7 @@ export default function ThreeComponent() {
         // 更新camera 宽高比;
         camera.aspect = WIDTH / HEIGHT;
         // 设置相机位置 object3d具有position，属性是一个3维的向量。
-        camera.position.set(0, 0, 20);
+        camera.position.set(0, 0, 50);
         // 更新camera 视角方向, 摄像机看的方向，配合OrbitControls.target = new THREE.Vector3(
         //     scene.position.x,
         //     scene.position.y,
@@ -123,12 +123,11 @@ export default function ThreeComponent() {
         directionalLight.position.set(2.4, 5.3, 2);
         scene.add(directionalLight);
 
-        const box = new THREE.Mesh(
-            new THREE.BoxGeometry(1, 1, 1),
-            new THREE.MeshBasicMaterial({})
+        const directionalLightHelper = new THREE.DirectionalLightHelper(
+            directionalLight,
+            10
         );
-        box.position.copy(directionalLight.position);
-        scene.add(box);
+        scene.add(directionalLightHelper);
 
         // 加载.hdr 文件
         const rgbeLoader = new RGBELoader();
@@ -196,6 +195,128 @@ export default function ThreeComponent() {
                 });
         });
 
+        // 加载花glb文件
+        gltfLoader.loadAsync(require('./model/f4.glb')).then((flower0) => {
+            scene.add(flower0.scene);
+            flower0.scene.rotation.x = Math.PI;
+
+            // 花茎
+            let stem;
+            // 花瓣
+            let petal;
+
+            // 修复水展示 bug
+            flower0.scene.traverse((item) => {
+                if (item.type === 'Mesh' && item.material.name === 'Water') {
+                    item.material = new THREE.MeshStandardMaterial({
+                        color: 'skyblue',
+                        depthWrite: false,
+                        transparent: true,
+                        depthTest: false,
+                        opacity: 0.5,
+                    });
+                }
+            });
+
+            // 获取花茎
+            flower0.scene.children[0].traverse((item) => {
+                if (item.material && item.material.name === 'Stem') {
+                    stem = item;
+                }
+            });
+
+            // 获取花瓣
+            flower0.scene.children[0].traverse((item) => {
+                if (item.material && item.material.name === 'Petal') {
+                    petal = item;
+                }
+            });
+
+            // 加载花2
+            gltfLoader.loadAsync(require('./model/f2.glb')).then((flower1) => {
+                flower1.scene.children[0].traverse((item2) => {
+                    if (item2.material && item2.material.name === 'Stem') {
+                        stem.geometry.morphAttributes.position = [
+                            item2.geometry.attributes.position,
+                        ];
+                        stem.updateMorphTargets();
+                    }
+
+                    // 花瓣
+                    if (item2.material && item2.material.name === 'Petal') {
+                        petal.geometry.morphAttributes.position = [
+                            item2.geometry.attributes.position,
+                        ];
+                        petal.updateMorphTargets();
+                    }
+
+                    // 加载花3
+                    gltfLoader
+                        .loadAsync(require('./model/f1.glb'))
+                        .then((flower2) => {
+                            flower2.scene.children[0].traverse((item3) => {
+                                // 找到花茎
+                                if (
+                                    item3.material &&
+                                    item3.material.name === 'Stem'
+                                ) {
+                                    stem.geometry.morphAttributes.position.push(
+                                        item3.geometry.attributes.position
+                                    );
+                                    stem.updateMorphTargets();
+                                }
+
+                                // 找到花瓣
+                                if (
+                                    item3.material &&
+                                    item3.material.name === 'Petal'
+                                ) {
+                                    petal.geometry.morphAttributes.position.push(
+                                        item3.geometry.attributes.position
+                                    );
+                                    petal.updateMorphTargets();
+                                }
+
+                                // 加入花茎变形动画
+                                const params = {
+                                    value: 0, // 花茎
+                                    value1: 0, // 花根
+                                };
+
+                                gsap.to(params, {
+                                    value: 1,
+                                    duration: 1.5,
+                                    onUpdate: () => {
+                                        // 花茎变化
+                                        stem.morphTargetInfluences[0] =
+                                            params.value;
+
+                                        // 花瓣变化
+                                        petal.morphTargetInfluences[0] =
+                                            params.value;
+                                    },
+                                    // 完成时触发其他
+                                    onComplete: () => {
+                                        gsap.to(params, {
+                                            value1: 1,
+                                            duration: 1,
+                                            onUpdate: () => {
+                                                // 花茎变化
+                                                stem.morphTargetInfluences[1] =
+                                                    params.value1;
+
+                                                // 花瓣变化
+                                                petal.morphTargetInfluences[1] =
+                                                    params.value;
+                                            },
+                                        });
+                                    },
+                                });
+                            });
+                        });
+                });
+            });
+        });
         /*
          * ------------end ----------
          */
@@ -241,6 +362,22 @@ export default function ThreeComponent() {
 
         // 根据页面大小变化，更新渲染
         window.addEventListener('resize', () => {
+            // 实际three.js渲染区域
+            const WIDTH = Number(
+                window
+                    .getComputedStyle(
+                        document.getElementsByClassName('ant-layout-content')[0]
+                    )
+                    .width.split('px')[0]
+            );
+            const HEIGHT = Number(
+                window
+                    .getComputedStyle(
+                        document.getElementsByClassName('ant-layout-content')[0]
+                    )
+                    .height.split('px')[0]
+            );
+
             // 更新camera 宽高比;
             camera.aspect = WIDTH / HEIGHT;
             /* 

@@ -569,6 +569,24 @@ export const routerPaths = [
                 key: '变形动画原理和实现',
             },
             {
+                label: '3D看房',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: '3D看房',
+                key: '3D看房',
+            },
+            {
+                label: '3D展览馆',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: '3D展览馆',
+                key: '3D展览馆',
+            },
+            {
+                label: '3D看房（2）',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: '3D看房2',
+                key: '3D看房2',
+            },
+            {
                 label: '测试',
                 icon: <MyIcon type="icon-zhangyuxiaowanzi" />,
                 elementPath: 'test-demo',

@@ -467,37 +467,24 @@ export default function PackagePreview3D() {
     };
 
     const init = () => {
-        // 实际canvas 宽高
-        WIDTH =
-            Number(
-                window
-                    .getComputedStyle(document.getElementById('container'))
-                    .width.split('px')[0]
-            ) -
+        // 实际three.js渲染区域
+        const WIDTH =
             Number(
                 window
                     .getComputedStyle(
-                        document.getElementsByClassName(
-                            'ant-drawer-content-wrapper'
-                        )[0]
+                        document.getElementsByClassName('ant-layout-content')[0]
                     )
                     .width.split('px')[0]
-            );
+            ) || window.innerWidth;
+        const HEIGHT =
+            Number(
+                window
+                    .getComputedStyle(
+                        document.getElementsByClassName('ant-layout-content')[0]
+                    )
+                    .height.split('px')[0]
+            ) || window.innerHeight;
 
-        HEIGHT =
-            Number(
-                window
-                    .getComputedStyle(
-                        document.getElementsByClassName('ant-layout')[0]
-                    )
-                    .height.split('px')[0]
-            ) -
-            Number(
-                window
-                    .getComputedStyle(document.getElementById('operate'))
-                    .height.split('px')[0]
-            ) -
-            16 * 2;
         document.getElementById('canvas-frame').style.width = WIDTH + 'px';
         document.getElementById('canvas-frame').style.height = HEIGHT + 'px';
         // HEIGHT = window.innerHeight;

@@ -2,23 +2,21 @@ import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 // 导入轨道控制器 只能通过这种方法
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-
 // 引入加载.hdr 文件组件
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
-
 // 引入 GLTFLoader 加载glb模型文件
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 // 解压缩.glb .gltf 文件
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
-
 // 引入补间动画tween.js three.js 自带
 import * as TWEEN from 'three/examples/jsm/libs/tween.module.js';
-
-// import * as dat from 'dat.gui';
-// const gui = new dat.GUI();
+// 引入gsap补间动画操作组件库
+import gsap from 'gsap';
 // 使用 lil-gui 调试 three.js 图形
 import GUI from 'lil-gui';
 const gui = new GUI();
+// import * as dat from 'dat.gui';
+// const gui = new dat.GUI();
 
 export default function ThreeComponent() {
     const container = useRef(null);
@@ -129,16 +127,6 @@ export default function ThreeComponent() {
             20
         );
         scene.add(directionalLightHelper);
-
-        gui.add(directionalLight.position, 'x', 0, 10, 0.1)
-            .onChange((v) => (box.position.x = v))
-            .name('平行光x位置');
-        gui.add(directionalLight.position, 'y', 0, 10, 0.1)
-            .onChange((v) => (box.position.y = v))
-            .name('平行光y位置');
-        gui.add(directionalLight.position, 'z', 0, 10, 0.1)
-            .onChange((v) => (box.position.z = v))
-            .name('平行光z位置');
 
         // 创建自然光
         const ambientLight = new THREE.AmbientLight(0xffffff, 1);

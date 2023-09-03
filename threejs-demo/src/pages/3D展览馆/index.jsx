@@ -56,8 +56,8 @@ export default function ThreeComponent() {
         // 更新camera 宽高比;
         camera.aspect = WIDTH / HEIGHT;
         // 设置相机位置 object3d具有position，属性是一个3维的向量。
-        // camera.position.set(0, 10, 20);
-        camera.position.set(0, 0, 0);
+        camera.position.set(0, 1.5, 12);
+        // camera.position.set(0, 0, 0);
 
         // 摄像机添加到场景中
         scene.add(camera);
@@ -69,7 +69,8 @@ export default function ThreeComponent() {
         });
         // 设置渲染器编码格式  THREE.NoColorSpace = "" || THREE.SRGBColorSpace = "srgb" || THREE.LinearSRGBColorSpace = "srgb-linear"
         renderer.outputColorSpace = 'srgb-linear';
-
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 2.2;
         // 改变渲染器尺寸
         renderer.setSize(WIDTH, HEIGHT);
         // 设置像素比 使图形锯齿 消失
@@ -83,6 +84,122 @@ export default function ThreeComponent() {
         const axesHelper = new THREE.AxesHelper(25);
         //  坐标辅助线添加到场景中
         scene.add(axesHelper);
+
+        // 创建环境光
+        const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+        scene.add(ambientLight);
+
+        // 加载.glb文件
+        const gltfLoader = new GLTFLoader();
+        // 加载被压缩的.glb文件会报错，需要draco解码器
+        const dracoLoader = new DRACOLoader();
+        // 设置dracoLoader路径
+        dracoLoader.setDecoderPath(
+            'https://www.gstatic.com/draco/versioned/decoders/1.5.6/'
+        );
+        // 使用js方式解压
+        dracoLoader.setDecoderConfig({ type: 'js' });
+        // 初始化_initDecoder 解码器
+        dracoLoader.preload();
+
+        // 设置gltf加载器draco解码器
+        gltfLoader.setDRACOLoader(dracoLoader);
+        gltfLoader
+            .loadAsync(require('./models/exhibition-min1.glb'))
+            .then((gltf) => {
+                scene.add(gltf.scene);
+                console.log(gltf.scene);
+                gltf.scene.traverse((child) => {
+                    //     if (child.isLight) {
+                    //         // console.log(child);
+                    //         child.intensity = 1;
+                    //         // child.position.y = 1;
+                    //     }
+
+                    if (
+                        child.isMesh &&
+                        child.material.name.indexOf('Glass') !== -1
+                    ) {
+                        console.log(child);
+                        child.geometry.computeVertexNormals();
+                        const cubeMaterial3 = new THREE.MeshPhongMaterial({
+                            color: 0xffffff,
+                            //   envMap: threePlus.scene.environment,
+                            refractionRatio: 0.98,
+                            reflectivity: 0.98,
+                            side: THREE.DoubleSide,
+                            transparent: true,
+                            opacity: 0.6,
+                        });
+                        child.material = cubeMaterial3;
+                        const geometry = new THREE.TorusKnotGeometry(
+                            0.5,
+                            0.15,
+                            50,
+                            8
+                        );
+                        const material = new THREE.MeshBasicMaterial({
+                            color: 0xffff00,
+                        });
+                        const torusKnot = new THREE.Mesh(geometry, material);
+                        torusKnot.position.set(0, 4, 0);
+                        torusKnot.scale.set(1, 3, 1);
+                        child.add(torusKnot);
+                    }
+
+                    if (
+                        child.isMesh &&
+                        child.material.name.indexOf('Floor') !== -1
+                    ) {
+                        // console.log(child);
+                        child.material = new THREE.MeshBasicMaterial({
+                            map: child.material.map,
+                        });
+                    }
+                });
+            });
+
+        controlsCamera();
+        function controlsCamera() {
+            // 添加鼠标点击拖拽事件
+            let isMouseDown = false;
+            // 监听鼠标按下事件
+            container.current.addEventListener(
+                'mousedown',
+                () => {
+                    isMouseDown = true;
+                },
+                false
+            );
+            container.current.addEventListener(
+                'mouseup',
+                () => {
+                    isMouseDown = false;
+                },
+                false
+            );
+            container.current.addEventListener(
+                'mouseout',
+                () => {
+                    isMouseDown = false;
+                },
+                false
+            );
+            // 是否按下鼠标,移动鼠标
+            container.current.addEventListener(
+                'mousemove',
+                (event) => {
+                    if (isMouseDown) {
+                        camera.rotation.y += event.movementX * 0.002;
+                        camera.rotation.x += event.movementY * 0.002;
+                        // /📌 设置相机旋转时的顺序，以Y轴为主
+                        camera.rotation.order = 'YXZ';
+                        // xyz
+                    }
+                },
+                false
+            );
+        }
 
         /*
          * ------------end ----------

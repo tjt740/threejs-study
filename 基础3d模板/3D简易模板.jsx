@@ -128,7 +128,7 @@ export default function ThreeComponent() {
         );
         scene.add(directionalLightHelper);
 
-        // 创建自然光
+        // 创建环境光
         const ambientLight = new THREE.AmbientLight(0xffffff, 1);
         ambientLight.position.set(5, 7, 7);
         scene.add(ambientLight);

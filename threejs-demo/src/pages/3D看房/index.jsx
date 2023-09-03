@@ -1,4 +1,4 @@
-import React, { useEffect, useRef,useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 // 导入轨道控制器 只能通过这种方法
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -23,7 +23,7 @@ const gui = new GUI();
 let tagDOM;
 export default function ThreeComponent() {
     const container = useRef(null);
-    const [loadingProgess,setLoadingProgess] = useState(0);
+    const [loadingProgess, setLoadingProgess] = useState(0);
 
     // 实际three.js渲染区域
     const WIDTH =
@@ -149,36 +149,47 @@ export default function ThreeComponent() {
         // textSprite.position.set(2, 0, -5);
         // scene.add(textSprite);
 
-        // 添加鼠标点击拖拽事件
-        let isMouseDown = false;
-        // 监听鼠标按下事件
-        container.current.addEventListener(
-            'mousedown',
-            () => {
-                isMouseDown = true;
-            },
-            false
-        );
-        container.current.addEventListener(
-            'mouseup',
-            () => {
-                isMouseDown = false;
-            },
-            false
-        );
-        container.current.addEventListener('mouseout', () => {
-            isMouseDown = false;
-        });
-        // 是否按下鼠标,移动鼠标
-        container.current.addEventListener('mousemove', (event) => {
-            if (isMouseDown) {
-                camera.rotation.y += event.movementX * 0.002;
-                camera.rotation.x += event.movementY * 0.002;
-                // /📌 设置相机旋转时的顺序，以Y轴为主
-                camera.rotation.order = 'YXZ';
-                // xyz
-            }
-        });
+        controlsCamera();
+        function controlsCamera() {
+            // 添加鼠标点击拖拽事件
+            let isMouseDown = false;
+            // 监听鼠标按下事件
+            container.current.addEventListener(
+                'mousedown',
+                () => {
+                    isMouseDown = true;
+                },
+                false
+            );
+            container.current.addEventListener(
+                'mouseup',
+                () => {
+                    isMouseDown = false;
+                },
+                false
+            );
+            container.current.addEventListener(
+                'mouseout',
+                () => {
+                    isMouseDown = false;
+                },
+                false
+            );
+            // 是否按下鼠标,移动鼠标
+            container.current.addEventListener(
+                'mousemove',
+                (event) => {
+                    if (isMouseDown) {
+                        camera.rotation.y += event.movementX * 0.002;
+                        camera.rotation.x += event.movementY * 0.002;
+                        // /📌 设置相机旋转时的顺序，以Y轴为主
+                        camera.rotation.order = 'YXZ';
+                        // xyz
+                    }
+                },
+                false
+            );
+        }
 
         // 将上面 创建<当前所在房间>函数封装成类组件
         class Room {
@@ -375,7 +386,7 @@ export default function ThreeComponent() {
                 },
             });
 
-            moveTo('客厅')
+            moveTo('客厅');
             // camera.position.set(0, 0, -11);
         });
 
@@ -418,26 +429,25 @@ export default function ThreeComponent() {
             moveTo('阳台');
         });
 
-
         // 设置右下角位置
         tagDOM = document.getElementsByClassName('tag')[0];
         tagDOM.style.cssText = `transform:translate(100px,100px)`;
 
         // 配合点击进行位置改变
-        function moveTo(name){
+        function moveTo(name) {
             const positions = {
-              客厅: {x:100, y:110},
-                厨房: {x:180, y:190},
-                阳台: {x:50, y:50},
-              };
-              if (positions[name]) {
+                客厅: { x: 100, y: 110 },
+                厨房: { x: 180, y: 190 },
+                阳台: { x: 50, y: 50 },
+            };
+            if (positions[name]) {
                 gsap.to(tagDOM, {
-                  duration: 0.5,
-                  x: positions[name].x,
-                  y: positions[name].y,
-                  ease: "power3.inOut",
+                    duration: 0.5,
+                    x: positions[name].x,
+                    y: positions[name].y,
+                    ease: 'power3.inOut',
                 });
-              }
+            }
         }
 
         /*
@@ -509,9 +519,13 @@ export default function ThreeComponent() {
             renderer.setPixelRatio(window.devicePixelRatio);
         });
 
-        THREE.DefaultLoadingManager.onProgress = function (item, loaded, total) {
+        THREE.DefaultLoadingManager.onProgress = function (
+            item,
+            loaded,
+            total
+        ) {
             console.log(item, loaded, total);
-            console.log("进度:", new Number((loaded / total) * 100).toFixed(2));
+            console.log('进度:', new Number((loaded / total) * 100).toFixed(2));
         };
     };
 
@@ -523,12 +537,13 @@ export default function ThreeComponent() {
     return (
         <>
             <div id="container" ref={container}></div>
-            {!loadingProgess?        <div class="progress" >
-    <img src={require('./assets/loading.gif')} alt="" />
-    <span>新房奔跑中： { loadingProgess}%</span>
-  </div>
-       :null }
-         <div className="map">
+            {!loadingProgess ? (
+                <div class="progress">
+                    <img src={require('./assets/loading.gif')} alt="" />
+                    <span>新房奔跑中： {loadingProgess}%</span>
+                </div>
+            ) : null}
+            <div className="map">
                 <div className="tag"></div>
                 <img src={require('./assets/map.gif')} alt="" />
             </div>

@@ -124,7 +124,7 @@ export default function ThreeComponent() {
                         child.geometry.computeVertexNormals();
                         const cubeMaterial3 = new THREE.MeshPhongMaterial({
                             color: 0xffffff,
-                            //   envMap: threePlus.scene.environment,
+                            // envMap: ,
                             refractionRatio: 0.98,
                             reflectivity: 0.98,
                             side: THREE.DoubleSide,
@@ -132,6 +132,14 @@ export default function ThreeComponent() {
                             opacity: 0.6,
                         });
                         child.material = cubeMaterial3;
+
+                        new THREE.TextureLoader().load(
+                            require('./textures/bl.jpg'),
+                            (texture) => {
+                                scene.environment = texture;
+                                // cubeMaterial3.envMap = texture;
+                            }
+                        );
                         const geometry = new THREE.TorusKnotGeometry(
                             0.5,
                             0.15,
@@ -151,7 +159,6 @@ export default function ThreeComponent() {
                         child.isMesh &&
                         child.material.name.indexOf('Floor') !== -1
                     ) {
-                        // console.log(child);
                         child.material = new THREE.MeshBasicMaterial({
                             map: child.material.map,
                         });
@@ -200,6 +207,105 @@ export default function ThreeComponent() {
                 false
             );
         }
+
+        // 移动位置(创建精灵文案)
+        class SpriteText {
+            constructor(text, canvasPosition) {
+                this.callbacks = [];
+                // 创建canvas文案
+                const canvas = document.createElement('canvas');
+                canvas.width = 1024;
+                canvas.height = 1024;
+                const ctx = canvas.getContext('2d');
+                ctx.font = '12px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.font = 'bold 200px Arial';
+                ctx.fillStyle = 'red'; //  设置文本字体和大小
+                ctx.fillText(text, 512, 512); // 绘制文本，参数分别是文本内容，x 坐标和 y 坐标
+
+                // 绘制一个填充矩形
+                ctx.fillStyle = 'rgba(100, 100, 100, 0.2)'; // 设置填充颜色
+                ctx.fillRect(0, 256, 1024, 512); // 参数分别是 x 坐标，y 坐标，宽度和高度
+
+                // 绘制一个描边矩形
+                ctx.strokeStyle = 'red'; // 设置描边颜色
+                ctx.lineWidth = 5; // 设置描边线宽度
+                ctx.strokeRect(0, 0, 1024, 1024); // 参数分别是 x 坐标，y 坐标，宽度和高度 1024,1024 全部宽度
+
+                // 创建canvasTexture纹理
+                const canvasTexture = new THREE.CanvasTexture(canvas);
+
+                // 创建精灵文案 （精灵文案始终朝向自己）
+                this.textSprite = new THREE.Sprite(
+                    new THREE.SpriteMaterial({
+                        map: canvasTexture,
+                        depthTest: false, // 不进行深度检测
+                    })
+                );
+                // 设置精灵文案位置
+                this.textSprite.position.copy(canvasPosition);
+                scene.add(this.textSprite);
+
+                // 进行射线检测
+                //1️⃣ 创建射线
+                const raycaster = new THREE.Raycaster();
+                //2️⃣ 创建鼠标点
+                const mouse = new THREE.Vector2();
+                //3️⃣ 鼠标点击事件
+                const onClick = (e) => {
+                    // 将鼠标位置归一化为设备坐标。x 和 y 方向的取值范围是 (-1 —— 1)
+                    // mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+                    // mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+                    // ❤️‍🔥4️⃣ 修复点击事件精度
+                    mouse.x =
+                        ((e.clientX - renderer.domElement.offsetLeft) /
+                            renderer.domElement.clientWidth) *
+                            2 -
+                        1;
+                    mouse.y =
+                        -(
+                            (e.clientY - renderer.domElement.offsetTop) /
+                            renderer.domElement.clientHeight
+                        ) *
+                            2 +
+                        1;
+                    //5️⃣ 通过摄像机和鼠标位置更新射线 ,设置相机更新射线照射
+                    raycaster.setFromCamera(mouse, camera);
+
+                    // 检测照射结果
+                    const intersect = raycaster.intersectObject(
+                        this.textSprite
+                    );
+                    if (intersect.length) {
+                        this.callbacks.forEach((item) => {
+                            // tjt: 异步同步执行。
+                            item();
+                        });
+                    }
+                };
+
+                // 全局添加点击事件
+                window.addEventListener('click', onClick);
+            }
+
+            onClick = (callback) => {
+                this.callbacks.push(callback);
+            };
+        }
+
+        const text1 = new SpriteText('展品1', new THREE.Vector3(5, 0, -5));
+        text1.onClick(() => {
+            setTimeout(() => {
+                console.log(1);
+            }, 1000);
+            setTimeout(() => {
+                console.log(0);
+            }, 1000);
+            setTimeout(() => {
+                console.log(3);
+            }, 1000);
+        });
 
         /*
          * ------------end ----------

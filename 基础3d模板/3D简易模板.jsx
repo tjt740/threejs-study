@@ -124,7 +124,7 @@ export default function ThreeComponent() {
         // 平行光辅助线
         const directionalLightHelper = new THREE.DirectionalLightHelper(
             directionalLight,
-            20
+            5
         );
         scene.add(directionalLightHelper);
 

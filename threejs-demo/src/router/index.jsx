@@ -332,6 +332,24 @@ export const routerPaths = [
                 elementPath: 'lessons/shader-粒子效果',
                 key: 'lessons/shader-粒子效果',
             },
+            {
+                label: '着色器加工材质+阴影补正',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: 'lessons/着色器加工材质',
+                key: 'lessons/着色器加工材质',
+            },
+            {
+                label: '后期合成-效果合成器',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: 'lessons/EffectComposer',
+                key: 'lessons/EffectComposer',
+            },
+            {
+                label: '曲线相关Curve',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: 'lessons/线相关Curve',
+                key: 'lessons/线相关Curve',
+            },
         ],
     },
     {
@@ -537,6 +555,36 @@ export const routerPaths = [
                 icon: <MyIcon type="icon-zhangyuxiaowanzi" />,
                 elementPath: 'fireworks',
                 key: 'fireworks',
+            },
+            {
+                label: '月球🌙绕着地球🌏转',
+                icon: <MyIcon type="icon-zhangyuxiaowanzi" />,
+                elementPath: 'CSS2DRenderer',
+                key: 'CSS2DRenderer',
+            },
+            {
+                label: '变形动画原理和实现',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: '变形动画原理和实现',
+                key: '变形动画原理和实现',
+            },
+            {
+                label: '3D看房',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: '3D看房',
+                key: '3D看房',
+            },
+            {
+                label: '3D展览馆',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: '3D展览馆',
+                key: '3D展览馆',
+            },
+            {
+                label: '3D看房（2）',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: '3D看房2',
+                key: '3D看房2',
             },
             {
                 label: '测试',

@@ -14,9 +14,11 @@ import * as TWEEN from 'three/examples/jsm/libs/tween.module.js';
 import gsap from 'gsap';
 // 使用 lil-gui 调试 three.js 图形
 import GUI from 'lil-gui';
-const gui = new GUI();
 // import * as dat from 'dat.gui';
 // const gui = new dat.GUI();
+
+import { CreateRoomList } from './class/room';
+const gui = new GUI();
 
 export default function ThreeComponent() {
     const container = useRef(null);
@@ -55,7 +57,7 @@ export default function ThreeComponent() {
         // 更新camera 宽高比;
         camera.aspect = WIDTH / HEIGHT;
         // 设置相机位置 object3d具有position，属性是一个3维的向量。
-        camera.position.set(0, 0, 20);
+        camera.position.set(0, 10, 20);
         // 更新camera 视角方向, 摄像机看的方向，配合OrbitControls.target = new THREE.Vector3(
         //     scene.position.x,
         //     scene.position.y,
@@ -66,11 +68,6 @@ export default function ThreeComponent() {
 
         // 摄像机添加到场景中
         scene.add(camera);
-
-        //  创建XYZ直角坐标系  (红色代表 X 轴. 绿色代表 Y 轴. 蓝色代表 Z 轴.)，帮助我们查看3维坐标轴
-        const axesHelper = new THREE.AxesHelper(25);
-        //  坐标辅助线添加到场景中
-        scene.add(axesHelper);
 
         // 初始化<渲染器>
         const renderer = new THREE.WebGLRenderer({
@@ -121,12 +118,6 @@ export default function ThreeComponent() {
         const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
         directionalLight.position.set(2.4, 5.3, 2);
         scene.add(directionalLight);
-        // 平行光辅助线
-        const directionalLightHelper = new THREE.DirectionalLightHelper(
-            directionalLight,
-            5
-        );
-        scene.add(directionalLightHelper);
 
         // 创建环境光
         const ambientLight = new THREE.AmbientLight(0xffffff, 1);
@@ -146,6 +137,49 @@ export default function ThreeComponent() {
                 scene.environment = texture;
             }
         );
+
+        // 请求后端接口拿到渲染数据
+        fetch(
+            'https://test-1251830808.cos.ap-guangzhou.myqcloud.com/three_course/demo720.json'
+        )
+            .then((res) => res.json())
+            .then((data) => {
+                // console.log('data:', data);
+                /*
+                    cameraLocation: 摄像机位置
+                    housePic: 房间布局图
+                    objData: {
+                        roomList: 房间平面图
+                        walls: 墙壁
+                    }
+                    panoramaLocation: 
+                    segments: 
+                    wallRelation: 
+                */
+                const {
+                    cameraLocation,
+                    housePic,
+                    objData: { roomList, walls },
+                    panoramaLocation,
+                    segments,
+                    wallRelation,
+                } = data;
+
+                // console.log(roomList);
+                // 创建平面图
+                roomList.forEach((item, index) => {
+                    const { areas, roomName } = item;
+                    /*
+                        areas: 位置信息
+                        roomName: 房间名称
+                    */
+                    if (!index) {
+                        const roomAreas = new CreateRoomList(areas, roomName);
+                        // scene.add(roomAreas.generateMesh());
+                    }
+                    // 场景添加class返回值
+                });
+            });
 
         /*
          * ------------end ----------

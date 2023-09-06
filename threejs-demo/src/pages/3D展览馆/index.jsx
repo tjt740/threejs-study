@@ -110,17 +110,18 @@ export default function ThreeComponent() {
                 scene.add(gltf.scene);
                 console.log(gltf.scene);
                 gltf.scene.traverse((child) => {
-                    //     if (child.isLight) {
-                    //         // console.log(child);
-                    //         child.intensity = 1;
-                    //         // child.position.y = 1;
-                    //     }
+                    // 优化中间模型展示
+                    // if()
+                    console.log(
+                        child.material?.name
+                        // child.getObjectByName('Sphere003')
+                    );
 
                     if (
                         child.isMesh &&
                         child.material.name.indexOf('Glass') !== -1
                     ) {
-                        console.log(child);
+                        // console.log(child);
                         child.geometry.computeVertexNormals();
                         const cubeMaterial3 = new THREE.MeshPhongMaterial({
                             color: 0xffffff,
@@ -137,9 +138,9 @@ export default function ThreeComponent() {
                             require('./textures/bl.jpg'),
                             (texture) => {
                                 scene.environment = texture;
-                                // cubeMaterial3.envMap = texture;
                             }
                         );
+                        // 扭结几何体
                         const geometry = new THREE.TorusKnotGeometry(
                             0.5,
                             0.15,

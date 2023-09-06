@@ -173,10 +173,10 @@ export default function ThreeComponent() {
                         areas: 位置信息
                         roomName: 房间名称
                     */
-                    if (!index) {
-                        const roomAreas = new CreateRoomList(areas, roomName);
-                        // scene.add(roomAreas.generateMesh());
-                    }
+
+                    const roomAreas = new CreateRoomList(areas, roomName);
+                    scene.add(roomAreas.generateMesh());
+
                     // 场景添加class返回值
                 });
             });

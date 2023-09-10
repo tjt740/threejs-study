@@ -88,6 +88,7 @@ const hasJsxRuntime = (() => {
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
 module.exports = function (webpackEnv) {
+    console.log(webpackEnv);
     const isEnvDevelopment = webpackEnv === 'development';
     const isEnvProduction = webpackEnv === 'production';
 
@@ -348,6 +349,20 @@ module.exports = function (webpackEnv) {
         module: {
             strictExportPresence: true,
             rules: [
+                // {
+                //     test: /\.(glsl|vert|frag)$/,
+                //     // type: 'asset',
+                //     use: 'raw-loader',
+                // },
+                {
+                    test: /\.glsl$/,
+                    use: [
+                        'raw-loader',
+                        {
+                            loader: 'webpack-glsl-loader',
+                        },
+                    ],
+                },
                 // Handle node_modules packages that contain sourcemaps
                 shouldUseSourceMap && {
                     enforce: 'pre',
@@ -624,6 +639,7 @@ module.exports = function (webpackEnv) {
                             ],
                             type: 'asset/resource',
                         },
+
                         // ** STOP ** Are you adding a new loader?
                         // Make sure to add the new loader(s) before the "file" loader.
                     ],

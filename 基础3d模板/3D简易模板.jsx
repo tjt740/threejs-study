@@ -14,12 +14,20 @@ import * as TWEEN from 'three/examples/jsm/libs/tween.module.js';
 import gsap from 'gsap';
 // 使用 lil-gui 调试 three.js 图形
 import GUI from 'lil-gui';
-const gui = new GUI();
+const gui = new GUI({
+    // 设置gui title
+    title: 'gui控制器(点击展开)',
+    // 收起分区，默认false
+    closeFolders: true,
+    // 自动生成在页面右上角，默认为true
+    autoPlace: true,
+});
+
 // import * as dat from 'dat.gui';
 // const gui = new dat.GUI();
 
 export default function ThreeComponent() {
-    const container = useRef(null);
+    const containerRef = useRef(null);
 
     // 实际three.js渲染区域
     const WIDTH =
@@ -50,10 +58,10 @@ export default function ThreeComponent() {
             0.1,
             1000
         );
-        // 更新camera 投影矩阵
-        camera.updateProjectionMatrix();
         // 更新camera 宽高比;
         camera.aspect = WIDTH / HEIGHT;
+        // 更新camera 投影矩阵
+        camera.updateProjectionMatrix();
         // 设置相机位置 object3d具有position，属性是一个3维的向量。
         camera.position.set(0, 0, 20);
         // 更新camera 视角方向, 摄像机看的方向，配合OrbitControls.target = new THREE.Vector3(
@@ -300,7 +308,7 @@ export default function ThreeComponent() {
 
         // 渲染函数
         const clock = new THREE.Clock();
-        function render(t) {
+        function animation(t) {
             // 获取秒数
             const time = clock.getElapsedTime();
 
@@ -314,13 +322,13 @@ export default function ThreeComponent() {
             controls.update();
             renderer.render(scene, camera);
             // 动画帧
-            requestAnimationFrame(render);
+            requestAnimationFrame(animation);
         }
-        // 渲染
-        render();
+        // 渲染动画帧
+        animation();
 
         // DOM承载渲染器
-        container.current.appendChild(renderer.domElement);
+        containerRef.current.appendChild(renderer.domElement);
 
         // 控制是否全屏
         const eventObj = {
@@ -383,7 +391,7 @@ export default function ThreeComponent() {
 
     return (
         <>
-            <div id="container" ref={container}></div>
+            <div id="container" ref={containerRef}></div>
         </>
     );
 }

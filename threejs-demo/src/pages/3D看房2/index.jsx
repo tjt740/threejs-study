@@ -17,7 +17,11 @@ import GUI from 'lil-gui';
 // import * as dat from 'dat.gui';
 // const gui = new dat.GUI();
 
-import { CreateRoomList } from './class/room';
+// 创建地板、天花板
+import RoomShapeMesh from './class/room-shape-mesh';
+// 创建墙壁
+import WallShapeMesh from './class/wall-shape-mesh';
+
 const gui = new GUI();
 
 export default function ThreeComponent() {
@@ -50,7 +54,7 @@ export default function ThreeComponent() {
             45, // 90
             WIDTH / HEIGHT,
             0.1,
-            1000
+            10000
         );
         // 更新camera 投影矩阵
         camera.updateProjectionMatrix();
@@ -134,7 +138,7 @@ export default function ThreeComponent() {
         // 加载全景图
         const textureLoader = new THREE.TextureLoader();
         textureLoader.load(
-            require('./textures/assets/HdrSkyCloudy004_JPG_8K.jpg'),
+            require('./textures/HdrSkyCloudy004_JPG_8K.jpg'),
             (texture) => {
                 texture.mapping = THREE.EquirectangularRefractionMapping;
                 scene.background = texture;
@@ -148,7 +152,9 @@ export default function ThreeComponent() {
         )
             .then((res) => res.json())
             .then((data) => {
-                // console.log('data:', data);
+                data = require('./data/response_data.json');
+
+                console.log('data:', data);
                 /*
                     cameraLocation: 摄像机位置
                     housePic: 房间布局图
@@ -156,9 +162,9 @@ export default function ThreeComponent() {
                         roomList: 房间平面图
                         walls: 墙壁
                     }
-                    panoramaLocation: 
+                    panoramaLocation: 全景坐标
                     segments: 
-                    wallRelation: 
+                    wallRelation: 墙壁关系
                 */
                 const {
                     cameraLocation,
@@ -170,22 +176,139 @@ export default function ThreeComponent() {
                 } = data;
 
                 // 创建平面图
+                let _roomId = null;
                 roomList.forEach((item, index) => {
-                    const { areas, roomName } = item;
+                    const { areas, roomName, roomId } = item;
+                    // _roomId = roomId;
                     /*
                         areas: 位置信息
                         roomName: 房间名称
                     */
+                    // 创建房间平面
+                    const roomMesh = new RoomShapeMesh(areas, roomName);
+                    // 房间天花板
+                    // const roomCeilingMesh = new RoomShapeMesh(areas, roomName);
+                    // roomCeilingMesh.position.y = 2.8;
+                    // 场景添加地平面+天花板
+                    // scene.add(roomMesh, roomCeilingMesh);
+                    scene.add(roomMesh);
+                    // 根据房间平面id 去找全景坐标里对应的房间id
+                    panoramaLocation.forEach((v) => {
+                        if (v.roomId === roomId) {
+                            const { point } = v;
 
-                    const roomAreas = new CreateRoomList(
-                        areas,
-                        roomName,
-                        scene
+                            const panoramaUrl = point[0].panoramaUrl;
+                            // 因为平面坐标x,y,z 中 y和z是反的。所以 y和z调过来
+                            const center = new THREE.Vector3(
+                                point[0].x / 100,
+                                point[0].z / 100,
+                                point[0].y / 100
+                            );
+
+                            // 修改roomMesh、roomCeilingMesh 材质
+                            // roomMesh.material =
+                            // ./assets/f7984b17e4d962a6372bc3e40dbf86972509171113612625690.jpg; || "https://img.alicdn.com/imgextra/i4/O1CN01ILVf7M1z7XRpLAxl7_!!6000000006667-0-tps-7680-3840.jpg"
+
+                            let material = WallShaderMaterial(
+                                panoramaUrl,
+                                center
+                            );
+                            roomMesh.material = material;
+
+                            // roomCeilingMesh.material = WallShaderMaterial(
+                            //     panoramaUrl,
+                            //     center
+                            // );
+
+                            // 赋值material
+                            v.material = material;
+                        }
+                    });
+                });
+
+                // 创建墙
+                wallRelation.forEach((item, index) => {
+                    const { faceRelation, wallPoints } = item;
+
+                    // 根据id找到对应的全景贴图
+                    const findPanorama = panoramaLocation.find((value) => {
+                        return value.roomId === faceRelation[0].roomId;
+                    });
+
+                    const wallMesh = new WallShapeMesh(
+                        wallPoints,
+                        faceRelation,
+                        findPanorama
                     );
-
-                    // 场景添加class返回值
+                    scene.add(wallMesh);
                 });
             });
+
+        function WallShaderMaterial(panoramaUrl, center) {
+            const panaramaTexture = new THREE.TextureLoader().load(panoramaUrl);
+            panaramaTexture.flipY = false;
+            panaramaTexture.wrapS = THREE.RepeatWrapping;
+            panaramaTexture.wrapT = THREE.RepeatWrapping;
+            panaramaTexture.magFilter = THREE.NearestFilter;
+            panaramaTexture.minFilter = THREE.NearestFilter;
+
+            return new THREE.ShaderMaterial({
+                transparent: true,
+                side: THREE.DoubleSide,
+                vertexShader: /*glsl*/ `
+                    varying vec2 v_uv;
+
+                    // 声明position
+                    varying vec3 v_position;
+                    void main() {
+                        v_uv = uv;
+                        vec4 modelpos = modelMatrix * vec4(position, 1.0);
+                        v_position = modelpos.xyz;
+
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+
+                    }
+
+                `,
+                fragmentShader: /*glsl*/ `
+                    varying vec2 v_uv;
+                     // 获取uniforms v_center;
+                     uniform vec3 v_center;
+                    // 获取到uniforms 图片纹理
+                    uniform sampler2D v_panoramaSrc;
+                    // 获取顶点着色器中v_position
+                    varying vec3 v_position;
+                    // 声明 π
+                    const float PI = 3.14159265359;
+
+                    void main() {
+
+                    vec3 nPos = normalize(v_position - v_center);
+                    float theta = acos(nPos.y)/PI;
+                    float phi = 0.0;
+                    phi = (atan(nPos.z, nPos.x)+PI)/(2.0*PI);
+                    // phi += 0.75;
+                    vec4 pColor = texture2D(v_panoramaSrc, vec2(phi, theta));
+
+                    gl_FragColor = pColor;
+                    if(nPos.z<0.003&&nPos.z>-0.003 && nPos.x<0.0){
+                        phi = (atan(0.003, nPos.x)+PI)/(2.0*PI);
+                        phi += 0.75;
+                        gl_FragColor = texture2D(v_panoramaSrc, vec2(phi, theta));
+                    }
+
+                    }
+                `,
+                uniforms: {
+                    v_panoramaSrc: {
+                        value: panaramaTexture,
+                    },
+                    v_center: {
+                        value: center,
+                    },
+                },
+            });
+        }
 
         /*
          * ------------end ----------

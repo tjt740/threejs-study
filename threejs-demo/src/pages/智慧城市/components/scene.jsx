@@ -21,6 +21,8 @@ import './three/gui/gui';
 //9️⃣ 创建几何体
 import createMesh from './three/utils/createMesh';
 
+// 创建城市
+import createCity from './three/mesh/city';
 import '../index.less';
 
 export default function Scene() {
@@ -35,7 +37,8 @@ export default function Scene() {
         //  坐标辅助线添加到场景中
         scene.add(axesHelper);
 
-        createMesh();
+        // 创建城市
+        createCity();
 
         /*
          * ------------end ----------

@@ -3160,7 +3160,7 @@
                 {
                     "floor": 1,
                     "id": 14,
-                    "panoramaUrl": "/assets/f1177924fe8df6d89970b51b05cf4a2c5793183108815074904.jpg",
+                    "panoramaUrl": "https://img.alicdn.com/imgextra/i4/O1CN01ILVf7M1z7XRpLAxl7_!!6000000006667-0-tps-7680-3840.jpg",
                     "parentroomid": 0,
                     "thumbnailUrl": "",
                     "x": 23.057601928710938,
@@ -3536,7 +3536,7 @@
                 {
                     "floor": 1,
                     "id": 15,
-                    "panoramaUrl": "/assets/1ae0d607f0aabde42278a448dcf1237b913761085841340441.jpg",
+                    "panoramaUrl": "https://img.alicdn.com/imgextra/i4/O1CN01IfZ7Hu1k1Nt7I4PVD_!!6000000004623-0-tps-7680-3840.jpg",
                     "parentroomid": 0,
                     "thumbnailUrl": "",
                     "x": 278.4854431152344,
@@ -3648,7 +3648,7 @@
                 {
                     "floor": 1,
                     "id": 16,
-                    "panoramaUrl": "/assets/d5da0be4fb6d19376a148808eb2d7e742359994068049525757.jpg",
+                    "panoramaUrl": "https://img.alicdn.com/imgextra/i4/O1CN01N6Tpof1oquujNjQ2l_!!6000000005277-0-tps-7680-3840.jpg",
                     "parentroomid": 0,
                     "thumbnailUrl": "",
                     "x": -349.0074462890625,
@@ -3716,7 +3716,7 @@
                 {
                     "floor": 1,
                     "id": 17,
-                    "panoramaUrl": "/assets/40a1edfb54ca7b34b7e349afc89f73277702473047438189240.jpg",
+                    "panoramaUrl": "https://img.alicdn.com/imgextra/i3/O1CN01p1TCWN1QN6LwsM3Ac_!!6000000001963-0-tps-7680-3840.jpg",
                     "parentroomid": 0,
                     "thumbnailUrl": "",
                     "x": 347.0113220214844,
@@ -3828,7 +3828,7 @@
                 {
                     "floor": 1,
                     "id": 18,
-                    "panoramaUrl": "/assets/8384d703e360b46a08d3a0bb8ac2dbe08115136352186866059.jpg",
+                    "panoramaUrl": "https://img.alicdn.com/imgextra/i1/O1CN0188mCvd1GR5e3NunMg_!!6000000000618-0-tps-7680-3840.jpg",
                     "parentroomid": 0,
                     "thumbnailUrl": "",
                     "x": -191.67933654785156,
@@ -3896,7 +3896,7 @@
                 {
                     "floor": 1,
                     "id": 19,
-                    "panoramaUrl": "/assets/b3e8bbbaecb53cbfb59218023643bdba147146823650955972.jpg",
+                    "panoramaUrl": "https://img.alicdn.com/imgextra/i4/O1CN01WcRfG71JgbuhOeU45_!!6000000001058-0-tps-7680-3840.jpgg",
                     "parentroomid": 0,
                     "thumbnailUrl": "",
                     "x": 323.3890380859375,
@@ -3964,7 +3964,7 @@
                 {
                     "floor": 1,
                     "id": 20,
-                    "panoramaUrl": "/assets/9134e09ded885733b6c0ba9b919a26028369501598094468441.jpg",
+                    "panoramaUrl": "https://img.alicdn.com/imgextra/i2/O1CN01DTQotS1N6CtaRSDlH_!!6000000001520-0-tps-7680-3840.jpg",
                     "parentroomid": 61390951,
                     "thumbnailUrl": "",
                     "x": -74.88008117675781,
@@ -4076,7 +4076,7 @@
                 {
                     "floor": 1,
                     "id": 21,
-                    "panoramaUrl": "/assets/6cbdfe77d703fc72556c91fe02db0bc56100275367158842890.jpg",
+                    "panoramaUrl": "https://img.alicdn.com/imgextra/i3/O1CN01URHMAH1H4w6K2x7bN_!!6000000000705-0-tps-7680-3840.jpg",
                     "parentroomid": 0,
                     "thumbnailUrl": "",
                     "x": 268.42108154296875,
@@ -4144,7 +4144,7 @@
                 {
                     "floor": 1,
                     "id": 22,
-                    "panoramaUrl": "/assets/f7984b17e4d962a6372bc3e40dbf86972509171113612625690.jpg",
+                    "panoramaUrl": "https://img.alicdn.com/imgextra/i1/O1CN01FfTHa01zbJBpCCzSE_!!6000000006732-0-tps-7680-3840.jpg",
                     "parentroomid": 0,
                     "thumbnailUrl": "",
                     "x": 546.1363525390625,
@@ -4256,7 +4256,7 @@
                 {
                     "floor": 1,
                     "id": 23,
-                    "panoramaUrl": "/assets/cf04e867e828dcf260bd42af0716838f6933583034365165052.jpg",
+                    "panoramaUrl": "https://img.alicdn.com/imgextra/i4/O1CN01vBLfuI1qw4bdUNUBu_!!6000000005559-0-tps-7680-3840.jpg",
                     "parentroomid": 0,
                     "thumbnailUrl": "",
                     "x": -511.08154296875,
@@ -4528,21 +4528,11 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 61390956
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 61390956
                 }
             ],
@@ -4592,21 +4582,11 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 61390954
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 61390956
                 }
             ],
@@ -4656,39 +4636,19 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        0,
-                        1,
-                        2,
-                        3
-                    ],
+                    "index": [0, 1, 2, 3],
                     "roomId": 61390956
                 },
                 {
-                    "index": [
-                        4,
-                        5,
-                        6,
-                        7
-                    ],
+                    "index": [4, 5, 6, 7],
                     "roomId": 61390956
                 },
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 61390956
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 61390956
                 }
             ],
@@ -4738,39 +4698,19 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        0,
-                        1,
-                        2,
-                        3
-                    ],
+                    "index": [0, 1, 2, 3],
                     "roomId": 61390954
                 },
                 {
-                    "index": [
-                        4,
-                        5,
-                        6,
-                        7
-                    ],
+                    "index": [4, 5, 6, 7],
                     "roomId": 61390954
                 },
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 61390954
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 61390954
                 }
             ],
@@ -4820,39 +4760,19 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        0,
-                        1,
-                        2,
-                        3
-                    ],
+                    "index": [0, 1, 2, 3],
                     "roomId": 61390952
                 },
                 {
-                    "index": [
-                        4,
-                        5,
-                        6,
-                        7
-                    ],
+                    "index": [4, 5, 6, 7],
                     "roomId": 61390952
                 },
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 61390952
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 61390952
                 }
             ],
@@ -4902,21 +4822,11 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 61390957
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 10100001
                 }
             ],
@@ -4966,21 +4876,11 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 10100001
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 61390959
                 }
             ],
@@ -5030,21 +4930,11 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 61390951
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 61390959
                 }
             ],
@@ -5094,21 +4984,11 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 61390957
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 61390959
                 }
             ],
@@ -5158,21 +5038,11 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 61390957
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 61390959
                 }
             ],
@@ -5222,21 +5092,11 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 61390951
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 61390958
                 }
             ],
@@ -5286,39 +5146,19 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        0,
-                        1,
-                        2,
-                        3
-                    ],
+                    "index": [0, 1, 2, 3],
                     "roomId": 61390958
                 },
                 {
-                    "index": [
-                        4,
-                        5,
-                        6,
-                        7
-                    ],
+                    "index": [4, 5, 6, 7],
                     "roomId": 61390958
                 },
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 61390958
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 61390958
                 }
             ],
@@ -5368,21 +5208,11 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 61390951
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 61390958
                 }
             ],
@@ -5432,21 +5262,11 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 61390958
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 61390957
                 }
             ],
@@ -5496,21 +5316,11 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 61390954
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 61390957
                 }
             ],
@@ -5560,21 +5370,11 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 61390951
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 61390957
                 }
             ],
@@ -5624,21 +5424,11 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 61390951
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 10100001
                 }
             ],
@@ -5688,39 +5478,19 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        0,
-                        1,
-                        2,
-                        3
-                    ],
+                    "index": [0, 1, 2, 3],
                     "roomId": 61390951
                 },
                 {
-                    "index": [
-                        4,
-                        5,
-                        6,
-                        7
-                    ],
+                    "index": [4, 5, 6, 7],
                     "roomId": 61390951
                 },
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 61390951
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 61390951
                 }
             ],
@@ -5770,21 +5540,11 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 61390957
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 61390953
                 }
             ],
@@ -5834,39 +5594,19 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        0,
-                        1,
-                        2,
-                        3
-                    ],
+                    "index": [0, 1, 2, 3],
                     "roomId": 61390957
                 },
                 {
-                    "index": [
-                        4,
-                        5,
-                        6,
-                        7
-                    ],
+                    "index": [4, 5, 6, 7],
                     "roomId": 61390957
                 },
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 61390957
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 61390957
                 }
             ],
@@ -5916,21 +5656,11 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 61390957
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 61390952
                 }
             ],
@@ -5980,21 +5710,11 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 61390953
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 61390952
                 }
             ],
@@ -6044,21 +5764,11 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 61390950
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 61390952
                 }
             ],
@@ -6108,21 +5818,11 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 61390956
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 61390952
                 }
             ],
@@ -6172,21 +5872,11 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 61390956
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 61390957
                 }
             ],
@@ -6236,21 +5926,11 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 61390954
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 61390956
                 }
             ],
@@ -6300,21 +5980,11 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 61390956
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 61390952
                 }
             ],
@@ -6364,39 +6034,19 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        0,
-                        1,
-                        2,
-                        3
-                    ],
+                    "index": [0, 1, 2, 3],
                     "roomId": 61390951
                 },
                 {
-                    "index": [
-                        4,
-                        5,
-                        6,
-                        7
-                    ],
+                    "index": [4, 5, 6, 7],
                     "roomId": 61390951
                 },
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 61390951
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 61390951
                 }
             ],
@@ -6446,39 +6096,19 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        0,
-                        1,
-                        2,
-                        3
-                    ],
+                    "index": [0, 1, 2, 3],
                     "roomId": 61390958
                 },
                 {
-                    "index": [
-                        4,
-                        5,
-                        6,
-                        7
-                    ],
+                    "index": [4, 5, 6, 7],
                     "roomId": 61390958
                 },
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 61390958
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 61390958
                 }
             ],
@@ -6528,39 +6158,19 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        0,
-                        1,
-                        2,
-                        3
-                    ],
+                    "index": [0, 1, 2, 3],
                     "roomId": 10100001
                 },
                 {
-                    "index": [
-                        4,
-                        5,
-                        6,
-                        7
-                    ],
+                    "index": [4, 5, 6, 7],
                     "roomId": 10100001
                 },
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 10100001
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 10100001
                 }
             ],
@@ -6610,39 +6220,19 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        0,
-                        1,
-                        2,
-                        3
-                    ],
+                    "index": [0, 1, 2, 3],
                     "roomId": 10100001
                 },
                 {
-                    "index": [
-                        4,
-                        5,
-                        6,
-                        7
-                    ],
+                    "index": [4, 5, 6, 7],
                     "roomId": 10100001
                 },
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 10100001
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 10100001
                 }
             ],
@@ -6692,39 +6282,19 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        0,
-                        1,
-                        2,
-                        3
-                    ],
+                    "index": [0, 1, 2, 3],
                     "roomId": 10100001
                 },
                 {
-                    "index": [
-                        4,
-                        5,
-                        6,
-                        7
-                    ],
+                    "index": [4, 5, 6, 7],
                     "roomId": 10100001
                 },
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 10100001
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 10100001
                 }
             ],
@@ -6774,39 +6344,19 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        0,
-                        1,
-                        2,
-                        3
-                    ],
+                    "index": [0, 1, 2, 3],
                     "roomId": 10100001
                 },
                 {
-                    "index": [
-                        4,
-                        5,
-                        6,
-                        7
-                    ],
+                    "index": [4, 5, 6, 7],
                     "roomId": 10100001
                 },
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 10100001
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 10100001
                 }
             ],
@@ -6856,39 +6406,19 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        0,
-                        1,
-                        2,
-                        3
-                    ],
+                    "index": [0, 1, 2, 3],
                     "roomId": 61390957
                 },
                 {
-                    "index": [
-                        4,
-                        5,
-                        6,
-                        7
-                    ],
+                    "index": [4, 5, 6, 7],
                     "roomId": 61390957
                 },
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 61390957
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 61390957
                 }
             ],
@@ -6938,39 +6468,19 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        0,
-                        1,
-                        2,
-                        3
-                    ],
+                    "index": [0, 1, 2, 3],
                     "roomId": 61390957
                 },
                 {
-                    "index": [
-                        4,
-                        5,
-                        6,
-                        7
-                    ],
+                    "index": [4, 5, 6, 7],
                     "roomId": 61390957
                 },
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 61390957
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 61390957
                 }
             ],
@@ -7020,39 +6530,19 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        0,
-                        1,
-                        2,
-                        3
-                    ],
+                    "index": [0, 1, 2, 3],
                     "roomId": 61390957
                 },
                 {
-                    "index": [
-                        4,
-                        5,
-                        6,
-                        7
-                    ],
+                    "index": [4, 5, 6, 7],
                     "roomId": 61390957
                 },
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 61390957
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 61390957
                 }
             ],
@@ -7102,39 +6592,19 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        0,
-                        1,
-                        2,
-                        3
-                    ],
+                    "index": [0, 1, 2, 3],
                     "roomId": 61390953
                 },
                 {
-                    "index": [
-                        4,
-                        5,
-                        6,
-                        7
-                    ],
+                    "index": [4, 5, 6, 7],
                     "roomId": 61390953
                 },
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 61390953
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 61390953
                 }
             ],
@@ -7184,39 +6654,19 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        0,
-                        1,
-                        2,
-                        3
-                    ],
+                    "index": [0, 1, 2, 3],
                     "roomId": 61390953
                 },
                 {
-                    "index": [
-                        4,
-                        5,
-                        6,
-                        7
-                    ],
+                    "index": [4, 5, 6, 7],
                     "roomId": 61390953
                 },
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 61390953
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 61390953
                 }
             ],
@@ -7266,39 +6716,19 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        0,
-                        1,
-                        2,
-                        3
-                    ],
+                    "index": [0, 1, 2, 3],
                     "roomId": 61390950
                 },
                 {
-                    "index": [
-                        4,
-                        5,
-                        6,
-                        7
-                    ],
+                    "index": [4, 5, 6, 7],
                     "roomId": 61390950
                 },
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 61390950
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 61390950
                 }
             ],
@@ -7348,39 +6778,19 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        0,
-                        1,
-                        2,
-                        3
-                    ],
+                    "index": [0, 1, 2, 3],
                     "roomId": 61390950
                 },
                 {
-                    "index": [
-                        4,
-                        5,
-                        6,
-                        7
-                    ],
+                    "index": [4, 5, 6, 7],
                     "roomId": 61390950
                 },
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 61390950
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 61390950
                 }
             ],
@@ -7430,39 +6840,19 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        0,
-                        1,
-                        2,
-                        3
-                    ],
+                    "index": [0, 1, 2, 3],
                     "roomId": 61390950
                 },
                 {
-                    "index": [
-                        4,
-                        5,
-                        6,
-                        7
-                    ],
+                    "index": [4, 5, 6, 7],
                     "roomId": 61390950
                 },
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 61390950
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 61390950
                 }
             ],
@@ -7512,39 +6902,19 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        0,
-                        1,
-                        2,
-                        3
-                    ],
+                    "index": [0, 1, 2, 3],
                     "roomId": 61390954
                 },
                 {
-                    "index": [
-                        4,
-                        5,
-                        6,
-                        7
-                    ],
+                    "index": [4, 5, 6, 7],
                     "roomId": 61390954
                 },
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 61390954
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 61390954
                 }
             ],
@@ -7594,39 +6964,19 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        0,
-                        1,
-                        2,
-                        3
-                    ],
+                    "index": [0, 1, 2, 3],
                     "roomId": 61390954
                 },
                 {
-                    "index": [
-                        4,
-                        5,
-                        6,
-                        7
-                    ],
+                    "index": [4, 5, 6, 7],
                     "roomId": 61390954
                 },
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 61390954
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 61390954
                 }
             ],
@@ -7676,21 +7026,11 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 61390954
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 61390958
                 }
             ],
@@ -7740,21 +7080,11 @@
         {
             "faceRelation": [
                 {
-                    "index": [
-                        5,
-                        0,
-                        3,
-                        6
-                    ],
+                    "index": [5, 0, 3, 6],
                     "roomId": 61390957
                 },
                 {
-                    "index": [
-                        2,
-                        1,
-                        4,
-                        7
-                    ],
+                    "index": [2, 1, 4, 7],
                     "roomId": 61390959
                 }
             ],

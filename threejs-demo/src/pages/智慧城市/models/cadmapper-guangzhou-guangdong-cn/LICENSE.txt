@@ -1,0 +1,13 @@
+The downloaded file must be distributed with this accompanying license text.
+
+Map data (c) OpenStreetMap contributors.
+
+License details available at http://www.openstreetmap.org/copyright
+
+---
+
+Data via USGS National Elevation Dataset (NED). All NED data are in the public domain.
+
+---
+
+Data via NASA Shuttle Radar Topography Mission (SRTM). All SRTM data are in the public domain.

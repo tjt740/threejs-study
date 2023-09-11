@@ -1,0 +1,63 @@
+/*
+ * 场景组件
+ */
+
+import React, { useEffect, useRef } from 'react';
+import * as THREE from 'three';
+//1️⃣ 获取屏幕three.js实际渲染宽高
+import './getScreenWidthandHeight';
+//2️⃣ 导入场景
+import scene from './scene';
+//3️⃣ 导入相机
+import './camera';
+//4️⃣ 导入render
+import renderer from './renderer';
+//5️⃣  导入控制器
+import './controls';
+//6️⃣ 导入动画帧
+import './animationFrame';
+//7️⃣ 导入gui
+import './gui/gui';
+//9️⃣ 创建几何体
+import createMesh from './utils/createMesh';
+
+// import '../index.less';
+
+export default function Scene() {
+    const containerRef = useRef(null);
+
+    const init = () => {
+        /*
+         * ------------ start ----------
+         */
+        //  创建XYZ直角坐标系  (红色代表 X 轴. 绿色代表 Y 轴. 蓝色代表 Z 轴.)，帮助我们查看3维坐标轴
+        const axesHelper = new THREE.AxesHelper(25);
+        //  坐标辅助线添加到场景中
+        scene.add(axesHelper);
+
+        createMesh();
+
+        /*
+         * ------------end ----------
+         */
+
+        //8️⃣ DOM承载渲染器
+        containerRef.current.appendChild(renderer.domElement);
+    };
+
+    useEffect(() => {
+        // 初始化three.js
+        init();
+    });
+
+    return (
+        <div
+            ref={containerRef}
+            id="container"
+            style={{
+                width: '100%',
+                height: '100%',
+            }}
+        ></div>
+    );
+}

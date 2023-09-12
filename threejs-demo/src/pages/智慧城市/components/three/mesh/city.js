@@ -15,7 +15,7 @@ export default function createCity() {
         gltf.scene.traverse((item) => {
             if (item.type === 'Mesh') {
                 const cityMaterial = new THREE.MeshBasicMaterial({
-                    color: new THREE.Color(0x999999),
+                    color: new THREE.Color(0x0c016f),
                     side: THREE.DoubleSide,
                 });
 

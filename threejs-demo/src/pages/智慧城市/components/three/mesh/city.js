@@ -7,6 +7,8 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 
 // 自定义修改material 修改材质 顶点着色器和片元着色器
 import modifyCityMaterial from '../modify-material/modifyCityMaterial';
+// 飞线特效
+import FlyLine from './FlyLine';
 
 export default function createCity() {
     const gltfLoader = new GLTFLoader();
@@ -21,11 +23,14 @@ export default function createCity() {
 
                 // 通过 .onBeforeCompile 修改材质 顶点着色器和片元着色器
                 modifyCityMaterial(cityMaterial, item);
-
                 item.material = cityMaterial;
             }
         });
 
         scene.add(gltf.scene);
+
+        // 创建飞线特效
+        const flyLine = new FlyLine();
+        scene.add(flyLine);
     });
 }

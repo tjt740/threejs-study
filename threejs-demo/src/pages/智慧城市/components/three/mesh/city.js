@@ -11,6 +11,8 @@ import modifyCityMaterial from '../modify-material/modifyCityMaterial';
 import FlyLine from './FlyLine';
 // 飞线特效（shader）
 import FlyLineShader from './FlyLineShader';
+// 修改楼房模型，增加线框特效
+import meshLine from '../mesh/meshLine';
 
 export default function createCity() {
     const gltfLoader = new GLTFLoader();
@@ -18,6 +20,7 @@ export default function createCity() {
         // 修改子级mesh材质
         gltf.scene.traverse((item) => {
             if (item.type === 'Mesh') {
+                console.log(item);
                 const cityMaterial = new THREE.MeshBasicMaterial({
                     color: new THREE.Color(0x0c016f),
                     side: THREE.DoubleSide,
@@ -37,5 +40,9 @@ export default function createCity() {
         // 飞线特效（shader）
         const flyLineShader = new FlyLineShader();
         scene.add(flyLineShader);
+
+        // 给楼房增加线框特效
+
+        // meshLine(mesh);
     });
 }

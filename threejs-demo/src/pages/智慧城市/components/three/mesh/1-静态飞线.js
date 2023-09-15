@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import gsap from 'gsap';
+
 export default class FlyLineShader {
     constructor() {
         //1. 生成曲线路径
@@ -52,26 +52,17 @@ export default class FlyLineShader {
             // 获取自定义属性
             attribute float aSize;
             varying float vSize;
-            uniform float u_time;
-            uniform vec3 u_color;
-            uniform float u_length;
-
                 void main() {
                     vec4 viewPosition = viewMatrix * modelMatrix *vec4(position,1);
                     gl_Position = projectionMatrix * viewPosition;
-                   
-                    // vSize = (aSize-75.0)*10.0;
-                    // 配合u_time修改vSize
-                     // 当点大小到一定时再出现, aSize  0 ~ 150 跟aSizeArray.length相关
-                    vSize = (aSize - u_time);
+                    // 设置点大小
+                    // gl_PointSize = 10.0;
                   
-
-                    if(vSize<0.0){
-                        vSize  = vSize + u_length;
-                    }
-
-                    vSize = (vSize-75.0) * 10.0;
-
+                    // aSize  0 ~ 150 跟aSizeArray.length相关
+                    // gl_PointSize = aSize* 0.5 ;
+                  
+                    // 当点大小到一定时再出现, aSize  0 ~ 150 跟aSizeArray.length相关
+                    vSize = (aSize-75.0)*10.0;
                     // 实现近大远小
                     gl_PointSize = -vSize/viewPosition.z;
                     
@@ -79,9 +70,15 @@ export default class FlyLineShader {
             `,
             fragmentShader: /*glsl*/ `
                 varying float vSize;
-                uniform vec3 u_color;
                 void main() {
                
+                // if(vSize <=0.0){
+                //     gl_FragColor = vec4(0.0,0.0,0.0,1.0);
+                // }else{
+                //     gl_FragColor = vec4(1.0, 1.0, 0.0, 1.0);
+                //     }
+                // }
+
                     
                     float distanceToCenter = distance(gl_PointCoord,vec2(0.5,0.5));
                     float strength = 1.0 - (distanceToCenter*2.0);
@@ -89,7 +86,7 @@ export default class FlyLineShader {
                     if(vSize<=0.0){
                         gl_FragColor = vec4(1,0,0,0);
                     }else{
-                        gl_FragColor = vec4(u_color,strength);
+                        gl_FragColor = vec4(1.0, 1.0, 0.0,strength);
                     }
                 }
             `,
@@ -97,27 +94,12 @@ export default class FlyLineShader {
                 u_texture: {
                     value: this.texture,
                 },
-                u_time: {
-                    value: 0,
-                },
-                u_color: {
-                    value: new THREE.Color(0x0fff30),
-                },
-                u_length: {
-                    value: aSizeArray.length,
-                },
             },
         });
 
         // 创建点
         this.mesh = new THREE.Points(this.geometry, this.material);
 
-        gsap.to(this.material.uniforms.u_time, {
-            value: 150, // aSizeArray.length
-            duration: 3,
-            repeat: -1,
-        });
-        // 更改u_time
         return this.mesh;
     }
 }

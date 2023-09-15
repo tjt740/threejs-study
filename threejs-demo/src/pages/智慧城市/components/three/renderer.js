@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { WIDTH, HEIGHT } from './getScreenWidthandHeight';
 import camera from './camera';
-import WindowAddEventListener from './windowAddEventsListener/windowAddEventsListener';
+import WindowAddEventListener from './windowAddEventsListener/WindowAddEventsListener';
 
 // 初始化<渲染器>
 const renderer = new THREE.WebGLRenderer({

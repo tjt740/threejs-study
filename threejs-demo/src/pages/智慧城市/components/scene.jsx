@@ -25,6 +25,9 @@ import createMesh from './three/utils/createMesh';
 import createCity from './three/mesh/city';
 import '../index.less';
 
+// 创建.hdr加载器
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
+
 export default function Scene() {
     const containerRef = useRef(null);
 

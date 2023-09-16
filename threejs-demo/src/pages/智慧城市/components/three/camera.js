@@ -15,7 +15,7 @@ camera.aspect = WIDTH / HEIGHT;
 // 更新camera 投影矩阵
 camera.updateProjectionMatrix();
 // 设置相机位置 object3d具有position，属性是一个3维的向量。
-camera.position.set(0, 0, 20);
+camera.position.set(-5, 8, 20);
 // 摄像机看向方向（可以是场景中某个物体）
 camera.lookAt(scene.position);
 // 摄像机添加到场景中

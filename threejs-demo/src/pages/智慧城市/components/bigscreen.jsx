@@ -246,6 +246,7 @@ export default function BigScreen() {
                                             x: position.x,
                                             y: position.y + 3,
                                             z: position.z + 7,
+
                                             // 相机视角移动完成后，可以允许控制
                                             onComplete: () => {
                                                 controls.enabled = true;

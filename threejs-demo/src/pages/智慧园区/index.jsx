@@ -10,6 +10,11 @@ import gsap from './three/gsap';
 import windowDom2 from './three/windowDom2';
 // 辅助线
 import axesHelper from './three/axesHelper';
+// 全局加载管理器
+// import defaultLoadingManager from './three/defaultLoadingManager';
+
+// city加载
+import './three/mesh/city/city';
 
 export default function ThreeComponent() {
     const containerRef = useRef(null);

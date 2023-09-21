@@ -84,6 +84,8 @@ export default function ThreeComponent() {
         const renderer = new THREE.WebGLRenderer({
             antialias: true, // 消除锯齿
             alpha: true, // 背景透明
+            // 设置对数深度缓冲区，优化深度冲突问题，当两个面间隙过小，或者重合，你设置webgl渲染器对数深度缓冲区也是无效的。
+            logarithmicDepthBuffer: true,
         });
         // 设置渲染器编码格式  THREE.NoColorSpace = "" || THREE.SRGBColorSpace = "srgb" || THREE.LinearSRGBColorSpace = "srgb-linear"
         renderer.outputColorSpace = 'srgb';

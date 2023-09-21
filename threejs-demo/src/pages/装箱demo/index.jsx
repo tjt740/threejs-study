@@ -39,8 +39,7 @@ const camera = new THREE.PerspectiveCamera(
 );
 // 初始化网格
 const grid = new THREE.GridHelper(15000, 20, 0x333333, 0x333333);
-// 选中子级盒子
-const mouse = new THREE.Vector3();
+
 // 射线
 const raycaster = new THREE.Raycaster();
 // 初始化渲染器
@@ -420,6 +419,8 @@ export default function PackagePreview3D() {
     };
 
     // 选中盒子
+    // 选中子级盒子
+    const mouse = new THREE.Vector2();
     const onMouseClick = (e) => {
         e.preventDefault();
         // 修改e精度
@@ -436,6 +437,7 @@ export default function PackagePreview3D() {
             ) *
                 2 +
             1;
+
         raycaster.setFromCamera(mouse, camera);
         intersections = raycaster.intersectObjects(boxArr);
 

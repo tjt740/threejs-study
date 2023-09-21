@@ -593,6 +593,12 @@ export const routerPaths = [
                 key: '智慧城市',
             },
             {
+                label: '智慧园区',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: '智慧园区',
+                key: '智慧园区',
+            },
+            {
                 label: '测试',
                 icon: <MyIcon type="icon-zhangyuxiaowanzi" />,
                 elementPath: 'test-demo',

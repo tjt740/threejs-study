@@ -16,6 +16,10 @@ import axesHelper from './three/axesHelper';
 // city加载
 import './three/mesh/city/city';
 
+// 添加光线
+import ambientLight from './three/light/ambientLight';
+import directionalLight from './three/light/directionalLight';
+
 export default function ThreeComponent() {
     const containerRef = useRef(null);
 

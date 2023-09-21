@@ -24,5 +24,31 @@ dracoLoader.preload();
 gltfLoader.setDRACOLoader(dracoLoader);
 
 gltfLoader.load(require('./model/city4.glb'), (gltf) => {
+    console.log(gltf);
+
     scene.add(gltf.scene);
+
+    // 遍历子元素
+    gltf.scene.traverse((child) => {
+        if (child.name === '热气球') {
+            console.log('热气球：', child);
+            // 创建一个动画播放器mixer,装在mesh。
+            const mixer = new THREE.AnimationMixer(child);
+            // 获取gltf中 animations中，关于热气球的 AnimationClip
+            const ballAnimation = gltf.animations[0];
+            // 执行播放器AnimationMixer的.clipAction()方法返回一个AnimationAction对象,AnimationAction对象用来控制如何播放。
+            const ballAction = mixer.clipAction(ballAnimation);
+            // 启动动画，默认循环播放
+            ballAction.play();
+            // 如果想播放动画开始变化，需要使用requestAnimationFrame动画帧
+            const clock = new THREE.Clock();
+            function loop() {
+                requestAnimationFrame(loop);
+                const frameT = clock.getDelta();
+                // 更新播放器相关的时间
+                mixer.update(frameT);
+            }
+            loop();
+        }
+    });
 });

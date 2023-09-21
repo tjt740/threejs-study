@@ -31,7 +31,7 @@ camera.aspect = WIDTH / HEIGHT;
 // 更新camera 投影矩阵
 camera.updateProjectionMatrix();
 // 设置相机位置 object3d具有position，属性是一个3维的向量。
-camera.position.set(0, 0, 2000);
+camera.position.set(0, 0, 1500);
 // 更新camera 视角方向, 摄像机看的方向，配合OrbitControls.target = new THREE.Vector3(
 //     scene.position.x,
 //     scene.position.y,

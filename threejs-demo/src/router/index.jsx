@@ -350,6 +350,12 @@ export const routerPaths = [
                 elementPath: 'lessons/线相关Curve',
                 key: 'lessons/线相关Curve',
             },
+            {
+                label: '动画帧AnimationClip',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: 'lessons/动画帧AnimationClip',
+                key: 'lessons/动画帧AnimationClip',
+            },
         ],
     },
     {
@@ -597,6 +603,12 @@ export const routerPaths = [
                 icon: <MyIcon type="icon-futejia" />,
                 elementPath: '智慧园区',
                 key: '智慧园区',
+            },
+            {
+                label: '特效球',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: '特效球',
+                key: '特效球',
             },
             {
                 label: '测试',

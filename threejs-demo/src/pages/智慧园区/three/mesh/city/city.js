@@ -23,15 +23,16 @@ dracoLoader.preload();
 // 设置gltf加载器draco解码器
 gltfLoader.setDRACOLoader(dracoLoader);
 
-gltfLoader.load(require('./model/city4.glb'), (gltf) => {
+gltfLoader.load(require('./model/城市.glb'), (gltf) => {
     console.log(gltf);
 
     scene.add(gltf.scene);
 
     // 遍历子元素
     gltf.scene.traverse((child) => {
-        if (child.name === '热气球') {
-            console.log('热气球：', child);
+        // 让热气球自己运动
+        if (child.name === '热气球1') {
+            console.log('热气球1：', child);
             // 创建一个动画播放器mixer,装在mesh。
             const mixer = new THREE.AnimationMixer(child);
             // 获取gltf中 animations中，关于热气球的 AnimationClip
@@ -40,8 +41,12 @@ gltfLoader.load(require('./model/city4.glb'), (gltf) => {
             const ballAction = mixer.clipAction(ballAnimation);
             // 启动动画，默认循环播放
             ballAction.play();
-            // 如果想播放动画开始变化，需要使用requestAnimationFrame动画帧
+            ballAction.clampWhenFinished = true;
+            ballAction.loop = THREE.LoopOnce;
+
+            // 如果想播放动画开始变化，需要使用requestAnimationFrame
             const clock = new THREE.Clock();
+
             function loop() {
                 requestAnimationFrame(loop);
                 const frameT = clock.getDelta();
@@ -49,6 +54,11 @@ gltfLoader.load(require('./model/city4.glb'), (gltf) => {
                 mixer.update(frameT);
             }
             loop();
+        }
+
+        // 按照blender设计的曲线 渲染动画
+        if (child.name === 'NURBS_曲线') {
+            console.log('NURBS_曲线：', child);
         }
     });
 });

@@ -50,8 +50,8 @@ export default function ThreeComponent() {
     const init = () => {
         const scene = new THREE.Scene();
         // 场景颜色
-        scene.background = new THREE.Color(0xd2d0d0);
-        // scene.background = new THREE.Color(0x000000);
+        // scene.background = new THREE.Color(0xd2d0d0);
+        scene.background = new THREE.Color(0x000000);
         const camera = new THREE.PerspectiveCamera(
             50, // 90
             WIDTH / HEIGHT,
@@ -127,21 +127,27 @@ export default function ThreeComponent() {
          * ------------ start ----------
          */
 
-        /*
-         * ------------end ----------
-         */
+        // 创建平行光
+        const pointLight = new THREE.PointLight(0xffffff, 2.2);
+        pointLight.position.set(4, 4, 4);
+        scene.add(pointLight);
+
+        const sphereGeometry = new THREE.SphereGeometry(3, 512, 512);
+        const sphereMaterial = new THREE.MeshStandardMaterial({
+            color: new THREE.Color('#00ff83'),
+            roughness: 0.2,
+        });
+
+        const ballMesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
+        scene.add(ballMesh);
 
         // 渲染函数
         const clock = new THREE.Clock();
         function animation(t) {
             // 获取秒数
             const time = clock.getElapsedTime();
-
-            // 通过摄像机和鼠标位置更新射线
-            // raycaster.setFromCamera(mouse, camera);
-
-            // 最后，想要成功的完成这种效果，你需要在主函数中调用 TWEEN.update()
-            // TWEEN.update();
+            ballMesh.rotation.y = time * 0.5;
+            pointLight.position.set(Math.sin(time) * 4, 4, Math.cos(time) * 4);
 
             // 控制器更新
             controls.update();
@@ -151,6 +157,10 @@ export default function ThreeComponent() {
         }
         // 渲染动画帧
         animation();
+
+        /*
+         * ------------end ----------
+         */
 
         // DOM承载渲染器
         containerRef.current.appendChild(renderer.domElement);
@@ -206,6 +216,14 @@ export default function ThreeComponent() {
             renderer.setSize(WIDTH, HEIGHT);
             // 设置渲染器像素比:
             renderer.setPixelRatio(window.devicePixelRatio);
+        });
+
+        window.addEventListener('click', () => {
+            sphereMaterial.color = new THREE.Color(
+                Math.random(),
+                Math.random(),
+                Math.random()
+            );
         });
     };
 

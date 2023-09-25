@@ -84,6 +84,8 @@ export default function ThreeComponent() {
         const renderer = new THREE.WebGLRenderer({
             antialias: true, // 消除锯齿
             alpha: true, // 背景透明
+            // 设置对数深度缓冲区，优化深度冲突问题，当两个面间隙过小，或者重合，你设置webgl渲染器对数深度缓冲区也是无效的。
+            logarithmicDepthBuffer: true,
         });
         // 设置渲染器编码格式  THREE.NoColorSpace = "" || THREE.SRGBColorSpace = "srgb" || THREE.LinearSRGBColorSpace = "srgb-linear"
         renderer.outputColorSpace = 'srgb';
@@ -99,7 +101,7 @@ export default function ThreeComponent() {
         // 设置渲染器开启阴影计算
         renderer.shadowMap.enabled = true;
         // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能.
-        // renderer.physicallyCorrectLights = true;
+        renderer.physicallyCorrectLights = true;
 
         // 轨道控制器
         const controls = new OrbitControls(camera, renderer.domElement);

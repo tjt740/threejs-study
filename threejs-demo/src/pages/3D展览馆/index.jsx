@@ -94,6 +94,7 @@ export default function ThreeComponent() {
         // 加载被压缩的.glb文件会报错，需要draco解码器
         const dracoLoader = new DRACOLoader();
         // 设置dracoLoader路径
+        // dracoLoader.setDecoderPath('../../static/draco/');
         dracoLoader.setDecoderPath(
             'https://www.gstatic.com/draco/versioned/decoders/1.5.6/'
         );

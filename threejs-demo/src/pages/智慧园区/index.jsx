@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from 'react';
-
+import { Button } from 'antd';
 import scene from './three/scene';
 import camera from './three/camera';
 import renderer from './three/renderer';
-import controls from './three/controls';
+import controlsModule from './three/controls';
 import animation from './three/animation';
 import gui from './three/gui';
 import gsap from './three/gsap';
@@ -34,6 +34,36 @@ export default function ThreeComponent() {
 
     return (
         <>
+            <div style={{ display: 'flex' }}>
+                <Button
+                    onClick={() => {
+                        controlsModule.setOrbitControls();
+                    }}
+                >
+                    切换到默认轨道控制器
+                </Button>
+                <Button
+                    onClick={() => {
+                        controlsModule.setFlyControls();
+                    }}
+                >
+                    切换到飞行控制器
+                </Button>
+                <Button
+                    onClick={() => {
+                        controlsModule.setFirstPersonControls();
+                    }}
+                >
+                    切换到第一人称控制器
+                </Button>
+                <Button
+                    onClick={() => {
+                        controlsModule.setTrackballControls();
+                    }}
+                >
+                    切换到轨迹球控制器
+                </Button>
+            </div>
             <div id="container" ref={containerRef}></div>
         </>
     );

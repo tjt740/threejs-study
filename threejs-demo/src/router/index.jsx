@@ -617,6 +617,12 @@ export const routerPaths = [
                 key: '变形动画',
             },
             {
+                label: '骨骼动画',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: '骨骼动画',
+                key: '骨骼动画',
+            },
+            {
                 label: '测试',
                 icon: <MyIcon type="icon-zhangyuxiaowanzi" />,
                 elementPath: 'test-demo',

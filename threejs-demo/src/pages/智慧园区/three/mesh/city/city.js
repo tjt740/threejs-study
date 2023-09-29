@@ -23,6 +23,11 @@ dracoLoader.preload();
 // 设置gltf加载器draco解码器
 gltfLoader.setDRACOLoader(dracoLoader);
 
+// scene.add(new THREE.Mesh(
+//     new THREE.BoxGeometry(10, 10, 10),
+//     new THREE.MeshStandardMaterial({ color: new THREE.Color(0xfff000) })
+// ));
+
 gltfLoader.load(require('./model/城市.glb'), (gltf) => {
     console.log(gltf);
 

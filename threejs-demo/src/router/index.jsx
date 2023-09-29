@@ -623,6 +623,12 @@ export const routerPaths = [
                 key: '骨骼动画',
             },
             {
+                label: '智慧工厂',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: '智慧工厂',
+                key: '智慧工厂',
+            },
+            {
                 label: '测试',
                 icon: <MyIcon type="icon-zhangyuxiaowanzi" />,
                 elementPath: 'test-demo',

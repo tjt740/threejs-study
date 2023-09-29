@@ -24,6 +24,7 @@
     "@toast-ui/editor-plugin-table-merged-cell": "^3.1.0",
     "@toast-ui/editor-plugin-uml": "^3.0.1",
     "ace-builds": "^1.16.0",
+    "ahooks": "^3.7.8",
     "antd": "^5.9.3",
     "antd-mobile": "^5.17.2",
     "axios": "^1.1.3",

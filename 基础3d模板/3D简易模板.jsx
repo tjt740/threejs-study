@@ -234,7 +234,7 @@ export default function ThreeComponent() {
         }
 
         // 全局添加点击事件
-        window.addEventListener('click', onClick);
+        renderer.domElement.addEventListener('click', onClick);
 
         // 加载hdr文件
         const rgbeLoader = new RGBELoader();
@@ -349,7 +349,7 @@ export default function ThreeComponent() {
         gui.add(eventObj, 'ExitFullscreen').name('退出全屏');
 
         // 根据页面大小变化，更新渲染
-        renderer.domElement.addEventListener('resize', () => {
+        window.addEventListener('resize', () => {
             // 实际three.js渲染区域
             const WIDTH =
                 Number(

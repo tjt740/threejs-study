@@ -203,7 +203,7 @@ function raycasterJudge(params) {
     };
 
     // 全局添加点击事件
-    window.addEventListener('click', onClick);
+    renderer.domElement.addEventListener('click', onClick);
 }
 
 gltfLoader.loadAsync(require('../model/floor2.glb')).then((gltf) => {

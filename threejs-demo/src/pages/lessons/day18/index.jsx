@@ -103,17 +103,19 @@ export default function ThreeComponent() {
             if (intersects.length > 1) {
                 // 获取第一个选中结果。
                 const intersected = intersects[0].object;
-                const findItem =  dataArr.find(v => v.uuid === intersected.uuid);
+                const findItem = dataArr.find(
+                    (v) => v.uuid === intersected.uuid
+                );
                 console.log(findItem);
                 findItem.material = selectMaterial;
 
-                // 全部选中 
-                intersects.forEach(i => i.object.material = selectMaterial)
+                // 全部选中
+                intersects.forEach((i) => (i.object.material = selectMaterial));
             }
         }
 
         // 全局添加点击事件
-        window.addEventListener('click', onClick);
+        renderer.domElement.addEventListener('click', onClick);
         /*
          * ------------end ----------
          */

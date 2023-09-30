@@ -287,7 +287,7 @@ export default function ThreeComponent() {
                 };
 
                 // 全局添加点击事件
-                window.addEventListener('click', onClick);
+                renderer.domElement.addEventListener('click', onClick);
             }
 
             onClick = (callback) => {

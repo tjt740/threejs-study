@@ -69,7 +69,7 @@ gltfLoader.loadAsync(require('../model/Fighter1.glb')).then((gltf) => {
     };
 
     // 全局添加点击事件
-    window.addEventListener('click', onClick);
+    renderer.domElement.addEventListener('click', onClick);
 
     // 粒子化飞机
     creatParticleFighter(false, _gltf);

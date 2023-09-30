@@ -67,7 +67,7 @@ export default function ThreeComponent() {
                 for (let j = -3; j < 3; j++) {
                     for (let k = -3; k < 3; k++) {
                         const boxCube = new THREE.Mesh(boxGeometry, material);
-                        boxCube.position.set(i * 2 +1 , j * 2, k * 2); // 2: 矩形宽度
+                        boxCube.position.set(i * 2 + 1, j * 2, k * 2); // 2: 矩形宽度
                         group.add(boxCube);
                         dataArr.push(boxCube);
                     }
@@ -128,7 +128,7 @@ export default function ThreeComponent() {
             }
 
             // 全局添加点击事件
-            window.addEventListener('click', onClick);
+            renderer.domElement.addEventListener('click', onClick);
             group.position.z = 5;
             return group;
         }
@@ -323,7 +323,7 @@ export default function ThreeComponent() {
                     y: '+=' + Math.PI * 2,
                     duration: 3,
                     ease: 'power2.inOut',
-                    repeat:-1
+                    repeat: -1,
                 });
             },
             true

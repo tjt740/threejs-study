@@ -10,6 +10,21 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 // 引入补间动画tween.js three.js 自带
 import * as TWEEN from 'three/examples/jsm/libs/tween.module.js';
+
+// 引入加载.obj类型的文件加载器 OBJLoader
+import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+
+//1️⃣ 导入后期效果合成器
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
+//2️⃣ 添加渲染通道
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
+
+//3️⃣ three框架本身自带效果。其他效果路径： /node_modules/three/examples/jsm/postprocessing/xxx.js
+// 描边特效
+import { OutlinePass } from 'three/addons/postprocessing/OutlinePass.js';
+// 增加光亮特效
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+
 // 引入gsap补间动画操作组件库
 import gsap from 'gsap';
 // 使用 lil-gui 调试 three.js 图形
@@ -50,8 +65,8 @@ export default function ThreeComponent() {
     const init = () => {
         const scene = new THREE.Scene();
         // 场景颜色
-        scene.background = new THREE.Color(0xd2d0d0);
-        // scene.background = new THREE.Color(0x000000);
+        // scene.background = new THREE.Color(0xd2d0d0);
+        scene.background = new THREE.Color(0x000000);
         const camera = new THREE.PerspectiveCamera(
             45, // 90
             WIDTH / HEIGHT,
@@ -63,7 +78,7 @@ export default function ThreeComponent() {
         // 更新camera 投影矩阵
         camera.updateProjectionMatrix();
         // 设置相机位置 object3d具有position，属性是一个3维的向量。
-        camera.position.set(0, 0, 20);
+        camera.position.set(0, 0, 5);
         // 更新camera 视角方向, 摄像机看的方向，配合OrbitControls.target = new THREE.Vector3(
         //     scene.position.x,
         //     scene.position.y,
@@ -75,10 +90,10 @@ export default function ThreeComponent() {
         // 摄像机添加到场景中
         scene.add(camera);
 
-        //  创建XYZ直角坐标系  (红色代表 X 轴. 绿色代表 Y 轴. 蓝色代表 Z 轴.)，帮助我们查看3维坐标轴
-        const axesHelper = new THREE.AxesHelper(25);
-        //  坐标辅助线添加到场景中
-        scene.add(axesHelper);
+        // //  创建XYZ直角坐标系  (红色代表 X 轴. 绿色代表 Y 轴. 蓝色代表 Z 轴.)，帮助我们查看3维坐标轴
+        // const axesHelper = new THREE.AxesHelper(25);
+        // //  坐标辅助线添加到场景中
+        // scene.add(axesHelper);
 
         // 初始化<渲染器>
         const renderer = new THREE.WebGLRenderer({
@@ -131,12 +146,6 @@ export default function ThreeComponent() {
         const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
         directionalLight.position.set(2.4, 5.3, 2);
         scene.add(directionalLight);
-        // 平行光辅助线
-        const directionalLightHelper = new THREE.DirectionalLightHelper(
-            directionalLight,
-            5
-        );
-        scene.add(directionalLightHelper);
 
         // 创建环境光
         const ambientLight = new THREE.AmbientLight(0xffffff, 1);
@@ -146,188 +155,119 @@ export default function ThreeComponent() {
         gui.add(directionalLight, 'intensity', 0, 10).name('平行光亮度');
         gui.add(ambientLight, 'intensity', 0, 10).name('自然光亮度');
 
-        // const rgbeLoader = new RGBELoader();
-        // rgbeLoader.loadAsync(require('./assets/050.hdr')).then((texture) => {
-        //     texture.mapping = THREE.EquirectangularReflectionMapping;
-        //     texture.colorSpace = THREE.LinearSRGBColorSpace;
-        //     scene.background = texture;
-        //     scene.environment = texture;
-        // });
-
-        // 设置灯光和阴影
-        // 1. 设置自然光、<点光源>、<标准>网格材质（带PBR属性的都可以）  材质要满足能够对光照有反应
-        // 2. 设置渲染器开启阴影计算 renderer.shadowMap.enabled = true;
-        // 3. 设置光照能产生动态阴影  directionalLight.castShadow = true;
-        // 4. 设置投射阴影的物体投射阴影 sphereGeometry.castShadow = true;
-        // 5. 设置被投射的物体接收阴影  planGeometry.receiveShadow = true;
-
-        // 创建 n 个矩形
-        const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
-        // 基础材质
-        const material = new THREE.MeshBasicMaterial({
-            wireframe: true,
-        });
-        // 被选中后的材质
-        const selectMaterial = new THREE.MeshBasicMaterial({
-            color: new THREE.Color(0xff0000),
-            opacity: 0.1,
+        // 创建objLoader
+        const objLoader = new OBJLoader();
+        objLoader.load(require('./tree.obj'), (object) => {
+            console.log(object);
+            scene.add(object);
         });
 
-        // 存储数据的数据
-        const dataArr = [];
-        for (let i = -3; i < 3; i++) {
-            for (let j = -3; j < 3; j++) {
-                for (let k = -3; k < 3; k++) {
-                    const boxCube = new THREE.Mesh(boxGeometry, material);
-                    boxCube.position.set(i, j, k);
-                    scene.add(boxCube);
-                    dataArr.push(boxCube);
-                }
-            }
+        // 创建多个随机位置大小的球体
+        for (let i = 0; i < 8; i++) {
+            const sphereGeometry = new THREE.SphereGeometry(
+                Math.random() * 0.5,
+                32,
+                32
+            );
+            const sphereMeterial = new THREE.MeshStandardMaterial({
+                color: new THREE.Color(
+                    Math.random(),
+                    Math.random(),
+                    Math.random()
+                ),
+                roughness: 0.2,
+            });
+            const sphereMesh = new THREE.Mesh(sphereGeometry, sphereMeterial);
+            sphereMesh.position.set(
+                Math.random() * 2,
+                Math.random() * 2,
+                Math.random() * 2
+            );
+            // mesh.scale.multiplyScalar( Math.random() * 0.3 + 0.1 );
+            scene.add(sphereMesh);
         }
 
-        // 创建射线
-        const raycaster = new THREE.Raycaster();
-        // 射线捕捉的最远距离,超过该距离后就不会捕捉对应的物体,默认Infinity(无穷远)
-        // raycaster.far = 10;
-        // 射线捕捉的最近距离,小于该距离就无法捕捉对应的物体. 不能为空,要不far小
-        // raycaster.near = 3;
-        // 创建鼠标点
-        const mouse = new THREE.Vector2();
-        // 监听鼠标位置
-        function onClick(e) {
-            // 将鼠标位置归一化为设备坐标。x 和 y 方向的取值范围是 (-1 —— 1)
-            // mouse.x = (e.clientX / WIDTH) * 2 - 1;
-            // mouse.y = -(e.clientY / HEIGHT) * 2 + 1;
-            // 修复点击事件精度
-            mouse.x =
-                ((e.clientX - renderer.domElement.offsetLeft) /
-                    renderer.domElement.clientWidth) *
-                    2 -
-                1;
+        //4️⃣ 合成效果
+        const effectComposer = new EffectComposer(renderer);
+        effectComposer.setSize(WIDTH, HEIGHT);
 
-            mouse.y =
-                -(
-                    (e.clientY - renderer.domElement.offsetTop) /
-                    renderer.domElement.clientHeight
-                ) *
-                    2 +
-                1;
-            // 通过摄像机和鼠标位置更新射线 ,设置相机更新射线照射
-            raycaster.setFromCamera(mouse, camera);
-            // 检测照射结果
-            const intersects = raycaster.intersectObjects(dataArr);
+        //5️⃣ 添加渲染通道
+        const renderPass = new RenderPass(scene, camera);
+        effectComposer.addPass(renderPass);
 
-            // 计算物体和射线的焦点
-            if (intersects.length > 1) {
-                // 获取第一个选中结果。
-                const intersected = intersects[0].object;
-                const findItem = dataArr.find(
-                    (v) => v.uuid === intersected.uuid
+        //6️⃣ 描边特效
+        const outlinePass = new OutlinePass(
+            new THREE.Vector2(WIDTH, HEIGHT),
+            scene,
+            camera
+        );
+        //6️⃣.5️⃣  合成效果器添加 <描边特效>
+        effectComposer.addPass(outlinePass);
+
+        //7️⃣ 高亮特效
+        const outputPass = new OutputPass();
+        //7️⃣.5️⃣合成效果器添加 <高亮特效>
+        effectComposer.addPass(outputPass);
+
+        // 添加射线进行物体检测
+        const raycasterDetection = () => {
+            const raycaster = new THREE.Raycaster();
+            // 创建鼠标点
+            const mouse = new THREE.Vector2();
+            // 鼠标点击事件
+            const onClick = (e) => {
+                // ❤️‍🔥 修复点击事件精度
+                mouse.x =
+                    ((e.clientX - renderer.domElement.offsetLeft) /
+                        renderer.domElement.clientWidth) *
+                        2 -
+                    1;
+                mouse.y =
+                    -(
+                        (e.clientY - renderer.domElement.offsetTop) /
+                        renderer.domElement.clientHeight
+                    ) *
+                        2 +
+                    1;
+                // 通过摄像机和鼠标位置更新射线 ,设置相机更新射线照射
+                raycaster.setFromCamera(mouse, camera);
+                // 检测照射结果
+                const intersects = raycaster.intersectObjects(
+                    scene.children,
+                    true
                 );
-                console.log(findItem);
-                findItem.material = selectMaterial;
 
-                // 全部选中
-                intersects.forEach((i) => (i.object.material = selectMaterial));
-            }
-        }
+                if (intersects.length) {
+                    // 选中物体中Mesh
+                    const selectedObjects = intersects[0].object;
+                    console.log(selectedObjects);
+                    // 将选中的Object里的Mesh内容，赋值给<描边特效>
+                    outlinePass.selectedObjects = selectedObjects;
+                }
+            };
+            // 全局添加点击事件
+            renderer.domElement.addEventListener('click', onClick);
+        };
+        raycasterDetection();
 
-        // 全局添加点击事件
-        window.addEventListener('click', onClick);
-
-        // 加载hdr文件
-        const rgbeLoader = new RGBELoader();
-        rgbeLoader.load(
-            require('./christmas_photo_studio_04_2k.hdr'),
-            (envMap) => {
-                // 纹理材质映射方式折射
-                envMap.mapping = THREE.EquirectangularRefractionMapping;
-                // 设置场景背景
-                scene.background = envMap;
-                // 设置场景环境映射
-                scene.environment = envMap;
-
-                // 加载鸭子
-                const gltfLoader = new GLTFLoader();
-                gltfLoader
-                    .loadAsync(require('./model/Duck.glb'))
-                    .then((gltf) => {
-                        const duck = gltf.scene;
-                        // 获取鸭子模型
-                        const duckMesh =
-                            gltf.scene.getObjectByName('LOD3spShape');
-                        // 获取原先鸭子的材质
-                        const preDuckMaterial = duckMesh.material;
-
-                        // 修改鸭子材质
-                        duckMesh.material = new THREE.MeshPhongMaterial({
-                            map: preDuckMaterial.map,
-                            // 折射比率
-                            refractionRatio: 0.7,
-                            // 反射率
-                            reflectivity: 0.99,
-                        });
-                        // 加载.hdr文件时赋值给duckMaterial中的环境贴图envMap
-                        duckMesh.material.envMap = envMap;
-                        // 将改过材质的鸭子添加入场景中
-                        scene.add(duck);
-                    });
-            }
-        );
-
-        // 创建gltfloader
-        const gltfLoader = new GLTFLoader();
-
-        // 正常添加.glb文件
-        // gltfLoader加载鸭子.glb模型
-        gltfLoader.loadAsync(require('./model/Duck.glb')).then((gltf) => {
-            // .glb文件加载完成后放出场景中
-            scene.add(gltf.scene);
-        });
-
-        // 加载被压缩的.glb文件会报错，需要draco解码器
-        const dracoLoader = new DRACOLoader();
-        // 设置dracoLoader路径
-        dracoLoader.setDecoderPath(
-            'https://www.gstatic.com/draco/versioned/decoders/1.5.6/'
-        );
-        // 使用js方式解压
-        dracoLoader.setDecoderConfig({ type: 'js' });
-        // 初始化_initDecoder 解码器
-        dracoLoader.preload();
-
-        // 设置gltf加载器draco解码器
-        gltfLoader.setDRACOLoader(dracoLoader);
-
-        gltfLoader.loadAsync(require('./model/city.glb')).then((gltf) => {
-            console.log(gltf);
-            scene.add(gltf.scene);
-        });
-        /*
-         * ------------end ----------
-         */
-
-        // 渲染函数
-        const clock = new THREE.Clock();
         function animation(t) {
-            // 获取秒数
-            const time = clock.getElapsedTime();
-
-            // 通过摄像机和鼠标位置更新射线
-            // raycaster.setFromCamera(mouse, camera);
-
-            // 最后，想要成功的完成这种效果，你需要在主函数中调用 TWEEN.update()
-            // TWEEN.update();
-
             // 控制器更新
             controls.update();
-            renderer.render(scene, camera);
+
+            // 合成效果加载
+            effectComposer.render();
+
+            // 使用合成效果必须注释  renderer.render(scene, camera);
+            // renderer.render(scene, camera);
             // 动画帧
             requestAnimationFrame(animation);
         }
         // 渲染动画帧
         animation();
+
+        /*
+         * ------------end ----------
+         */
 
         // DOM承载渲染器
         containerRef.current.appendChild(renderer.domElement);
@@ -349,7 +289,7 @@ export default function ThreeComponent() {
         gui.add(eventObj, 'ExitFullscreen').name('退出全屏');
 
         // 根据页面大小变化，更新渲染
-        renderer.domElement.addEventListener('resize', () => {
+        window.addEventListener('resize', () => {
             // 实际three.js渲染区域
             const WIDTH =
                 Number(

@@ -25,7 +25,7 @@ const camera = new THREE.PerspectiveCamera(
     45, // 90
     WIDTH / HEIGHT,
     0.1,
-    1000
+    99999
 );
 // 更新camera 宽高比;
 camera.aspect = WIDTH / HEIGHT;

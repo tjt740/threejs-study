@@ -44,6 +44,7 @@
 }
 
 .right {
+    pointer-events: auto !important;
     width: 300px;
     /* background-color: rgb(255,255,255,0.5); */
     background-image: url(../../assets/bg/line_img.png);

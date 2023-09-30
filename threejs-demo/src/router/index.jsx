@@ -356,6 +356,12 @@ export const routerPaths = [
                 elementPath: 'lessons/动画帧AnimationClip',
                 key: 'lessons/动画帧AnimationClip',
             },
+            {
+                label: '选中物体并发光+OBJLoader',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: 'lessons/选中物体并发光+OBJLoader',
+                key: 'lessons/选中物体并发光+OBJLoader',
+            },
         ],
     },
     {

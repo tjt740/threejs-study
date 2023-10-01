@@ -4,8 +4,6 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as dat from 'dat.gui';
 
-
-
 export default function ThreeComponent() {
     const container = useRef(null);
     const gui = new dat.GUI();
@@ -51,8 +49,7 @@ export default function ThreeComponent() {
         const mapTexture = textureLoader.load(require('./texture/ca.jpeg'));
 
         // 创建平面几何体
-        const planGeometry = new THREE.PlaneGeometry(20, 20, 64 ,64 );
-       
+        const planGeometry = new THREE.PlaneGeometry(20, 20, 64, 64);
 
         // 创建平面材质
         //🌟 改用原始着色器材质 （顶点着色器 + 片元着色器）
@@ -115,7 +112,7 @@ export default function ThreeComponent() {
                     gl_Position = projectionMatrix * viewMatrix * modelPosition;
                 }    
             `,
-            
+
             // 片元着色器
             fragmentShader: `
                 precision highp float;
@@ -152,12 +149,12 @@ export default function ThreeComponent() {
                 // 变量
                 uTime: {
                     // 【固定】value
-                    value:0
+                    value: 0,
                 },
                 uTexture: {
-                    value:mapTexture
-                }
-            }
+                    value: mapTexture,
+                },
+            },
         });
 
         // 构建平面几何体
@@ -180,8 +177,8 @@ export default function ThreeComponent() {
         renderer.setPixelRatio(window.devicePixelRatio);
         // 设置渲染器开启阴影计算
         renderer.shadowMap.enabled = true;
-        // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能.
-        renderer.physicallyCorrectLights = true;
+        // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能（已被移除）.
+        // renderer.physicallyCorrectLights = true;
         //  更新camera 投影矩阵
         camera.updateProjectionMatrix();
 
@@ -235,7 +232,7 @@ export default function ThreeComponent() {
 
     return (
         <>
-           原始着色器RawshaderMaterial纹理贴图Texture
+            原始着色器RawshaderMaterial纹理贴图Texture
             <div id="container" ref={container}></div>
         </>
     );

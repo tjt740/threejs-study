@@ -8,6 +8,8 @@ import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 // 解压缩.glb .gltf 文件
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
+// CSM 阴影
+import { CSM } from 'three/addons/csm/CSM.js';
 // 引入补间动画tween.js three.js 自带
 import * as TWEEN from 'three/examples/jsm/libs/tween.module.js';
 // 引入gsap补间动画操作组件库
@@ -100,8 +102,10 @@ export default function ThreeComponent() {
         renderer.setPixelRatio(window.devicePixelRatio);
         // 设置渲染器开启阴影计算
         renderer.shadowMap.enabled = true;
-        // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能.
-        renderer.physicallyCorrectLights = true;
+        // 设置软阴影（不再是像素阴影）
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能（已被移除）.
+        // renderer.physicallyCorrectLights = true;
 
         // 轨道控制器
         const controls = new OrbitControls(camera, renderer.domElement);
@@ -127,14 +131,41 @@ export default function ThreeComponent() {
          * ------------ start ----------
          */
 
-        // 创建平行光
+        // 创建CSM阴影类
+        const csm = new CSM({
+            // 是否是正交相机
+            orthographic: false,
+            // 级联阴影最远距离(超过就不展示阴影)
+            maxFar: 1000,
+            // 级联分段数，默认4层
+            cascades: 4,
+            // 灯光模式，默认practical
+            mode: 'practical', // [ 'uniform', 'logarithmic', 'practical' ]
+            // 作用父级场景:scene
+            parent: scene,
+            // 阴影像素尺寸，越大越精细
+            shadowMapSize: 2048,
+            // 阴影是否在结尾处淡出
+            fade: true,
+            // 灯光方向
+            lightDirection: new THREE.Vector3(-1, -1, -1).normalize(),
+            // 相机
+            camera: camera,
+        });
+
+        // 创建平行光 + 强度
         const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-        directionalLight.position.set(2.4, 5.3, 2);
+        // 基于灯光方向设置
+        directionalLight.position
+            .set(-1, -1, -1)
+            .normalize()
+            .multiplyScalar(-100);
         scene.add(directionalLight);
-        // 平行光辅助线
+
+        // 平灯光辅助线
         const directionalLightHelper = new THREE.DirectionalLightHelper(
             directionalLight,
-            5
+            50
         );
         scene.add(directionalLightHelper);
 
@@ -146,13 +177,30 @@ export default function ThreeComponent() {
         gui.add(directionalLight, 'intensity', 0, 10).name('平行光亮度');
         gui.add(ambientLight, 'intensity', 0, 10).name('自然光亮度');
 
-        // const rgbeLoader = new RGBELoader();
-        // rgbeLoader.loadAsync(require('./assets/050.hdr')).then((texture) => {
-        //     texture.mapping = THREE.EquirectangularReflectionMapping;
-        //     texture.colorSpace = THREE.LinearSRGBColorSpace;
-        //     scene.background = texture;
-        //     scene.environment = texture;
-        // });
+        // 创建圆球模型
+        const sphereGeometry = new THREE.SphereGeometry(2, 32, 32);
+        const sphereMeterial = new THREE.MeshStandardMaterial({
+            color: new THREE.Color('#ffaa33'),
+            roughness: 0.2,
+        });
+        const sphereMesh = new THREE.Mesh(sphereGeometry, sphereMeterial);
+        sphereMesh.castShadow = true;
+        scene.add(sphereMesh);
+        // 所有需要阴影的材质都需要设置csm
+        csm.setupMaterial(sphereMeterial);
+
+        // 创建地板
+        const planeGeometry = new THREE.PlaneGeometry(100, 100);
+        const planeMaterial = new THREE.MeshStandardMaterial({
+            color: '#fff',
+        });
+        const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
+        planeMesh.rotation.x = -Math.PI / 2;
+        planeMesh.position.y = -3;
+        planeMesh.receiveShadow = true;
+        scene.add(planeMesh);
+        // 所有需要阴影的材质都需要设置csm
+        csm.setupMaterial(planeMaterial);
 
         // 设置灯光和阴影
         // 1. 设置自然光、<点光源>、<标准>网格材质（带PBR属性的都可以）  材质要满足能够对光照有反应
@@ -304,6 +352,7 @@ export default function ThreeComponent() {
             console.log(gltf);
             scene.add(gltf.scene);
         });
+
         /*
          * ------------end ----------
          */
@@ -311,6 +360,10 @@ export default function ThreeComponent() {
         // 渲染函数
         const clock = new THREE.Clock();
         function animation(t) {
+            // 更新摄像机+CSM阴影方法
+            camera.updateMatrixWorld();
+            csm.update();
+
             // 获取秒数
             const time = clock.getElapsedTime();
 

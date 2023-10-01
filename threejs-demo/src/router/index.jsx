@@ -362,6 +362,18 @@ export const routerPaths = [
                 elementPath: 'lessons/选中物体并发光+OBJLoader',
                 key: 'lessons/选中物体并发光+OBJLoader',
             },
+            {
+                label: '物体发光特效',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: 'lessons/物体发光特效',
+                key: 'lessons/物体发光特效',
+            },
+            {
+                label: '阴影csm.js',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: 'lessons/阴影csm',
+                key: 'lessons/阴影csm',
+            },
         ],
     },
     {

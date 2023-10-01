@@ -70,7 +70,6 @@ export default function ThreeComponent() {
         //3️⃣ 小球上添加点光源
         mockSphere.add(pointLight);
 
-        
         scene.add(mockSphere);
 
         // 设置阴影分辨率,值越大分辨率越高,默认 512*512
@@ -142,8 +141,8 @@ export default function ThreeComponent() {
         renderer.shadowMap.enabled = true;
         // 设置渲染器像素比:
         renderer.setPixelRatio(window.devicePixelRatio);
-        // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能.
-        renderer.physicallyCorrectLights = true;
+        // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能（已被移除）.
+        // renderer.physicallyCorrectLights = true;
 
         //4️⃣ 创建时钟
         const clock = new THREE.Clock();

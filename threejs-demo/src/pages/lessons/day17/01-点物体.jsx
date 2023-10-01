@@ -50,13 +50,12 @@ export default function ThreeComponent() {
         pointsMaterial.depthWrite = false;
         //  设置材质在随相机深度重叠后，遮挡样式 https://threejs.org/docs/index.html#api/zh/constants/Materials
         pointsMaterial.blending =
-            
-        // THREE.NoBlending // 无混合模式，默认深色变白，亮色不变
-// THREE.NormalBlending // 默认，根据材质设置保持一致
-THREE.AdditiveBlending; 
-// THREE.SubtractiveBlending
-// THREE.MultiplyBlending
-// THREE.CustomBlending // 黑色透明，亮色变白
+            // THREE.NoBlending // 无混合模式，默认深色变白，亮色不变
+            // THREE.NormalBlending // 默认，根据材质设置保持一致
+            THREE.AdditiveBlending;
+        // THREE.SubtractiveBlending
+        // THREE.MultiplyBlending
+        // THREE.CustomBlending // 黑色透明，亮色变白
 
         // 生成<点>物体
         const sphere = new THREE.Points(sphereGeometry, pointsMaterial);
@@ -96,8 +95,8 @@ THREE.AdditiveBlending;
         renderer.setPixelRatio(window.devicePixelRatio);
         // 设置渲染器开启阴影计算
         renderer.shadowMap.enabled = true;
-        // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能.
-        renderer.physicallyCorrectLights = true;
+        // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能（已被移除）.
+        // renderer.physicallyCorrectLights = true;
 
         // 渲染函数
         function render(t) {

@@ -115,8 +115,8 @@ export default function ThreeComponent() {
         renderer.setPixelRatio(window.devicePixelRatio);
         // 设置渲染器开启阴影计算
         renderer.shadowMap.enabled = true;
-        // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能.
-        renderer.physicallyCorrectLights = true;
+        // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能（已被移除）.
+        // renderer.physicallyCorrectLights = true;
 
         // 轨道控制器
         const controls = new OrbitControls(camera, renderer.domElement);
@@ -203,6 +203,59 @@ export default function ThreeComponent() {
         );
         //6️⃣.5️⃣  合成效果器添加 <描边特效>
         effectComposer.addPass(outlinePass);
+        // 给<描边特效>设置纹理贴图
+        const textureLoader = new THREE.TextureLoader();
+        textureLoader.load(require('./tri_pattern.jpg'), function (texture) {
+            outlinePass.patternTexture = texture;
+            texture.wrapS = THREE.RepeatWrapping;
+            texture.wrapT = THREE.RepeatWrapping;
+        });
+
+        // gui控制描边特效
+        const params = {
+            edgeStrength: 3.0,
+            edgeGlow: 0.0,
+            edgeThickness: 1.0,
+            visibleEdgeColor: '#ffffff',
+            hiddenEdgeColor: '#190a05',
+            usePatternTexture: false,
+        };
+
+        gui.add(params, 'edgeStrength', 0.01, 10)
+            .onChange(function (value) {
+                outlinePass.edgeStrength = Number(value);
+            })
+            .name('描边粗细程度');
+
+        gui.add(params, 'edgeGlow', 0.0, 1)
+            .onChange(function (value) {
+                outlinePass.edgeGlow = Number(value);
+            })
+            .name('描边亮度');
+
+        gui.add(params, 'edgeThickness', 1, 4)
+            .onChange(function (value) {
+                outlinePass.edgeThickness = Number(value);
+            })
+            .name('描边厚度');
+
+        gui.add(params, 'usePatternTexture')
+            .onChange(function (value) {
+                outlinePass.usePatternTexture = value;
+            })
+            .name('描边是否使用纹理贴图');
+
+        gui.addColor(params, 'visibleEdgeColor')
+            .onChange(function (value) {
+                outlinePass.visibleEdgeColor.set(value);
+            })
+            .name('描边选中时颜色');
+
+        gui.addColor(params, 'hiddenEdgeColor')
+            .onChange(function (value) {
+                outlinePass.hiddenEdgeColor.set(value);
+            })
+            .name('描边被遮住时颜色');
 
         //7️⃣ 高亮特效
         const outputPass = new OutputPass();
@@ -242,7 +295,7 @@ export default function ThreeComponent() {
                     const selectedObjects = intersects[0].object;
                     console.log(selectedObjects);
                     // 将选中的Object里的Mesh内容，赋值给<描边特效>
-                    outlinePass.selectedObjects = selectedObjects;
+                    outlinePass.selectedObjects = [selectedObjects];
                 }
             };
             // 全局添加点击事件

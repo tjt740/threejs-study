@@ -50,12 +50,16 @@ export default function ThreeComponent() {
         pointLight.position.set(10, 15, 15);
         scene.add(pointLight);
 
-        gui.add(pointLight, 'power').min(pointLight.intensity * 1 * Math.PI).max(pointLight.intensity * 30 * Math.PI).step(1).name('点光源的灯光功率');
-        gui.add(pointLight,'distance').min(1).max(500).step(1).name('点光源的照射范围')
-
-
-
-
+        gui.add(pointLight, 'power')
+            .min(pointLight.intensity * 1 * Math.PI)
+            .max(pointLight.intensity * 30 * Math.PI)
+            .step(1)
+            .name('点光源的灯光功率');
+        gui.add(pointLight, 'distance')
+            .min(1)
+            .max(500)
+            .step(1)
+            .name('点光源的照射范围');
 
         // 模拟灯光位置
         const mockSphereGeometry = new THREE.SphereGeometry(1, 32, 16);
@@ -64,8 +68,6 @@ export default function ThreeComponent() {
         mockSphere.position.set(10, 15, 15);
         scene.add(mockSphere);
 
-       
-      
         // 设置阴影分辨率,值越大分辨率越高,默认 512*512
         pointLight.shadow.mapSize.set(3072, 3072);
         // 设置阴影的边缘模糊度
@@ -137,11 +139,11 @@ export default function ThreeComponent() {
         renderer.setSize(window.innerWidth, window.innerHeight);
         //2️⃣ 设置渲染器开启阴影计算
         renderer.shadowMap.enabled = true;
-       // 设置渲染器像素比:
-       renderer.setPixelRatio(window.devicePixelRatio);
-       // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能.
-       renderer.physicallyCorrectLights = true;
- 
+        // 设置渲染器像素比:
+        renderer.setPixelRatio(window.devicePixelRatio);
+        // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能（已被移除）.
+        // renderer.physicallyCorrectLights = true;
+
         // 渲染函数
         function render(t) {
             controls.update();

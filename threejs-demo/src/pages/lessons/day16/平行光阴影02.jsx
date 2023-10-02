@@ -47,7 +47,7 @@ export default function ThreeComponent() {
         directionalLight.shadow.radius = 20;
         // 设置阴影分辨率
         directionalLight.shadow.mapSize.set(3072, 3072);
-        
+
         // 设置平行光投射相机的属性
         // 设置平行光相机投射阴影时，距离近点（平行光位置）的距离
         directionalLight.shadow.camera.near = 0.5;
@@ -58,11 +58,15 @@ export default function ThreeComponent() {
         directionalLight.shadow.camera.bottom = -5;
         directionalLight.shadow.camera.left = -5;
         directionalLight.shadow.camera.right = 5;
-        gui.add(directionalLight.shadow.camera, 'near').min(0.1).max(30).step(0.1).name('设置平行光投射，距离近点的位置').onChange(() => { 
-            // 因为平行光是正交相机，所以要重新调用相机的 updateProjectionMatrix() 方法，更新相机矩阵，才能看到效果。
-            directionalLight.shadow.camera.updateProjectionMatrix();
-        })        
-
+        gui.add(directionalLight.shadow.camera, 'near')
+            .min(0.1)
+            .max(30)
+            .step(0.1)
+            .name('设置平行光投射，距离近点的位置')
+            .onChange(() => {
+                // 因为平行光是正交相机，所以要重新调用相机的 updateProjectionMatrix() 方法，更新相机矩阵，才能看到效果。
+                directionalLight.shadow.camera.updateProjectionMatrix();
+            });
 
         scene.add(directionalLight);
 
@@ -122,9 +126,9 @@ export default function ThreeComponent() {
         renderer.shadowMap.enabled = true;
         // 设置渲染器像素比:
         renderer.setPixelRatio(window.devicePixelRatio);
-        // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能.
-        renderer.physicallyCorrectLights = true;
-  
+        // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能（已被移除）.
+        // renderer.physicallyCorrectLights = true;
+
         // 渲染函数
         function render(t) {
             controls.update();

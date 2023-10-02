@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 // 导入封装的场景
 import scene from './scene';
+// 导入gui控制器
+import gui from './gui';
 
 // 实际three.js渲染区域
 export const WIDTH =
@@ -42,5 +44,10 @@ camera.lookAt(scene.position);
 
 // 摄像机添加到场景中
 scene.add(camera);
+
+// gui控制摄像机位置
+gui.add(camera.position, 'x').min(-500).max(500).step(1);
+gui.add(camera.position, 'y').min(-500).max(500).step(1);
+gui.add(camera.position, 'z').min(-500).max(500).step(1);
 
 export default camera;

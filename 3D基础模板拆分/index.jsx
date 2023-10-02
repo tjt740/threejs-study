@@ -8,6 +8,9 @@ import animation from './three/animation';
 import gui from './three/gui';
 import gsap from './three/gsap';
 import windowDom2 from './three/windowDom2';
+// 添加光线
+import ambientLight from './three/ambientLight';
+import directionalLight from './three/directionalLight';
 // 辅助线
 import axesHelper from './three/axesHelper';
 

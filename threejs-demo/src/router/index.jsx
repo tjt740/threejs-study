@@ -356,6 +356,24 @@ export const routerPaths = [
                 elementPath: 'lessons/动画帧AnimationClip',
                 key: 'lessons/动画帧AnimationClip',
             },
+            {
+                label: '选中物体并发光+OBJLoader',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: 'lessons/选中物体并发光+OBJLoader',
+                key: 'lessons/选中物体并发光+OBJLoader',
+            },
+            {
+                label: '物体发光特效',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: 'lessons/物体发光特效',
+                key: 'lessons/物体发光特效',
+            },
+            {
+                label: '阴影csm.js',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: 'lessons/阴影csm',
+                key: 'lessons/阴影csm',
+            },
         ],
     },
     {
@@ -615,6 +633,30 @@ export const routerPaths = [
                 icon: <MyIcon type="icon-futejia" />,
                 elementPath: '变形动画',
                 key: '变形动画',
+            },
+            {
+                label: '骨骼动画',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: '骨骼动画',
+                key: '骨骼动画',
+            },
+            {
+                label: '智慧工厂',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: '智慧工厂',
+                key: '智慧工厂',
+            },
+            {
+                label: '操纵物体实现编辑器拖拽吸附等效果',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: '操纵物体实现编辑器拖拽吸附等效果',
+                key: '操纵物体实现编辑器拖拽吸附等效果',
+            },
+            {
+                label: '3D地图',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: '3D地图',
+                key: '3D地图',
             },
             {
                 label: '测试',

@@ -24,7 +24,7 @@ export default function ThreeComponent() {
          * ------------ start ----------
          */
 
-        const createPoints = (picUrl,picSize) => {
+        const createPoints = (picUrl, picSize) => {
             //1️⃣ 生成自定义几何体
             const particlesGeometry = new THREE.BufferGeometry();
             const verticesArr = [];
@@ -57,8 +57,10 @@ export default function ThreeComponent() {
             pointsMaterial.color.set(0xffffff);
             // 设置<点>材质纹理
             const pointTextureLoader = new THREE.TextureLoader();
-            
-            const pointTexture = pointTextureLoader.load(require(`./textures/particles/${picUrl}.png`));
+
+            const pointTexture = pointTextureLoader.load(
+                require(`./textures/particles/${picUrl}.png`)
+            );
             pointTexture.magFilter = THREE.NearestFilter;
             pointTexture.minFilter = THREE.NearestFilter;
             // pointsMaterial.map = pointTexture;
@@ -81,9 +83,9 @@ export default function ThreeComponent() {
             return sphere;
         };
 
-        const points1 = createPoints('xh',0.5);
-        const points2 = createPoints('1',0.3);
-        const points3 = createPoints('14',0.8);
+        const points1 = createPoints('xh', 0.5);
+        const points2 = createPoints('1', 0.3);
+        const points3 = createPoints('14', 0.8);
         /*
 
          * ------------ end ----------
@@ -119,8 +121,8 @@ export default function ThreeComponent() {
         renderer.setPixelRatio(window.devicePixelRatio);
         // 设置渲染器开启阴影计算
         renderer.shadowMap.enabled = true;
-        // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能.
-        renderer.physicallyCorrectLights = true;
+        // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能（已被移除）.
+        // renderer.physicallyCorrectLights = true;
 
         // 渲染函数
         const clock = new THREE.Clock();

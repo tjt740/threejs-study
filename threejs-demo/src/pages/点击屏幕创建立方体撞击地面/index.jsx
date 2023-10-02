@@ -107,23 +107,21 @@ export default function ThreeComponent() {
             return;
         };
 
-
         //3️⃣ 创建地面
-        const createTHREEPlaneGeometry = () => {     
-        const floorGeometry = new THREE.PlaneGeometry(60, 60);
-        const floorMaterial = new THREE.MeshStandardMaterial({
-            side: THREE.DoubleSide,
-        });
-        const floor = new THREE.Mesh(floorGeometry, floorMaterial);
-        floor.receiveShadow = true;
-        floor.rotation.x = -Math.PI / 2;
-        floor.position.y = -7;
-        scene.add(floor);
-        }
-      	//4️⃣ 执行创建地板函数
+        const createTHREEPlaneGeometry = () => {
+            const floorGeometry = new THREE.PlaneGeometry(60, 60);
+            const floorMaterial = new THREE.MeshStandardMaterial({
+                side: THREE.DoubleSide,
+            });
+            const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+            floor.receiveShadow = true;
+            floor.rotation.x = -Math.PI / 2;
+            floor.position.y = -7;
+            scene.add(floor);
+        };
+        //4️⃣ 执行创建地板函数
         createTHREEPlaneGeometry();
 
-        
         //5️⃣ 利用cannon创建物理世界
         // 1.
         // const world = new CANNON.World({
@@ -136,13 +134,13 @@ export default function ThreeComponent() {
         // Ps: Q1: THREE.js是渲染引擎 ， Cannon-es是物理引擎，怎么将两者结合呢？
         // Tjt: 在物理世界力创造矩形几何体
 
-        //6️⃣ 创造物理世界盒子函数，并用数组存储数据。 
+        //6️⃣ 创造物理世界盒子函数，并用数组存储数据。
         const CANNONBoxArr = [];
         // 创造物理世界
         const cannonBoxMaterial = new CANNON.Material();
         const createCANNONBoxShape = () => {
             // 创造物理世界矩形几何体
-            //🌟 Ps: 必须是THREE.js几何体的长宽高一半  
+            //🌟 Ps: 必须是THREE.js几何体的长宽高一半
             const cannonBoxGeometry = new CANNON.Box(new CANNON.Vec3(1, 1, 1));
 
             // 创造物理世界的物体
@@ -161,15 +159,14 @@ export default function ThreeComponent() {
             cannonBox.applyLocalForce(
                 new CANNON.Vec3(200, 0, 0), // 几何体受力大小和位置 （往X轴偏移）
                 new CANNON.Vec3(20, 0, 0) // 受力的目标点（移动到多少位置停止）
-            )
+            );
 
             CANNONBoxArr.push(cannonBox);
             // 将物理世界物体 放入物理世界中
             world.addBody(cannonBox);
 
-             //7️⃣ 添加监听矩形几何体碰撞事件
+            //7️⃣ 添加监听矩形几何体碰撞事件
             cannonBox.addEventListener('collide', onCollideFn);
-            
         };
 
         //8️⃣ 创造物理世界平面材质
@@ -231,16 +228,12 @@ export default function ThreeComponent() {
             }
         }
 
-
         //1️⃣4️⃣ 点击canvas 画布，调用<创建THREE.js矩形立方体函数>和<物理世界立方体函数>
         container.current.addEventListener('click', () => {
             createTHREEBoxGeometry();
             createCANNONBoxShape();
-           
         });
 
-
-      
         renderer.setSize(window.innerWidth, window.innerHeight);
         camera.updateProjectionMatrix();
 
@@ -248,8 +241,8 @@ export default function ThreeComponent() {
         renderer.setPixelRatio(window.devicePixelRatio);
         // 设置渲染器开启阴影计算
         renderer.shadowMap.enabled = true;
-        // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能.
-        renderer.physicallyCorrectLights = true;
+        // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能（已被移除）.
+        // renderer.physicallyCorrectLights = true;
 
         // 时间控件
         const clock = new THREE.Clock();
@@ -259,25 +252,24 @@ export default function ThreeComponent() {
             // 获取秒数
             // const time = clock.getElapsedTime();
 
-           //1️⃣5️⃣ 获取前一帧到后一帧的时间差
+            //1️⃣5️⃣ 获取前一帧到后一帧的时间差
             const deltaTime = clock.getDelta();
             //1️⃣6️⃣ 监听更新物理引擎里世界的物体
             world.step(1 / 120, deltaTime);
             //1️⃣7️⃣ 将THREE.js 中的矩形几何体与 物理世界中矩形几何体相互绑定 用forEach 相互绑定
             // sphere1.position.copy(cannonSphere.position); // === sphere1.position = cannonCube.position;
-            THREEBoxArr.forEach((item,index) => { 
+            THREEBoxArr.forEach((item, index) => {
                 item.position.copy(CANNONBoxArr[index].position);
-            })
+            });
 
             renderer.render(scene, camera);
             // 动画帧
             requestAnimationFrame(render);
         }
 
-      	/*
+        /*
          * ------------ end ----------
          */
-
 
         // 轨道控制器
         const controls = new OrbitControls(camera, renderer.domElement);

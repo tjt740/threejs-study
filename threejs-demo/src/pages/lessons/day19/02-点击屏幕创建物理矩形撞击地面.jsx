@@ -107,22 +107,20 @@ export default function ThreeComponent() {
             return;
         };
 
-
         // 创建地面
-        const createTHREEPlaneGeometry = () => {     
-        const floorGeometry = new THREE.PlaneGeometry(60, 60);
-        const floorMaterial = new THREE.MeshStandardMaterial({
-            side: THREE.DoubleSide,
-        });
-        const floor = new THREE.Mesh(floorGeometry, floorMaterial);
-        floor.receiveShadow = true;
-        floor.rotation.x = -Math.PI / 2;
-        floor.position.y = -7;
-        scene.add(floor);
-        }
+        const createTHREEPlaneGeometry = () => {
+            const floorGeometry = new THREE.PlaneGeometry(60, 60);
+            const floorMaterial = new THREE.MeshStandardMaterial({
+                side: THREE.DoubleSide,
+            });
+            const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+            floor.receiveShadow = true;
+            floor.rotation.x = -Math.PI / 2;
+            floor.position.y = -7;
+            scene.add(floor);
+        };
         createTHREEPlaneGeometry();
 
-        
         // 利用cannon创建物理世界
         // 1.
         // const world = new CANNON.World({
@@ -159,10 +157,8 @@ export default function ThreeComponent() {
             // 将物理世界物体 放入物理世界中
             world.addBody(cannonBox);
 
-
-             // 添加监听矩形几何体碰撞事件
+            // 添加监听矩形几何体碰撞事件
             cannonBox.addEventListener('collide', onCollideFn);
-            
         };
 
         // 创造物理世界平面材质
@@ -223,14 +219,10 @@ export default function ThreeComponent() {
             }
         }
 
-
-        
         container.current.addEventListener('click', () => {
             createTHREEBoxGeometry();
             createCANNONBoxShape();
-           
         });
-
 
         /*
          * ------------ end ----------
@@ -243,8 +235,8 @@ export default function ThreeComponent() {
         renderer.setPixelRatio(window.devicePixelRatio);
         // 设置渲染器开启阴影计算
         renderer.shadowMap.enabled = true;
-        // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能.
-        renderer.physicallyCorrectLights = true;
+        // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能（已被移除）.
+        // renderer.physicallyCorrectLights = true;
 
         // 时间控件
         const clock = new THREE.Clock();
@@ -260,9 +252,9 @@ export default function ThreeComponent() {
             world.step(1 / 120, deltaTime);
             // 将THREE.js 中的矩形几何体与 物理世界中矩形几何体相互绑定
             // sphere1.position.copy(cannonSphere.position); // === sphere1.position = cannonCube.position;
-            THREEBoxArr.forEach((item,index) => { 
+            THREEBoxArr.forEach((item, index) => {
                 item.position.copy(CANNONBoxArr[index].position);
-            })
+            });
 
             renderer.render(scene, camera);
             // 动画帧

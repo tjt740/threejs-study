@@ -73,8 +73,8 @@ export default function ThreeComponent() {
             branch: 3, // 3条线
             radius: 10, // 直线长度（圆周半径）
             rotate: 0.3, // 线段弯曲程度
-            startColor: "#ff6030",
-            endColor: "#1b3984",
+            startColor: '#ff6030',
+            endColor: '#1b3984',
         };
 
         const createPoints = (picSize, count) => {
@@ -109,8 +109,8 @@ export default function ThreeComponent() {
                     5;
                 const randomZ =
                     (Math.pow(Math.random() * 2 - 1, 3) *
-                        (params.radius - randomPosition)) /3
-                    
+                        (params.radius - randomPosition)) /
+                    3;
 
                 // x 轴位置
                 // 根据每个点的位置渲染到对应的角度 Math.cos(A) = b/c 邻边比斜边，已知cos(A) = xxx , 则c = cos(A) * b;
@@ -128,16 +128,13 @@ export default function ThreeComponent() {
                         randomPosition +
                     randomZ;
 
-                
                 // 创建混合颜色
                 // 克隆颜色
                 const mixColor = centerColor.clone();
                 mixColor.lerp(endColor, randomPosition / params.radius);
-                colorArr[current] = mixColor.r
-                colorArr[current+1] = mixColor.g
-                colorArr[current+2] = mixColor.b
-                
-               
+                colorArr[current] = mixColor.r;
+                colorArr[current + 1] = mixColor.g;
+                colorArr[current + 2] = mixColor.b;
             }
             console.log(verticesArr);
             // 创建配置数组
@@ -176,7 +173,7 @@ export default function ThreeComponent() {
                 alphaMap: pointTexture,
                 transparent: true,
                 //4️⃣ 启用顶点材质，忽略pointMaterial.color.set(xxx);
-                vertexColors:true,
+                vertexColors: true,
                 // 设置材质随相机深度重叠后，是否进行遮挡。默认为true
                 depthWrite: false,
                 //  设置材质在随相机深度重叠后，遮挡样式 https://threejs.org/docs/index.html#api/zh/constants/Materials
@@ -227,8 +224,8 @@ export default function ThreeComponent() {
         renderer.setPixelRatio(window.devicePixelRatio);
         // 设置渲染器开启阴影计算
         renderer.shadowMap.enabled = true;
-        // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能.
-        renderer.physicallyCorrectLights = true;
+        // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能（已被移除）.
+        // renderer.physicallyCorrectLights = true;
 
         // 渲染函数
         const clock = new THREE.Clock();

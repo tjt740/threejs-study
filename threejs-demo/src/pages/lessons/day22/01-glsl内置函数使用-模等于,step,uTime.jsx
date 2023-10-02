@@ -160,15 +160,14 @@ export default function ThreeComponent() {
             `,
             side: THREE.DoubleSide,
             transparent: true,
-             // 材质里设置 uTime ，初始值为 0， 然后在render里设置value的值
-             uniforms: {
+            // 材质里设置 uTime ，初始值为 0， 然后在render里设置value的值
+            uniforms: {
                 // 变量
                 uTime: {
                     // 【固定】value
-                    value:0
+                    value: 0,
                 },
-               
-            }
+            },
         });
 
         // 构建平面几何体
@@ -191,8 +190,8 @@ export default function ThreeComponent() {
         renderer.setPixelRatio(window.devicePixelRatio);
         // 设置渲染器开启阴影计算
         renderer.shadowMap.enabled = true;
-        // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能.
-        renderer.physicallyCorrectLights = true;
+        // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能（已被移除）.
+        // renderer.physicallyCorrectLights = true;
         //  更新camera 投影矩阵
         camera.updateProjectionMatrix();
 
@@ -205,7 +204,6 @@ export default function ThreeComponent() {
 
             // 改变rawMaterial里的uTime
             rawMaterial.uniforms.uTime.value = time;
-
 
             renderer.render(scene, camera);
             // 动画帧

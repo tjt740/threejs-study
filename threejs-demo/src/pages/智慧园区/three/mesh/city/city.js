@@ -23,10 +23,21 @@ dracoLoader.preload();
 // 设置gltf加载器draco解码器
 gltfLoader.setDRACOLoader(dracoLoader);
 
+// scene.add(new THREE.Mesh(
+//     new THREE.BoxGeometry(10, 10, 10),
+//     new THREE.MeshStandardMaterial({ color: new THREE.Color(0xfff000) })
+// ));
+
 gltfLoader.load(require('./model/城市.glb'), (gltf) => {
     console.log(gltf);
 
     scene.add(gltf.scene);
+
+    // 找到法棍🥖
+    const fagun = gltf.scene.getObjectByName('leaven_SFR_Bread_A_Main');
+
+    // 找到西瓜🍉
+    const watermelon = gltf.scene.getObjectByName('leaven_SFR_Fruit_H_Main');
 
     // 遍历子元素
     gltf.scene.traverse((child) => {
@@ -59,6 +70,73 @@ gltfLoader.load(require('./model/城市.glb'), (gltf) => {
         // 按照blender设计的曲线 渲染动画
         if (child.name === 'NURBS_曲线') {
             console.log('NURBS_曲线：', child);
+
+            const attributesPositionPointsList =
+                child.geometry.attributes.position.array;
+            // 创建曲线轨道
+            const points = [];
+            attributesPositionPointsList.forEach((_, index) => {
+                // 判断点位置信息在不超过总长度的情况下进行push
+                if (index * 3 <= attributesPositionPointsList.length) {
+                    let i = index * 3;
+                    let xIndex = i;
+                    let yIndex = i + 1;
+                    let zIndex = i + 2;
+                    points.push(
+                        new THREE.Vector3(
+                            // 修复位移问题
+                            attributesPositionPointsList[xIndex] +
+                                30.346168518066406,
+                            attributesPositionPointsList[yIndex] +
+                                0.8938552141189575,
+                            attributesPositionPointsList[zIndex] +
+                                39.97083282470703
+                        )
+                    );
+                }
+            });
+
+            // 创建 Catmull-Rom 曲线
+            const curve = new THREE.CatmullRomCurve3(points);
+            // 曲线自动闭合
+            curve.closed = true;
+
+            // 将曲线转化为几何体并创建线条对象
+            const geometry = new THREE.BufferGeometry().setFromPoints(
+                // 创建101个点 -'-'-’-
+                curve.getPoints(200)
+            );
+
+            // 创建曲线的材质，用线段材质。
+            const material = new THREE.LineBasicMaterial({ color: 0xff0000 });
+            // 创建曲线
+            const curveLine = new THREE.Line(geometry, material);
+
+            // // 修复位移问题
+            // curveLine.position.x = 30.346168518066406;
+            // curveLine.position.y = 0.8938552141189575;
+            // curveLine.position.z = 39.97083282470703;
+
+            // 将线条对象添加到场景中
+            scene.add(curveLine);
+
+            // 让法棍沿着曲线运动
+            const clock = new THREE.Clock();
+            console.log(curve, fagun);
+            function loop() {
+                const time = clock.getElapsedTime();
+                // 获取每一帧的曲线点位置信息
+                const curvePointPosition = curve.getPoint(time * 0.1);
+                // 法棍位置设置，因为是new THREE.Vector3(x,y,z)，所以需要用copy方法
+                fagun.position.copy(curvePointPosition);
+
+                // 西瓜逆时针位置设置
+                const curvePointPosition2 = curve.getPoint(time * -0.1);
+                watermelon.position.copy(curvePointPosition2);
+
+                requestAnimationFrame(loop);
+            }
+            loop();
         }
     });
 });

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Button, Drawer, Tabs, Descriptions, Empty } from 'antd';
-import 'antd/dist/antd.css';
+// import 'antd/dist/antd.css';
 import * as THREE from 'three';
 // 导入轨道控制器 只能通过这种方法
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';

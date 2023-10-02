@@ -100,12 +100,11 @@ export default function ThreeComponent() {
         renderer.setSize(window.innerWidth, window.innerHeight);
         //2️⃣ 设置渲染器开启阴影计算
         renderer.shadowMap.enabled = true;
-          // 设置渲染器像素比:
-          renderer.setPixelRatio(window.devicePixelRatio);
-      // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能.
-      renderer.physicallyCorrectLights = true;
+        // 设置渲染器像素比:
+        renderer.setPixelRatio(window.devicePixelRatio);
+        // 渲染是否使用正确的物理渲染方式,默认是false. 吃性能（已被移除）.
+        // renderer.physicallyCorrectLights = true;
 
-        
         // 渲染函数
         function render(t) {
             controls.update();

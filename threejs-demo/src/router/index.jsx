@@ -647,6 +647,18 @@ export const routerPaths = [
                 key: '智慧工厂',
             },
             {
+                label: '操纵物体实现编辑器拖拽吸附等效果',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: '操纵物体实现编辑器拖拽吸附等效果',
+                key: '操纵物体实现编辑器拖拽吸附等效果',
+            },
+            {
+                label: '3D地图',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: '3D地图',
+                key: '3D地图',
+            },
+            {
                 label: '测试',
                 icon: <MyIcon type="icon-zhangyuxiaowanzi" />,
                 elementPath: 'test-demo',

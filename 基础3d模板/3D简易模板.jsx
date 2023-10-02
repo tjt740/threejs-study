@@ -156,16 +156,17 @@ export default function ThreeComponent() {
         // 创建平行光 + 强度
         const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
         // 基于灯光方向设置
-        directionalLight.position
-            .set(-1, -1, -1)
-            .normalize()
-            .multiplyScalar(-100);
+        directionalLight.position.set(5, 7, 7);
+        // directionalLight.position
+        //     .set(-1, -1, -1)
+        //     .normalize()
+        //     .multiplyScalar(-100);
         scene.add(directionalLight);
 
         // 平灯光辅助线
         const directionalLightHelper = new THREE.DirectionalLightHelper(
             directionalLight,
-            50
+            5
         );
         scene.add(directionalLightHelper);
 

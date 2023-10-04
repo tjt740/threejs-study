@@ -10,6 +10,9 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 // 引入补间动画tween.js three.js 自带
 import * as TWEEN from 'three/examples/jsm/libs/tween.module.js';
+// 引入stats
+import Stats from 'three/examples/jsm/libs/stats.module';
+
 // 引入gsap补间动画操作组件库
 import gsap from 'gsap';
 // 使用 lil-gui 调试 three.js 图形
@@ -48,6 +51,9 @@ export default function ThreeComponent() {
         ) || window.innerHeight;
 
     const init = () => {
+        //新建Stats实例对象
+        const stats = new Stats();
+
         const scene = new THREE.Scene();
         // 场景颜色
         scene.background = new THREE.Color(0xd2d0d0);
@@ -214,6 +220,10 @@ export default function ThreeComponent() {
 
             // 最后，想要成功的完成这种效果，你需要在主函数中调用 TWEEN.update()
             // TWEEN.update();
+
+            // 动画帧中更新stats
+            stats.update();
+
             // 控制器更新
             controls.update();
             renderer.render(scene, camera);
@@ -225,6 +235,9 @@ export default function ThreeComponent() {
 
         // DOM承载渲染器
         containerRef.current.appendChild(renderer.domElement);
+
+        // 将stats对象塞入DOM中
+        containerRef.current.appendChild(stats.dom);
 
         // 控制是否全屏
         const eventObj = {

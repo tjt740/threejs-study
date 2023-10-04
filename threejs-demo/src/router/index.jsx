@@ -666,6 +666,32 @@ export const routerPaths = [
             },
         ],
     },
+    {
+        label: 'cesium.js学习',
+        icon: <MyIcon type="icon-008-mushroom" />,
+        key: Math.random(),
+        children: [
+            {
+                label: 'cesium.js加载使用',
+                icon: <MyIcon type="icon-zhixiang_niupizhixiang-15" />,
+                elementPath: 'cesium/cesium基础使用',
+                key: 'cesium/cesium基础使用',
+            },
+        ],
+    },
+    {
+        label: 'GLSL学习',
+        icon: <MyIcon type="icon-weather_sand_storm_big" />,
+        key: Math.random(),
+        children: [
+            {
+                label: 'glsl配合three.js基础使用',
+                icon: <MyIcon type="icon-anliku" />,
+                elementPath: 'glsl-study/glsl基础使用',
+                key: 'glsl-study/glsl基础使用',
+            },
+        ],
+    },
 ];
 
 export function RouterCom2() {

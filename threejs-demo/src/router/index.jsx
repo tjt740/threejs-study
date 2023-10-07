@@ -672,10 +672,16 @@ export const routerPaths = [
         key: Math.random(),
         children: [
             {
-                label: 'cesium.js加载使用',
+                label: 'cesium初始化',
                 icon: <MyIcon type="icon-zhixiang_niupizhixiang-15" />,
-                elementPath: 'cesium/cesium基础使用',
-                key: 'cesium/cesium基础使用',
+                elementPath: 'cesium/cesium初始化',
+                key: 'cesium/cesium初始化',
+            },
+            {
+                label: 'cesium基础配置',
+                icon: <MyIcon type="icon-zhixiang_niupizhixiang-15" />,
+                elementPath: 'cesium/cesium配置',
+                key: 'cesium/cesium配置',
             },
         ],
     },

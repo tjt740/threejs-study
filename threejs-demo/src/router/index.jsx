@@ -659,6 +659,12 @@ export const routerPaths = [
                 key: '3D地图',
             },
             {
+                label: '开放世界元宇宙',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: '开放世界元宇宙',
+                key: '开放世界元宇宙',
+            },
+            {
                 label: '测试',
                 icon: <MyIcon type="icon-zhangyuxiaowanzi" />,
                 elementPath: 'test-demo',

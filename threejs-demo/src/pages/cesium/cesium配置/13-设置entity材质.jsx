@@ -4,7 +4,6 @@ import React, { useEffect, useRef } from 'react';
 import * as Cesium from 'cesium';
 // 引入widgets.css
 import 'cesium/Build/Cesium/Widgets/widgets.css';
-import gsap from 'gsap';
 
 // 设置token
 Cesium.Ion.defaultAccessToken =
@@ -62,67 +61,18 @@ export default function CesiumComponent() {
 
         // 隐藏logo
         viewer.cesiumWidget.creditContainer.style.display = 'none';
+
+        // 使用原始API（Primitive）创建矩形
         // primivite创建矩形
-
-        class CustomMaterialPropery {
-            constructor() {
-                this.definitionChanged = new Cesium.Event();
-                Cesium.Material._materialCache.addMaterial('CustomMaterial', {
-                    fabric: {
-                        type: 'CustomMaterial',
-                        uniforms: {
-                            uTime: 0,
-                        },
-                        source: `
-                  czm_material czm_getMaterial(czm_materialInput materialInput)
-                  {
-                    // 生成默认的基础材质
-                    czm_material material = czm_getDefaultMaterial(materialInput);
-                    material.diffuse = vec3(materialInput.st, uTime);
-                    return material;
-                  }
-        
-                  `,
-                    },
-                });
-
-                this.params = {
-                    uTime: 0,
-                };
-                gsap.to(this.params, {
-                    uTime: 1,
-                    duration: 2,
-                    repeat: -1,
-                    yoyo: true,
-                });
-            }
-            getType() {
-                // 返回材质类型
-                return 'CustomMaterial';
-            }
-            getValue(time, result) {
-                // console.log(result, time);
-                // let t = performance.now() / 1000;
-                // t = t % 1;
-                // console.log(t);
-                // result.uTime = t;
-                result.uTime = this.params.uTime;
-                // 返回材质值
-                return result;
-            }
-        }
-
-        let material = new CustomMaterialPropery();
-
         // 01-创建几何体
-        const rectGeometry = new Cesium.RectangleGeometry({
+        let rectGeometry = new Cesium.RectangleGeometry({
             rectangle: Cesium.Rectangle.fromDegrees(
                 // 西边的经度
-                140,
+                115,
                 // 南边维度
                 20,
                 // 东边经度
-                160,
+                135,
                 // 北边维度
                 30
             ),
@@ -132,32 +82,60 @@ export default function CesiumComponent() {
         });
 
         // 02-创建几何体实例
-        const instance = new Cesium.GeometryInstance({
-            id: 'blueRect',
+        let instance = new Cesium.GeometryInstance({
+            id: 'redRect',
             geometry: rectGeometry,
             attributes: {
                 color: Cesium.ColorGeometryInstanceAttribute.fromColor(
-                    Cesium.Color.BLUE.withAlpha(0.5)
+                    Cesium.Color.RED.withAlpha(0.5)
                 ),
             },
-            vertexFormat: Cesium.EllipsoidSurfaceAppearance.VERTEX_FORMAT,
         });
 
-        // 03-设置外观
-        const appearance = new Cesium.EllipsoidSurfaceAppearance({
-            material: material,
-            show: true,
+        // let material = new Cesium.ColorMaterialProperty(
+        //   new Cesium.Color(1.0, 1.0, 1.0, 1.0)
+        // );
+        // 棋盘纹理
+        let material = new Cesium.CheckerboardMaterialProperty({
+            evenColor: Cesium.Color.RED,
+            oddColor: Cesium.Color.YELLOW,
+            repeat: new Cesium.Cartesian2(2, 2),
         });
+        // 条纹纹理
+        // let material = new Cesium.StripeMaterialProperty({
+        //     evenColor: Cesium.Color.WHITE,
+        //     oddColor: Cesium.Color.BLACK,
+        //     repeat: 8,
+        // });
+        // 网格纹理
+        // let material = new Cesium.GridMaterialProperty({
+        //     color: Cesium.Color.YELLOW,
+        //     cellAlpha: 0.2,
+        //     lineCount: new Cesium.Cartesian2(4, 4),
+        //     lineThickness: new Cesium.Cartesian2(4.0, 4.0),
+        // });
 
-        // 04-图元
-        const primitive = new Cesium.Primitive({
-            geometryInstances: [instance],
-            appearance: appearance,
-            show: true,
+        console.log(material);
+
+        var rectangle = viewer.entities.add({
+            id: 'entityRect',
+            rectangle: {
+                coordinates: Cesium.Rectangle.fromDegrees(
+                    // 西边的经度
+                    90,
+                    // 南边维度
+                    20,
+                    // 东边经度
+                    110,
+                    // 北边维度
+                    30
+                ),
+                // 设置entity材质，MaterialProperty
+                // material: Cesium.Color.RED.withAlpha(0.5),
+                material: material,
+            },
         });
-
-        // 05-添加到viewer
-        // viewer.scene.primitives.add(primitive);
+        console.log(rectangle);
     };
 
     useEffect(() => {

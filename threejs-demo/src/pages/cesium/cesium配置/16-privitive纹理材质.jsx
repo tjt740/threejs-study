@@ -4,7 +4,6 @@ import React, { useEffect, useRef } from 'react';
 import * as Cesium from 'cesium';
 // 引入widgets.css
 import 'cesium/Build/Cesium/Widgets/widgets.css';
-import gsap from 'gsap';
 
 // 设置token
 Cesium.Ion.defaultAccessToken =
@@ -63,59 +62,9 @@ export default function CesiumComponent() {
         // 隐藏logo
         viewer.cesiumWidget.creditContainer.style.display = 'none';
         // primivite创建矩形
-
-        class CustomMaterialPropery {
-            constructor() {
-                this.definitionChanged = new Cesium.Event();
-                Cesium.Material._materialCache.addMaterial('CustomMaterial', {
-                    fabric: {
-                        type: 'CustomMaterial',
-                        uniforms: {
-                            uTime: 0,
-                        },
-                        source: `
-                  czm_material czm_getMaterial(czm_materialInput materialInput)
-                  {
-                    // 生成默认的基础材质
-                    czm_material material = czm_getDefaultMaterial(materialInput);
-                    material.diffuse = vec3(materialInput.st, uTime);
-                    return material;
-                  }
-        
-                  `,
-                    },
-                });
-
-                this.params = {
-                    uTime: 0,
-                };
-                gsap.to(this.params, {
-                    uTime: 1,
-                    duration: 2,
-                    repeat: -1,
-                    yoyo: true,
-                });
-            }
-            getType() {
-                // 返回材质类型
-                return 'CustomMaterial';
-            }
-            getValue(time, result) {
-                // console.log(result, time);
-                // let t = performance.now() / 1000;
-                // t = t % 1;
-                // console.log(t);
-                // result.uTime = t;
-                result.uTime = this.params.uTime;
-                // 返回材质值
-                return result;
-            }
-        }
-
-        let material = new CustomMaterialPropery();
-
         // 01-创建几何体
-        const rectGeometry = new Cesium.RectangleGeometry({
+
+        let rectGeometry = new Cesium.RectangleGeometry({
             rectangle: Cesium.Rectangle.fromDegrees(
                 // 西边的经度
                 140,
@@ -144,20 +93,55 @@ export default function CesiumComponent() {
         });
 
         // 03-设置外观
-        const appearance = new Cesium.EllipsoidSurfaceAppearance({
-            material: material,
-            show: true,
+
+        // 使用instance的颜色去着色
+        // const appearance = new Cesium.PerInstanceColorAppearance({
+        //     flat: true,
+        // });
+        // type color
+        // const material1 = new Cesium.Material.fromType('Color', {
+        //     color: Cesium.Color.AQUA.withAlpha(0.5),
+        // });
+
+        // type image
+        // const material1 = new Cesium.Material.fromType('Image', {
+        //     image: require('./textures/logo.png'),
+        //     repeat: new Cesium.Cartesian2(2.0, 2.0),
+        // });
+
+        // type disffuseMap
+        // const material1 = new Cesium.Material.fromType('DiffuseMap', {
+        //     image: require('./textures/logo.png'),
+        // });
+
+        // type grid
+        // const material1 = new Cesium.Material.fromType('Grid', {
+        //     color: Cesium.Color.AQUA.withAlpha(0.5),
+        //     cellAlpha: 0.2,
+        //     lineCount: new Cesium.Cartesian2(4, 4),
+        //     lineThickness: new Cesium.Cartesian2(4.0, 4.0),
+        // });
+
+        // type water
+        const material1 = new Cesium.Material.fromType('Water', {
+            baseWaterColor: Cesium.Color.AQUA.withAlpha(0.8),
+            distortion: 0.25,
+            normalMap: require('./textures/waterNormals.jpg'),
         });
 
+        //可以在计算大量顶点属性的时候节省内存
+        const appearance = new Cesium.EllipsoidSurfaceAppearance({
+            material: material1,
+            aboveGround: true,
+        });
         // 04-图元
         const primitive = new Cesium.Primitive({
             geometryInstances: [instance],
             appearance: appearance,
             show: true,
         });
-
         // 05-添加到viewer
-        // viewer.scene.primitives.add(primitive);
+        viewer.scene.primitives.add(primitive);
     };
 
     useEffect(() => {

@@ -3,7 +3,7 @@ import scene from './scene';
 import gui from './gui';
 
 // 创建平行光
-const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+const directionalLight = new THREE.DirectionalLight(0xffffff, 2.22);
 directionalLight.position.set(2.4, 50, 2);
 scene.add(directionalLight);
 

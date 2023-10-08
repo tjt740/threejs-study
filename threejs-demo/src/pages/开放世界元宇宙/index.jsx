@@ -16,8 +16,8 @@ import axesHelper from './three/axesHelper';
 // 性能监视器
 import statsFn from './three/stats';
 
-// 加载场景
-import './components/mesh/index';
+// 导入八叉树空间
+import './components/octree/index';
 
 export default function ThreeComponent() {
     const containerRef = useRef(null);

@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 import scene from '../../three/scene';
+import camera from '../../three/camera';
+import controls from '../../three/controls';
 
 // 八叉树分割模型，生成八叉树节点
 // 引入八叉树扩展库
@@ -17,7 +19,7 @@ const planeMaterial = new THREE.MeshBasicMaterial({
 });
 const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
 planeMesh.rotation.x = -Math.PI / 2;
-// scene.add(planeMesh);
+scene.add(planeMesh);
 
 // 创建八叉树实例
 const worldOctree = new Octree();
@@ -27,9 +29,9 @@ worldOctree.fromGraphNode(planeMesh);
 console.log('查看八叉树结构', worldOctree);
 
 // 创建八叉树辅助器
-// const octreeHelper = new OctreeHelper(worldOctree);
+const octreeHelper = new OctreeHelper(worldOctree);
 // 场景添加八叉树辅助器
-// scene.add(octreeHelper);
+scene.add(octreeHelper);
 
 // 创建一个碰撞胶囊（谭金涛：173cm）
 // new Capsule( start = new Vector3( 0, 0, 0 ), end = new Vector3( 0, 1, 0 ), radius = 1 )
@@ -43,16 +45,22 @@ const capsuleCenter = playerCollider.getCenter(new THREE.Vector3());
 console.log('碰撞胶囊中心:', capsuleCenter); // Vector3 {x: 0, y: 0.865, z: 0}
 console.log('碰撞胶囊(谭金涛身高体型):', playerCollider);
 
-// 创建一个胶囊物体对应显示
+// 创建一个胶囊几何体对应显示 （半径,长度-2*半径）
 const capsuleGeometry = new THREE.CapsuleGeometry(R, H - 2 * R, 5, 32);
 const capsuleMaterial = new THREE.MeshBasicMaterial({
     color: new THREE.Color(0x00ffff),
     opacity: 0.1,
 });
 const capsuleMesh = new THREE.Mesh(capsuleGeometry, capsuleMaterial);
-// 设置胶囊位置
+// 设置胶囊几何体位置
 capsuleMesh.position.set(0, H / 2, 0);
 scene.add(capsuleMesh);
+// 设置相机一直跟随胶囊几何体
+camera.position.set(0, 4, 8);
+// 相机一直盯着胶囊几何体
+camera.lookAt(capsuleMesh.position);
+// 让控制器一直聚焦在胶囊体上，达到第三人称的效果  controls.target = new THREE.Vector3(xx,xx,xx);
+controls.target = capsuleMesh.position;
 
 // 设置重力
 const gravity = -9.8;
@@ -80,7 +88,8 @@ const loopUpdatePlayer = () => {
 
     // 如果胶囊碰撞在地面上就没有重力加速度了
     // 模拟阻尼
-    const damping = -0.05;
+    // const damping = -0.1;
+    const damping = Math.exp(-4 * deltaTime) - 1;
     if (playerIsOnFloor) {
         playerVelocity.y = 0;
         // 在地板上滑动，按键结束后才有阻尼
@@ -121,9 +130,9 @@ function playerCollisionDetection() {
     const result = worldOctree.capsuleIntersect(playerCollider);
     playerIsOnFloor = false;
     if (result) {
-        // 碰撞到了地面
+        // 碰撞到了地面就改成true
         playerIsOnFloor = result.normal.y > 0;
-        // vector3的各个点都乘上交叉重合的深度
+        // 根据碰撞结果平移胶囊碰撞体，使交叉重合深度为0
         playerCollider.translate(result.normal.multiplyScalar(result.depth));
     }
 }
@@ -161,6 +170,7 @@ document.addEventListener(
     },
     false
 );
+
 // document.addEventListener(
 //     'mousedown',
 //     (event) => {
@@ -170,22 +180,24 @@ document.addEventListener(
 //     false
 // );
 
+//c
+
 // 根据键盘状态更新玩家速度
 function playerControls(deltaTime) {
+    // 设置任务移动速度
+    const speed = deltaTime * 5;
+
     // 如果胶囊往前/往后
     if (keyStates['KeyW'] || keyStates['KeyS']) {
         // 胶囊移动方向
         playerDirection.z = 1;
         //获取胶囊的正前面方向
         const capsuleFront = new THREE.Vector3(0, 0, 0);
-        // 胶囊移动
+        // 胶囊移动，返回一个矢量，表示对象在世界空间中的正z轴方向。
         capsuleMesh.getWorldDirection(capsuleFront);
-
         // 计算玩家的速度 如果是s就是倒退 w就是正
         playerVelocity.add(
-            capsuleFront.multiplyScalar(
-                keyStates['KeyW'] ? deltaTime * 10 : -deltaTime * 10
-            )
+            capsuleFront.multiplyScalar(keyStates['KeyW'] ? -speed : speed)
         );
     }
     // 如果胶囊往左往右
@@ -194,13 +206,15 @@ function playerControls(deltaTime) {
         playerDirection.x = 1;
         //获取胶囊的正前面方向
         const capsuleFront = new THREE.Vector3(0, 0, 0);
-        // 胶囊移动
+        // 胶囊移动，返回一个矢量，表示对象在世界空间中的正z轴方向。
         capsuleMesh.getWorldDirection(capsuleFront);
-        // 计算玩家的速度 如果是s就是倒退 w就是正
+
+        // 求侧方的方向，根据胶囊正前方的方向和正上方的方向，求叉积。
+        capsuleFront.cross(capsuleMesh.up);
+
+        // 计算玩家的速度 如果是A是左，D是右
         playerVelocity.add(
-            capsuleFront.multiplyScalar(
-                keyStates['KeyA'] ? deltaTime : -deltaTime
-            )
+            capsuleFront.multiplyScalar(keyStates['KeyA'] ? speed : -speed)
         );
     }
     // 如果按了空格，胶囊调起来
@@ -230,7 +244,7 @@ function playerControls(deltaTime) {
 //         });
 //     });
 
-// (2)可视化胶囊几何体
+//(2) 可视化胶囊几何体
 // const capsuleHelper = CapsuleHelper(R, H);
 // capsuleHelper.position.set(2, 0, 0);
 // scene.add(capsuleHelper);

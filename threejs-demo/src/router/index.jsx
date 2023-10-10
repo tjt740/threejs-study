@@ -374,6 +374,12 @@ export const routerPaths = [
                 elementPath: 'lessons/阴影csm',
                 key: 'lessons/阴影csm',
             },
+            {
+                label: '细节多层次展示LoD',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: 'lessons/细节多层次展示LoD',
+                key: 'lessons/细节多层次展示LoD',
+            },
         ],
     },
     {

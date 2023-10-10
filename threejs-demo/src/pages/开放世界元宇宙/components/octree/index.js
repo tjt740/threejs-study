@@ -38,7 +38,7 @@ scene.add(capsuleBody);
 const worldOctree = new Octree();
 // 分割模型，生成八叉树节点，执行.fromGraphNode()会把一个3D模型，分割为8个子空间，每个子空间都包含对应的三角形或者说顶点数据，每个子空间还可以继续分割。
 // worldOctree.fromGraphNode(模型对象Mesh);
-// worldOctree.fromGraphNode(planeMesh);
+worldOctree.fromGraphNode(planeMesh);
 console.log('查看八叉树结构', worldOctree);
 
 // 创建八叉树辅助器
@@ -82,6 +82,12 @@ capsuleMesh.add(camera);
 // 控制器中心点聚焦于胶囊几何体位置
 controls.target = capsuleMesh.position;
 
+// 创建空3D对象作为上下仰视摄像机
+const cameraUpBottomControls = new THREE.Object3D();
+cameraUpBottomControls.add(camera);
+// 胶囊几何体添加（上下仰视摄像机）
+capsuleMesh.add(cameraUpBottomControls);
+
 // 胶囊几何体添加（眼镜）
 capsuleMesh.add(capsuleBody);
 
@@ -100,7 +106,7 @@ document.addEventListener('mousemove', (e) => {
     // 胶囊几何体左右环视
     capsuleMesh.rotation.y -= e.movementX * 0.01;
     // 胶囊几何体上下环视
-    // capsuleMesh.rotation.x -= e.movementY * 0.005;
+    cameraUpBottomControls.rotation.x -= e.movementY * 0.005;
 });
 
 // 设置重力
@@ -254,25 +260,25 @@ function playerControls(deltaTime) {
 }
 
 // 加载.glb文件
-const gltfLoader = new GLTFLoader();
-gltfLoader
-    .loadAsync(require('../../models/collision-world.glb'))
-    .then((gltf) => {
-        // 场景中添加gltf.scene;
-        scene.add(gltf.scene);
-        worldOctree.fromGraphNode(gltf.scene);
-        // const octreeHelper = new OctreeHelper(worldOctree);
-        // scene.add(octreeHelper);
-        gltf.scene.traverse((child) => {
-            if (child.isMesh) {
-                child.castShadow = true;
-                child.receiveShadow = true;
-                if (child.material.map) {
-                    child.material.map.anisotropy = 4;
-                }
-            }
-        });
-    });
+// const gltfLoader = new GLTFLoader();
+// gltfLoader
+//     .loadAsync(require('../../models/collision-world.glb'))
+//     .then((gltf) => {
+//         // 场景中添加gltf.scene;
+//         scene.add(gltf.scene);
+//         worldOctree.fromGraphNode(gltf.scene);
+//         // const octreeHelper = new OctreeHelper(worldOctree);
+//         // scene.add(octreeHelper);
+//         gltf.scene.traverse((child) => {
+//             if (child.isMesh) {
+//                 child.castShadow = true;
+//                 child.receiveShadow = true;
+//                 if (child.material.map) {
+//                     child.material.map.anisotropy = 4;
+//                 }
+//             }
+//         });
+//     });
 
 //(2) 可视化胶囊几何体
 // const capsuleHelper = CapsuleHelper(R, H);

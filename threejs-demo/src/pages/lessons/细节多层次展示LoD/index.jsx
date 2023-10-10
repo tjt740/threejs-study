@@ -69,7 +69,7 @@ export default function ThreeComponent() {
         // 更新camera 投影矩阵
         camera.updateProjectionMatrix();
         // 设置相机位置 object3d具有position，属性是一个3维的向量。
-        camera.position.set(0, 10, 20);
+        camera.position.set(0, 0, 30);
         // 更新camera 视角方向, 摄像机看的方向，配合OrbitControls.target = new THREE.Vector3(
         //     scene.position.x,
         //     scene.position.y,
@@ -123,8 +123,18 @@ export default function ThreeComponent() {
          */
 
         // 多层次细节展示
-
         const lod = new THREE.LOD();
+
+        // 创建扭结几何体
+        const torusKnotGeometry = new THREE.TorusKnotGeometry(3, 2, 100, 16);
+        const torusKnoMaterial = new THREE.MeshBasicMaterial({
+            color: 0xffff00,
+            wireframe: true,
+        });
+        const torusKnot = new THREE.Mesh(torusKnotGeometry, torusKnoMaterial);
+        torusKnot.position.z = -10;
+        // 只能是正整数
+        lod.addLevel(torusKnot, 0);
 
         // 创建球体
         const geometry = new THREE.SphereGeometry(1, 32, 32);
@@ -133,35 +143,24 @@ export default function ThreeComponent() {
             wireframe: true,
         });
         const mesh = new THREE.Mesh(geometry, material);
+        mesh.position.z = 0;
         lod.addLevel(mesh, 10);
 
         // 创建一个立方体并设置大小
         const cubeGeometry = new THREE.BoxGeometry(3, 3, 4);
         // MeshBasicMaterial（基础材质不会对光源有反应只会使用指定的颜色渲染）
         const cubeMaterial = new THREE.MeshBasicMaterial({
-            color: 0xff0000,
+            color: 0x000fff,
             wireframe: true,
         });
         const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
         // 设置立方体位置
-        cube.position.x = -3;
-        cube.position.y = 2;
-        cube.position.z = -3;
-        lod.addLevel(cube, 15);
-
-        // 创建平面
-        const planeGeometry = new THREE.PlaneGeometry(16, 16);
-        const planeMaterial = new THREE.MeshBasicMaterial({
-            color: new THREE.Color(0xffffff),
-            side: THREE.DoubleSide,
-        });
-        const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
-        planeMesh.rotation.x = -Math.PI / 2;
-        scene.add(planeMesh);
-        lod.addLevel(planeMesh, 20);
+        cube.position.z = 20;
+        lod.addLevel(cube, 30);
 
         scene.add(lod);
 
+        console.log(lod.levels);
         /*
          * ------------end ----------
          */

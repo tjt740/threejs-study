@@ -125,20 +125,29 @@ export default function ThreeComponent() {
         // 多层次细节展示
 
         const lod = new THREE.LOD();
-        for (let i = 0; i < 5; i++) {
-            const geometry = new THREE.SphereGeometry(
-                1,
-                22 - i * 5,
-                22 - i * 5
-            );
-            const material = new THREE.MeshBasicMaterial({
-                color: 0xff0000,
-                wireframe: true,
-            });
-            const mesh = new THREE.Mesh(geometry, material);
-            console.log(i * 5);
-            lod.addLevel(mesh, i * 5);
-        }
+
+        // 创建球体
+        const geometry = new THREE.SphereGeometry(1, 32, 32);
+        const material = new THREE.MeshBasicMaterial({
+            color: 0xff0000,
+            wireframe: true,
+        });
+        const mesh = new THREE.Mesh(geometry, material);
+        lod.addLevel(mesh, 10);
+
+        // 创建一个立方体并设置大小
+        const cubeGeometry = new THREE.BoxGeometry(3, 3, 4);
+        // MeshBasicMaterial（基础材质不会对光源有反应只会使用指定的颜色渲染）
+        const cubeMaterial = new THREE.MeshBasicMaterial({
+            color: 0xff0000,
+            wireframe: true,
+        });
+        const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+        // 设置立方体位置
+        cube.position.x = -3;
+        cube.position.y = 2;
+        cube.position.z = -3;
+        lod.addLevel(cube, 15);
 
         // 创建平面
         const planeGeometry = new THREE.PlaneGeometry(16, 16);
@@ -149,8 +158,8 @@ export default function ThreeComponent() {
         const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
         planeMesh.rotation.x = -Math.PI / 2;
         scene.add(planeMesh);
-        // lod.addLevel(planeMesh, 25);
-        // lod.position.set(10, 0, 10);
+        lod.addLevel(planeMesh, 20);
+
         scene.add(lod);
 
         /*

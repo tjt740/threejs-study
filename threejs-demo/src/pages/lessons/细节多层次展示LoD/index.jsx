@@ -113,13 +113,33 @@ export default function ThreeComponent() {
 
         // 轨道控制器
 
-        const controls = new FlyControls(camera, renderer.domElement);
+        // const controls = new FlyControls(camera, renderer.domElement);
+        const controls = new OrbitControls(camera, renderer.domElement);
         controls.movementSpeed = 10;
         controls.rollSpeed = Math.PI / 60;
 
         /*
          * ------------ start ----------
          */
+
+        // 多层次细节展示
+
+        const lod = new THREE.LOD();
+        for (let i = 0; i < 5; i++) {
+            const geometry = new THREE.SphereGeometry(
+                1,
+                22 - i * 5,
+                22 - i * 5
+            );
+            const material = new THREE.MeshBasicMaterial({
+                color: 0xff0000,
+                wireframe: true,
+            });
+            const mesh = new THREE.Mesh(geometry, material);
+            console.log(i * 5);
+            lod.addLevel(mesh, i * 5);
+        }
+
         // 创建平面
         const planeGeometry = new THREE.PlaneGeometry(16, 16);
         const planeMaterial = new THREE.MeshBasicMaterial({
@@ -129,6 +149,10 @@ export default function ThreeComponent() {
         const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
         planeMesh.rotation.x = -Math.PI / 2;
         scene.add(planeMesh);
+        // lod.addLevel(planeMesh, 25);
+        // lod.position.set(10, 0, 10);
+        scene.add(lod);
+
         /*
          * ------------end ----------
          */

@@ -398,6 +398,18 @@ export const routerPaths = [
                 elementPath: 'lessons/reflector',
                 key: 'lessons/reflector',
             },
+            {
+                label: 'WebGLCubeRenderTarget',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: 'lessons/WebGLCubeRenderTarget',
+                key: 'lessons/WebGLCubeRenderTarget',
+            },
+            {
+                label: '位置音频PositionalAudio',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: 'lessons/位置音频PositionalAudio',
+                key: 'lessons/位置音频PositionalAudio',
+            },
         ],
     },
     {
@@ -683,10 +695,29 @@ export const routerPaths = [
                 key: '3D地图',
             },
             {
-                label: '开放世界元宇宙',
+                label: '开放世界元宇宙（1）',
                 icon: <MyIcon type="icon-futejia" />,
                 elementPath: '开放世界元宇宙',
                 key: '开放世界元宇宙',
+            },
+
+            {
+                label: '开放世界元宇宙（2）',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: '开放世界元宇宙2',
+                key: '开放世界元宇宙2',
+            },
+            {
+                label: '利用canvas绘制纹理图片创建3d文字',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: '利用canvas绘制纹理图片创建3d文字',
+                key: '利用canvas绘制纹理图片创建3d文字',
+            },
+            {
+                label: '添加视频video纹理',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: '添加视频video纹理',
+                key: '添加视频video纹理',
             },
             {
                 label: '测试',

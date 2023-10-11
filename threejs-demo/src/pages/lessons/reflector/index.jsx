@@ -10,6 +10,10 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 // CSM 阴影
 import { CSM } from 'three/addons/csm/CSM.js';
+
+// 反射方法
+import { Reflector } from 'three/examples/jsm/objects/Reflector.js';
+
 // 引入补间动画tween.js three.js 自带
 import * as TWEEN from 'three/examples/jsm/libs/tween.module.js';
 // 引入gsap补间动画操作组件库
@@ -130,21 +134,27 @@ export default function ThreeComponent() {
         /*
          * ------------ start ----------
          */
+
+        // 创建平行光 + 强度
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        // 基于灯光方向设置
+        directionalLight.position.set(5, 7, 7);
+        scene.add(directionalLight);
+
+        // 创建环境光
+        const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+        ambientLight.position.set(5, 7, 7);
+        scene.add(ambientLight);
+
+        gui.add(directionalLight, 'intensity', 0, 10).name('平行光亮度');
+        gui.add(ambientLight, 'intensity', 0, 10).name('自然光亮度');
+
         const rgbeLoader = new RGBELoader();
-        rgbeLoader.loadAsync(require('./textures/003.hdr'), (texture) => {
+        rgbeLoader.load(require('./textures/003.hdr'), (texture) => {
             texture.mapping = THREE.EquirectangularReflectionMapping;
             scene.background = texture;
+            scene.environment = texture;
         });
-
-        const planeGeometry = new THREE.PlaneGeometry(50, 50);
-        const planeMaterial = new THREE.MeshBasicMaterial({
-            color: 0xffffff,
-            side: THREE.DoubleSide,
-        });
-        const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
-        planeMesh.rotation.x = -Math.PI / 2;
-        planeMesh.position.y = -2;
-        scene.add(planeMesh);
 
         const sphereGeometry = new THREE.SphereGeometry(2, 512, 512);
         const sphereMaterial = new THREE.MeshPhysicalMaterial({
@@ -155,6 +165,22 @@ export default function ThreeComponent() {
         });
         const shpereMesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
         scene.add(shpereMesh);
+
+        // 创建平面
+        const planeGeometry = new THREE.PlaneGeometry(50, 50);
+        // const planeMaterial = new THREE.MeshBasicMaterial({
+        //     color: 0xffffff,
+        //     side: THREE.DoubleSide,
+        // });
+        // const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
+        const planeMesh = new Reflector(planeGeometry, {
+            color: 0xffffff,
+            textureWidth: 1024,
+            textureHeight: 1024,
+        });
+        planeMesh.rotation.x = -Math.PI / 2;
+        planeMesh.position.y = -2;
+        scene.add(planeMesh);
 
         /*
          * ------------end ----------

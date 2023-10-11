@@ -9,7 +9,7 @@ import FlyLine from './FlyLine';
 // 飞线特效（shader）
 import FlyLineShader from './FlyLineShader';
 // 修改楼房模型，增加线框特效
-import MeshLine from '../mesh/MeshLine';
+import MeshLine from './MeshLine';
 // 光墙
 import LightWall from './LightWall';
 // 雷达扫射特效

@@ -374,6 +374,42 @@ export const routerPaths = [
                 elementPath: 'lessons/阴影csm',
                 key: 'lessons/阴影csm',
             },
+            {
+                label: '细节多层次展示LoD',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: 'lessons/细节多层次展示LoD',
+                key: 'lessons/细节多层次展示LoD',
+            },
+            {
+                label: '实例化网格对象',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: 'lessons/InstancedMesh',
+                key: 'lessons/InstancedMesh',
+            },
+            {
+                label: '形状不一样，材质相同进行优化',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: 'lessons/形状不一样,材质相同进行优化',
+                key: 'lessons/形状不一样,材质相同进行优化',
+            },
+            {
+                label: '反射',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: 'lessons/reflector',
+                key: 'lessons/reflector',
+            },
+            {
+                label: 'WebGLCubeRenderTarget',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: 'lessons/WebGLCubeRenderTarget',
+                key: 'lessons/WebGLCubeRenderTarget',
+            },
+            {
+                label: '位置音频PositionalAudio',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: 'lessons/位置音频PositionalAudio',
+                key: 'lessons/位置音频PositionalAudio',
+            },
         ],
     },
     {
@@ -659,10 +695,67 @@ export const routerPaths = [
                 key: '3D地图',
             },
             {
+                label: '开放世界元宇宙（1）',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: '开放世界元宇宙',
+                key: '开放世界元宇宙',
+            },
+
+            {
+                label: '开放世界元宇宙（2）',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: '开放世界元宇宙2',
+                key: '开放世界元宇宙2',
+            },
+            {
+                label: '利用canvas绘制纹理图片创建3d文字',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: '利用canvas绘制纹理图片创建3d文字',
+                key: '利用canvas绘制纹理图片创建3d文字',
+            },
+            {
+                label: '添加视频video纹理',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: '添加视频video纹理',
+                key: '添加视频video纹理',
+            },
+            {
                 label: '测试',
                 icon: <MyIcon type="icon-zhangyuxiaowanzi" />,
                 elementPath: 'test-demo',
                 key: 'test-demo',
+            },
+        ],
+    },
+    {
+        label: 'cesium.js学习',
+        icon: <MyIcon type="icon-008-mushroom" />,
+        key: Math.random(),
+        children: [
+            {
+                label: 'cesium初始化',
+                icon: <MyIcon type="icon-zhixiang_niupizhixiang-15" />,
+                elementPath: 'cesium/cesium初始化',
+                key: 'cesium/cesium初始化',
+            },
+            {
+                label: 'cesium基础配置',
+                icon: <MyIcon type="icon-zhixiang_niupizhixiang-15" />,
+                elementPath: 'cesium/cesium配置',
+                key: 'cesium/cesium配置',
+            },
+        ],
+    },
+    {
+        label: 'GLSL学习',
+        icon: <MyIcon type="icon-weather_sand_storm_big" />,
+        key: Math.random(),
+        children: [
+            {
+                label: 'glsl配合three.js基础使用',
+                icon: <MyIcon type="icon-anliku" />,
+                elementPath: 'glsl-study/glsl基础使用',
+                key: 'glsl-study/glsl基础使用',
             },
         ],
     },

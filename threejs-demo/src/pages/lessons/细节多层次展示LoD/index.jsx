@@ -246,7 +246,7 @@ export default function ThreeComponent() {
 
     useEffect(() => {
         // 1. 初始化
-        // init();
+        init();
 
         class ProxyImg {
             constructor(imgELe) {

@@ -28,14 +28,14 @@ planeMesh.rotation.x = -Math.PI / 2;
 scene.add(planeMesh);
 
 // 创建一个平面(模拟眼镜)
-const capsuleBodyGeometry = new THREE.PlaneGeometry(1, 0.4, 1, 1);
-const capsuleBodyMaterial = new THREE.MeshBasicMaterial({
-    color: 0x0000ff,
-    side: THREE.DoubleSide,
-});
-const capsuleBody = new THREE.Mesh(capsuleBodyGeometry, capsuleBodyMaterial);
-capsuleBody.position.set(0, 0.5, -0.4);
-scene.add(capsuleBody);
+// const capsuleBodyGeometry = new THREE.PlaneGeometry(1, 0.4, 1, 1);
+// const capsuleBodyMaterial = new THREE.MeshBasicMaterial({
+//     color: 0x0000ff,
+//     side: THREE.DoubleSide,
+// });
+// const capsuleBody = new THREE.Mesh(capsuleBodyGeometry, capsuleBodyMaterial);
+// capsuleBody.position.set(0, 0.5, -0.4);
+// scene.add(capsuleBody);
 
 // 创建八叉树实例
 const worldOctree = new Octree();
@@ -62,12 +62,13 @@ console.log('碰撞胶囊中心:', capsuleCenter); // Vector3 {x: 0, y: 0.865, 
 console.log('碰撞胶囊(谭金涛身高体型):', playerCollider);
 
 // 创建一个胶囊几何体对应显示 （半径,长度-2*半径）
-const capsuleGeometry = new THREE.CapsuleGeometry(R, H - 2 * R, 5, 32);
-const capsuleMaterial = new THREE.MeshBasicMaterial({
-    color: new THREE.Color(0x00ffff),
-    opacity: 0.1,
-});
-const capsuleMesh = new THREE.Mesh(capsuleGeometry, capsuleMaterial);
+// const capsuleGeometry = new THREE.CapsuleGeometry(R, H - 2 * R, 5, 32);
+// const capsuleMaterial = new THREE.MeshBasicMaterial({
+//     color: new THREE.Color(0x00ffff),
+//     opacity: 0.1,
+// });
+// const capsuleMesh = new THREE.Mesh(capsuleGeometry, capsuleMaterial);
+const capsuleMesh = new THREE.Object3D();
 // 设置胶囊几何体位置
 capsuleMesh.position.set(0, H / 2, 0);
 scene.add(capsuleMesh);
@@ -106,7 +107,7 @@ cameraUpBottomControls.add(backCamera);
 capsuleMesh.add(cameraUpBottomControls);
 
 // 胶囊几何体添加（眼镜）
-capsuleMesh.add(capsuleBody);
+// capsuleMesh.add(capsuleBody);
 
 // 锁定鼠标指针
 document.addEventListener(
@@ -241,6 +242,38 @@ document.addEventListener(
         if (event.code === 'KeyZ') {
             activeCamera = activeCamera === camera ? backCamera : camera;
         }
+        // 动画事件
+        if (event.code === 'KeyW') {
+            window.animationMap.get('Walking').play();
+
+            window.animationMap.get('Walking').clampWhenFinished = true;
+        }
+        if (event.code === 'KeyS') {
+            window.animationMap.get('Walking').play();
+
+            window.animationMap.get('Walking').clampWhenFinished = true;
+        }
+
+        if (event.code === 'KeyA') {
+            window.animationMap.get('Walking').play();
+
+            window.animationMap.get('Walking').clampWhenFinished = true;
+        }
+        if (event.code === 'KeyD') {
+            window.animationMap.get('Walking').play();
+
+            window.animationMap.get('Walking').clampWhenFinished = true;
+        }
+        if (event.code === 'ShiftLeft') {
+            window.animationMap.get('Walking').stop();
+            window.animationMap.get('Running').play();
+        }
+        if (event.code === 'Space') {
+            window.animationMap.get('Jump').play();
+        }
+        if (event.code === 'KeyT') {
+            const preAction = window.animationMap.get('Wave').play();
+        }
     },
     false
 );
@@ -249,6 +282,10 @@ document.addEventListener(
     (event) => {
         keyStates[event.code] = false;
         keyStates.isDown = false;
+        // 走路跑步停止
+        window.animationMap.get('Walking').stop();
+        window.animationMap.get('Running').stop();
+        window.animationMap.get('Jump').stop();
     },
     false
 );
@@ -295,7 +332,41 @@ function playerControls(deltaTime) {
 }
 
 // 加载.glb文件
-// const gltfLoader = new GLTFLoader();
+const gltfLoader = new GLTFLoader();
+
+const animationMap = new Map([]);
+window.animationMap = animationMap;
+// animationMap.get('Dance').play();
+
+gltfLoader
+    .loadAsync(require('../../models/RobotExpressive.glb'))
+    .then((gltf) => {
+        console.log(gltf);
+        // scene.add(gltf.scene);
+        capsuleMesh.add(gltf.scene);
+        gltf.scene.scale.set(0.4, 0.4, 0.4);
+        gltf.scene.rotation.y = Math.PI;
+        gltf.scene.position.set(0, -0.865, 0);
+        // 设置动画切片
+        const { animations } = gltf;
+        // 创建动画播放器
+        const mixer = new THREE.AnimationMixer(gltf.scene);
+        // 创建动画缓存
+        animations.forEach((item) => {
+            animationMap.set(item.name, mixer.clipAction(item));
+        });
+        // 默认动作循环
+        animationMap.get('Idle').play();
+
+        const clock = new THREE.Clock();
+        const loop = () => {
+            const deltaTime = clock.getDelta();
+            mixer.update(deltaTime);
+            requestAnimationFrame(loop);
+        };
+        loop();
+    });
+
 // gltfLoader
 //     .loadAsync(require('../../models/collision-world.glb'))
 //     .then((gltf) => {

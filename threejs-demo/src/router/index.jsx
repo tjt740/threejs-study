@@ -380,6 +380,24 @@ export const routerPaths = [
                 elementPath: 'lessons/细节多层次展示LoD',
                 key: 'lessons/细节多层次展示LoD',
             },
+            {
+                label: '实例化网格对象',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: 'lessons/InstancedMesh',
+                key: 'lessons/InstancedMesh',
+            },
+            {
+                label: '形状不一样，材质相同进行优化',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: 'lessons/形状不一样,材质相同进行优化',
+                key: 'lessons/形状不一样,材质相同进行优化',
+            },
+            {
+                label: '反射',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: 'lessons/reflector',
+                key: 'lessons/reflector',
+            },
         ],
     },
     {

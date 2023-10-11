@@ -25,7 +25,7 @@ const planeMaterial = new THREE.MeshBasicMaterial({
 });
 const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
 planeMesh.rotation.x = -Math.PI / 2;
-scene.add(planeMesh);
+// scene.add(planeMesh);
 
 // 创建一个平面(模拟眼镜)
 // const capsuleBodyGeometry = new THREE.PlaneGeometry(1, 0.4, 1, 1);
@@ -41,7 +41,7 @@ scene.add(planeMesh);
 const worldOctree = new Octree();
 // 分割模型，生成八叉树节点，执行.fromGraphNode()会把一个3D模型，分割为8个子空间，每个子空间都包含对应的三角形或者说顶点数据，每个子空间还可以继续分割。
 // worldOctree.fromGraphNode(模型对象Mesh);
-worldOctree.fromGraphNode(planeMesh);
+// worldOctree.fromGraphNode(planeMesh);
 console.log('查看八叉树结构', worldOctree);
 
 // 创建八叉树辅助器
@@ -186,6 +186,19 @@ const loopUpdatePlayer = () => {
     */
     playerCollider.getCenter(capsuleMesh.position);
 
+    // 如果是水平运动 就去检测结果
+
+    if (
+        Math.abs(playerVelocity.x) + Math.abs(playerVelocity.z) > 0.1 &&
+        Math.abs(playerVelocity.x) + Math.abs(playerVelocity.z) < 2
+    ) {
+        window.animationMap.get('Walking').play();
+        window.animationMap.get('Running').stop();
+    } else if (Math.abs(playerVelocity.x) + Math.abs(playerVelocity.z) > 2) {
+        window.animationMap.get('Walking').stop();
+        window.animationMap.get('Running').play();
+    }
+
     // 实时进行碰撞检测
     playerCollisionDetection();
 
@@ -238,7 +251,7 @@ document.addEventListener(
     (event) => {
         keyStates[event.code] = true;
         keyStates.isDown = true;
-        console.log(event.code);
+        // console.log(event.code);
         if (event.code === 'KeyZ') {
             activeCamera = activeCamera === camera ? backCamera : camera;
         }
@@ -261,7 +274,6 @@ document.addEventListener(
         }
         if (event.code === 'KeyD') {
             window.animationMap.get('Walking').play();
-
             window.animationMap.get('Walking').clampWhenFinished = true;
         }
         if (event.code === 'ShiftLeft') {
@@ -271,8 +283,22 @@ document.addEventListener(
         if (event.code === 'Space') {
             window.animationMap.get('Jump').play();
         }
+
         if (event.code === 'KeyT') {
-            const preAction = window.animationMap.get('Wave').play();
+            if (!window.animationMap.get('Wave').isRunning()) {
+                // console.log(1);
+                // window.animationMap.get('Wave').play();
+                window.animationMap
+                    .get('Wave')
+                    .reset()
+                    .fadeIn(0.5)
+                    .setEffectiveWeight(1)
+                    .play();
+            } else {
+                // console.log(2);
+                // 打招呼动作在0.5秒后结束
+                window.animationMap.get('Wave').fadeOut(0.5);
+            }
         }
     },
     false
@@ -286,6 +312,7 @@ document.addEventListener(
         window.animationMap.get('Walking').stop();
         window.animationMap.get('Running').stop();
         window.animationMap.get('Jump').stop();
+        playerVelocity.set(0, 0, 0);
     },
     false
 );
@@ -367,24 +394,24 @@ gltfLoader
         loop();
     });
 
-// gltfLoader
-//     .loadAsync(require('../../models/collision-world.glb'))
-//     .then((gltf) => {
-//         // 场景中添加gltf.scene;
-//         scene.add(gltf.scene);
-//         worldOctree.fromGraphNode(gltf.scene);
-//         // const octreeHelper = new OctreeHelper(worldOctree);
-//         // scene.add(octreeHelper);
-//         gltf.scene.traverse((child) => {
-//             if (child.isMesh) {
-//                 child.castShadow = true;
-//                 child.receiveShadow = true;
-//                 if (child.material.map) {
-//                     child.material.map.anisotropy = 4;
-//                 }
-//             }
-//         });
-//     });
+gltfLoader
+    .loadAsync(require('../../models/collision-world.glb'))
+    .then((gltf) => {
+        // 场景中添加gltf.scene;
+        scene.add(gltf.scene);
+        worldOctree.fromGraphNode(gltf.scene);
+        // const octreeHelper = new OctreeHelper(worldOctree);
+        // scene.add(octreeHelper);
+        gltf.scene.traverse((child) => {
+            if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+                if (child.material.map) {
+                    child.material.map.anisotropy = 4;
+                }
+            }
+        });
+    });
 
 //(2) 可视化胶囊几何体
 // const capsuleHelper = CapsuleHelper(R, H);

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 // 导入轨道控制器 只能通过这种方法
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -34,7 +34,7 @@ const gui = new GUI({
 
 export default function ThreeComponent() {
     const containerRef = useRef(null);
-
+    const [imgSrc, setImgSrc] = useState();
     // 实际three.js渲染区域
     const WIDTH =
         Number(
@@ -246,11 +246,86 @@ export default function ThreeComponent() {
 
     useEffect(() => {
         // 1. 初始化
-        init();
+        // init();
+
+        class ProxyImg {
+            constructor(imgELe) {
+                this.imgELe = imgELe;
+                this.DEFAULT_URL = 'http://www.webgl3d.cn/img/logo.png';
+                this.init();
+            }
+            init() {
+                this.imgELe.src = this.DEFAULT_URL;
+            }
+
+            setUrl(targetUrl) {
+                const image = new Image();
+                console.log(targetUrl);
+                image.onload = () => {
+                    this.imgELe.src = targetUrl;
+                };
+                image.src = targetUrl;
+            }
+        }
+
+        const img1 = new ProxyImg(document.getElementById('img'));
+
+        setTimeout(() => {
+            img1.setUrl(
+                'https://tjt740.github.io/JavaScript-tools-and-Lodash-tools/assets/images/lodash-logo.png'
+            );
+        }, 3000);
+
+        const map1 = new Map();
+
+        map1.set('0', 'foo');
+        map1.set(1, 'bar');
+
+        const iterator1 = map1.values();
+        console.log(iterator1);
+
+        function fn(params) {
+            if (params === '123') {
+                console.log('123');
+            } else if (params === '456') {
+                console.log('456');
+            } else if (params === '789') {
+                console.log('789');
+            } else if (params === '101112') {
+                console.log('101112');
+            }
+        }
+
+        const t1 = fn('123');
+        const t2 = fn('456');
+
+        // console.log(
+        //     '----------------------------------------------------------------'
+        // );
+
+        // 封装new Map([]);
+        const map = new Map([[123, (params) => params + Math.random()]]);
+        // 构造activeMap函数，用来获取map内容或者删除内容。
+        const activeMap = (type, param) =>
+            map.get(type)
+                ? map.get(type)(param)
+                : // 没有keys就设置keys再去请求执行
+                  map.set(type, (params) => params + 'tjt').get(type)(param);
+
+        console.log(activeMap(123, '123')); // 1230.4434470922317717
+        console.log(activeMap('131425', '今天吃了吗')); // 今天吃了吗tjt
+
+        console.log(map); // new Map([[123,params => params + Math.random()],["131425",params => params + 'tjt']])
     }, []);
 
     return (
         <>
+            <img
+                src=""
+                alt=""
+                id="img"
+                style={{ width: '50px', height: '50px' }}
+            />
             <div id="container" ref={containerRef}></div>
         </>
     );

@@ -77,7 +77,6 @@ camera.position.set(0, 4, 8);
 camera.lookAt(capsuleMesh.position);
 // 胶囊几何体添加相机
 capsuleMesh.add(camera);
-
 // 让控制器一直聚焦在胶囊体上，达到第三人称的效果  controls.target = new THREE.Vector3(xx,xx,xx);
 // 控制器中心点聚焦于胶囊几何体位置
 controls.target = capsuleMesh.position;
@@ -260,25 +259,25 @@ function playerControls(deltaTime) {
 }
 
 // 加载.glb文件
-// const gltfLoader = new GLTFLoader();
-// gltfLoader
-//     .loadAsync(require('../../models/collision-world.glb'))
-//     .then((gltf) => {
-//         // 场景中添加gltf.scene;
-//         scene.add(gltf.scene);
-//         worldOctree.fromGraphNode(gltf.scene);
-//         // const octreeHelper = new OctreeHelper(worldOctree);
-//         // scene.add(octreeHelper);
-//         gltf.scene.traverse((child) => {
-//             if (child.isMesh) {
-//                 child.castShadow = true;
-//                 child.receiveShadow = true;
-//                 if (child.material.map) {
-//                     child.material.map.anisotropy = 4;
-//                 }
-//             }
-//         });
-//     });
+const gltfLoader = new GLTFLoader();
+gltfLoader
+    .loadAsync(require('../../models/collision-world.glb'))
+    .then((gltf) => {
+        // 场景中添加gltf.scene;
+        scene.add(gltf.scene);
+        worldOctree.fromGraphNode(gltf.scene);
+        // const octreeHelper = new OctreeHelper(worldOctree);
+        // scene.add(octreeHelper);
+        gltf.scene.traverse((child) => {
+            if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+                if (child.material.map) {
+                    child.material.map.anisotropy = 4;
+                }
+            }
+        });
+    });
 
 //(2) 可视化胶囊几何体
 // const capsuleHelper = CapsuleHelper(R, H);

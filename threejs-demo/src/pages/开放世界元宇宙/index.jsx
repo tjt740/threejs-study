@@ -4,7 +4,7 @@ import scene from './three/scene';
 import camera from './three/camera';
 import renderer from './three/renderer';
 import controls from './three/controls';
-import animation from './three/animation';
+// import animation from './three/animation';
 import gui from './three/gui';
 import gsap from './three/gsap';
 import windowDom2 from './three/windowDom2';

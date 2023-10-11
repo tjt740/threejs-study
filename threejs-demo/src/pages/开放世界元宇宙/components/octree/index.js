@@ -2,6 +2,9 @@ import * as THREE from 'three';
 import scene from '../../three/scene';
 import camera from '../../three/camera';
 import controls from '../../three/controls';
+import { WIDTH, HEIGHT } from '../../three/camera';
+// 导入renderer承载器
+import renderer from '../../three/renderer';
 
 // 引入 GLTFLoader 加载glb模型文件
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
@@ -81,9 +84,24 @@ capsuleMesh.add(camera);
 // 控制器中心点聚焦于胶囊几何体位置
 controls.target = capsuleMesh.position;
 
+// 设置默认摄像机
+let activeCamera = camera;
+
+// 创建背面摄像机
+const backCamera = new THREE.PerspectiveCamera(
+    45, // 90
+    WIDTH / HEIGHT,
+    0.1,
+    1000
+);
+backCamera.position.set(0, 4, -8);
+backCamera.lookAt(capsuleMesh.position);
+
 // 创建空3D对象作为上下仰视摄像机
 const cameraUpBottomControls = new THREE.Object3D();
 cameraUpBottomControls.add(camera);
+cameraUpBottomControls.add(backCamera);
+
 // 胶囊几何体添加（上下仰视摄像机）
 capsuleMesh.add(cameraUpBottomControls);
 
@@ -106,6 +124,15 @@ document.addEventListener('mousemove', (e) => {
     capsuleMesh.rotation.y -= e.movementX * 0.01;
     // 胶囊几何体上下环视
     cameraUpBottomControls.rotation.x -= e.movementY * 0.005;
+
+    // 限制视角最大仰视角
+    if (cameraUpBottomControls.rotation.x > Math.PI / 8) {
+        cameraUpBottomControls.rotation.x = Math.PI / 8;
+    }
+    // 限制视角最大俯视角
+    if (cameraUpBottomControls.rotation.x < -Math.PI / 6) {
+        cameraUpBottomControls.rotation.x = -Math.PI / 6;
+    }
 });
 
 // 设置重力
@@ -129,6 +156,7 @@ const keyStates = {
 
 // 更新人物 动画帧
 const clock = new THREE.Clock();
+
 const loopUpdatePlayer = () => {
     const deltaTime = clock.getDelta();
 
@@ -165,6 +193,10 @@ const loopUpdatePlayer = () => {
 
     // 人物控制器
     playerControls(deltaTime);
+
+    // 控制器更新
+    controls.update();
+    renderer.render(scene, activeCamera);
 
     // 动画帧
     requestAnimationFrame(loopUpdatePlayer);
@@ -205,6 +237,10 @@ document.addEventListener(
     (event) => {
         keyStates[event.code] = true;
         keyStates.isDown = true;
+        console.log(event.code);
+        if (event.code === 'KeyZ') {
+            activeCamera = activeCamera === camera ? backCamera : camera;
+        }
     },
     false
 );
@@ -259,25 +295,25 @@ function playerControls(deltaTime) {
 }
 
 // 加载.glb文件
-const gltfLoader = new GLTFLoader();
-gltfLoader
-    .loadAsync(require('../../models/collision-world.glb'))
-    .then((gltf) => {
-        // 场景中添加gltf.scene;
-        scene.add(gltf.scene);
-        worldOctree.fromGraphNode(gltf.scene);
-        // const octreeHelper = new OctreeHelper(worldOctree);
-        // scene.add(octreeHelper);
-        gltf.scene.traverse((child) => {
-            if (child.isMesh) {
-                child.castShadow = true;
-                child.receiveShadow = true;
-                if (child.material.map) {
-                    child.material.map.anisotropy = 4;
-                }
-            }
-        });
-    });
+// const gltfLoader = new GLTFLoader();
+// gltfLoader
+//     .loadAsync(require('../../models/collision-world.glb'))
+//     .then((gltf) => {
+//         // 场景中添加gltf.scene;
+//         scene.add(gltf.scene);
+//         worldOctree.fromGraphNode(gltf.scene);
+//         // const octreeHelper = new OctreeHelper(worldOctree);
+//         // scene.add(octreeHelper);
+//         gltf.scene.traverse((child) => {
+//             if (child.isMesh) {
+//                 child.castShadow = true;
+//                 child.receiveShadow = true;
+//                 if (child.material.map) {
+//                     child.material.map.anisotropy = 4;
+//                 }
+//             }
+//         });
+//     });
 
 //(2) 可视化胶囊几何体
 // const capsuleHelper = CapsuleHelper(R, H);

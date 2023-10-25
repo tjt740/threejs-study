@@ -720,6 +720,13 @@ export const routerPaths = [
                 key: '添加视频video纹理',
             },
             {
+                label: '物理盖布',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: '物理盖布',
+                key: '物理盖布',
+            },
+
+            {
                 label: '测试',
                 icon: <MyIcon type="icon-zhangyuxiaowanzi" />,
                 elementPath: 'test-demo',

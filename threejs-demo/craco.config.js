@@ -3,8 +3,8 @@ module.exports = {
         {
             plugin: require('craco-cesium')(),
         },
-        {
-            plugin: require('craco-wasm')(),
-        },
+        // {
+        //     plugin: require('craco-wasm')(),
+        // },
     ],
 };

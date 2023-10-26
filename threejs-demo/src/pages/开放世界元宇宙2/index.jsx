@@ -24,6 +24,7 @@ export default function ThreeComponent() {
 
     useEffect(() => {
         init();
+        
     }, []);
 
     return (

@@ -212,6 +212,7 @@ export default function ThreeComponent() {
         let transformAux1;
 
         const Ammo = await import('three/examples/jsm/libs/ammo.wasm.js');
+        console.log(Ammo);
         // https://github.com/alexjg/craco-wasm  async + await   cnpm i craco-wasm
 
         /*

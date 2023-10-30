@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-
-export default class Cloud {
+//juejin.cn/post/7220696133730975800
+https: export default class Cloud {
     /*
         height: 云所在的高度
         num: 云朵数量

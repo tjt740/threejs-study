@@ -725,7 +725,12 @@ export const routerPaths = [
                 elementPath: '物理盖布',
                 key: '物理盖布',
             },
-
+            {
+                label: '3D图表',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: '3D图表',
+                key: '3D图表',
+            },
             {
                 label: '测试',
                 icon: <MyIcon type="icon-zhangyuxiaowanzi" />,

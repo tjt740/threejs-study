@@ -702,7 +702,7 @@ export const routerPaths = [
             },
 
             {
-                label: '开放世界元宇宙（2）',
+                label: '开放世界元宇宙（2）云层+海洋',
                 icon: <MyIcon type="icon-futejia" />,
                 elementPath: '开放世界元宇宙2',
                 key: '开放世界元宇宙2',

@@ -6,7 +6,12 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import GUI from 'lil-gui';
 
 // 云特效
-import Cloud from './Cloud';
+import { Cloud, CloudsPlus } from './Cloud';
+// 海洋特效
+import Ocean from './Ocean';
+
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
+
 export default class ThreePlus {
     constructor(HTMLElement) {
         this.HTMLElement = HTMLElement;
@@ -153,6 +158,7 @@ export default class ThreePlus {
         // renderer.physicallyCorrectLights = true;
         // DOM承载渲染器
         this.HTMLElement.appendChild(this.renderer.domElement);
+        console.log('render.info', this.renderer.info);
     }
     // 初始化控制器
     initControls() {
@@ -246,8 +252,23 @@ export default class ThreePlus {
     }
     // 创建云特效
     createCloud() {
-        const clouds = new Cloud({});
-        this.scene.add(clouds.meshGroup);
-        console.log(this.scene);
+        // const clouds = new Cloud();
+        // this.scene.add(clouds.meshGroup);
+        const clouds = new CloudsPlus();
+        this.scene.add(clouds.mesh);
+    }
+    // 设置rgbeLoader
+    setRgbeLoader() {
+        const rgbeLoader = new RGBELoader();
+        rgbeLoader.loadAsync(require('../textures/sky11.hdr')).then((gltf) => {
+            gltf.mapping = THREE.EquirectangularReflectionMapping;
+            this.scene.environment = gltf;
+            this.scene.background = gltf;
+        });
+    }
+    // 创建生成海洋
+    creatOcean() {
+        const ocean = new Ocean();
+        this.scene.add(ocean.oceanGroup);
     }
 }

@@ -8,6 +8,7 @@ export default function ThreeComponent() {
         const threePlus = new ThreePlus(containerRef.current);
 
         threePlus.addAxes3DHelper();
+        threePlus.createBarChart();
     };
 
     useEffect(() => {

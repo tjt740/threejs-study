@@ -5,6 +5,9 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 // 使用 lil-gui 调试 three.js 图形
 import GUI from 'lil-gui';
 import Axes3D from './Axes3D';
+// 创建模型
+import Chart from './Chart';
+import TextSprite from './TextSprite';
 
 export default class ThreePlus {
     constructor(HTMLElement) {
@@ -72,24 +75,7 @@ export default class ThreePlus {
     initScene() {
         this.scene = new THREE.Scene();
         // 场景颜色
-        this.scene.background = new THREE.Color(0xd2d0d0);
-        // const bufferGeometry = new THREE.BufferGeometry();
-        // const position = [0, 0, 0, 1.5, 1.5, 1.5];
-        // bufferGeometry.setAttribute(
-        //     'position',
-        //     new THREE.Float32BufferAttribute(position, 3)
-        // );
-
-        // const lineSegments = new THREE.LineSegments(
-        //     bufferGeometry,
-        //     new THREE.LineDashedMaterial({
-        //         color: 0xf00,
-        //         dashSize: 0.2,
-        //         gapSize: 0.2,
-        //     })
-        // );
-        // lineSegments.computeLineDistances();
-        // this.scene.add(lineSegments);
+        this.scene.background = new THREE.Color(0x000000);
     }
     // 初始化相机
     initCamera() {
@@ -104,7 +90,7 @@ export default class ThreePlus {
         // 更新camera 投影矩阵
         this.camera.updateProjectionMatrix();
         // 设置相机位置 object3d具有position，属性是一个3维的向量。
-        this.camera.position.set(0, 0, 20);
+        this.camera.position.set(0, 0, 25);
         // 摄像机看向方向（可以是场景中某个物体）
         this.camera.lookAt(this.scene.position);
         // 摄像机添加到场景中
@@ -246,7 +232,66 @@ export default class ThreePlus {
 
     // 加载3D辅助框
     addAxes3DHelper() {
-        const axesHelper = new Axes3D();
-        this.scene.add(axesHelper.gridHelper);
+        this.size = 15;
+        this.divsion = 15;
+
+        const axesHelperX = new Axes3D(this.size, this.divsion);
+        axesHelperX.gridHelper.rotation.x = -Math.PI / 2;
+        axesHelperX.gridHelper.position.z = -this.size / 2;
+        this.scene.add(axesHelperX.gridHelper);
+
+        const axesHelperY = new Axes3D(15, 15);
+        axesHelperY.gridHelper.rotation.z = -Math.PI / 2;
+        axesHelperY.gridHelper.position.x = -this.size / 2;
+        axesHelperY.gridHelper.position.z = 0;
+        this.scene.add(axesHelperY.gridHelper);
+
+        const axesHelperZ = new Axes3D(15, 15);
+        axesHelperZ.gridHelper.position.y = -this.size / 2;
+        axesHelperZ.gridHelper.position.z = 0;
+        this.scene.add(axesHelperZ.gridHelper);
     }
+
+    // 创建柱状图
+    createBarChart() {
+        this.data = [
+            { label: '星期一', value: 3, type: 'box' },
+            { label: '星期二', value: 7, type: 'cylinde' },
+            { label: '星期三', value: 2, type: 'cylinde' },
+            { label: '星期四', value: 1.25, type: 'cylinde' },
+            { label: '星期五', value: 4, type: 'box' },
+            { label: '星期六', value: 2, type: 'cylinde' },
+            { label: '星期日', value: 2.3, type: 'box' },
+        ];
+
+        this.data.forEach((item, index) => {
+            console.log(item);
+            // 3d模型
+            const chart = new Chart(
+                item.label,
+                item.value,
+                item.type,
+                index + 1,
+                this.size
+            );
+            chart.chartGroup.position.x = -this.size / 2;
+            chart.chartGroup.rotation.y = Math.PI;
+            this.scene.add(chart.chartGroup);
+
+            // 精灵文案
+            const textSprite = new TextSprite(
+                item.label,
+                item.value,
+                item.type,
+                index + 1,
+                this.size
+            );
+            textSprite.textSpriteGroup.position.x = -this.size / 2;
+            textSprite.textSpriteGroup.rotation.y = Math.PI;
+            this.scene.add(textSprite.textSpriteGroup);
+        });
+    }
+
+    // 创建x轴内容（精灵）
+    createXsprite() {}
 }

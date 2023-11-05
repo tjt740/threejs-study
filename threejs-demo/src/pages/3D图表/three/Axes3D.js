@@ -1,15 +1,14 @@
 import * as THREE from 'three';
 
 export default class Axes3D {
-    constructor() {
-        this.size = 10;
-        this.divisions = 10;
+    constructor(size = 10, divisions = 10) {
+        this.size = size;
+        this.divisions = divisions;
         this.gridHelper = new THREE.GridHelper(
             this.size,
             this.divisions,
-            0xf00000,
-            0x444444
+            0x888888,
+            0x888888
         );
-        console.log(this.gridHelper);
     }
 }

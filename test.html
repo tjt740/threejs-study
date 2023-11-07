@@ -6,16 +6,58 @@
         <title>Document</title>
     </head>
     <style>
-        .a {
-            margin: auto;
-            width: 10px;
-            height: 10px;
-            background-color: #000000;
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        .head {
+            height: 50px;
+            background-color: aqua;
+        }
+        .center {
+            height: 100px;
+            padding: 0 80px;
+        }
+        .center .left {
+            width: 80px;
+            height: 100px;
+            float: left;
+            background-color: blanchedalmond;
+            position: relative;
+            margin-left: -100%;
+            /* left: -80px; */
+        }
+        .center .middle {
+            width: 100%;
+            height: 100px;
+            float: left;
+            background-color: rgb(255, 153, 0);
+            position: relative;
+        }
+        .center .right {
+            width: 80px;
+            height: 100px;
+            float: left;
+            background-color: blanchedalmond;
+            position: relative;
+            margin-left: -80px;
+            right: -80px;
+        }
+        .foot {
+            height: 50px;
+            background-color: aqua;
         }
     </style>
     <body>
-        <img src="" alt="" id="img" />
-
-        <script></script>
+        <div class="head">这个是头部</div>
+        <div class="center">
+            <!-- <div class="left"> 这个是左边嘞</div> -->
+            <div class="middle">
+                这个是不会被挡到的中间这个是不会被挡到的中间这个是不会被挡到的中间这个是不会被挡到的中间这个是不会被挡到的中间这个是不会被挡到的中间这个是不会被挡到的中间这个是不会被挡到的中间
+            </div>
+            <div class="left">这个是左边嘞</div>
+            <div class="right">这个是右边</div>
+        </div>
+        <div class="foot">这个是尾部</div>
     </body>
 </html>

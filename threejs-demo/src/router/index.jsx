@@ -702,7 +702,7 @@ export const routerPaths = [
             },
 
             {
-                label: '开放世界元宇宙（2）',
+                label: '开放世界元宇宙（2）云层+海洋',
                 icon: <MyIcon type="icon-futejia" />,
                 elementPath: '开放世界元宇宙2',
                 key: '开放世界元宇宙2',
@@ -718,6 +718,18 @@ export const routerPaths = [
                 icon: <MyIcon type="icon-futejia" />,
                 elementPath: '添加视频video纹理',
                 key: '添加视频video纹理',
+            },
+            {
+                label: '物理盖布',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: '物理盖布',
+                key: '物理盖布',
+            },
+            {
+                label: '3D图表',
+                icon: <MyIcon type="icon-futejia" />,
+                elementPath: '3D图表',
+                key: '3D图表',
             },
             {
                 label: '测试',
